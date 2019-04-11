@@ -1,0 +1,73 @@
+import libsedml
+import os
+import urllib.request
+import shutil
+import json
+import requests
+
+
+#### Task 1: Download Sed-ML file
+# write list of all JWS-models
+url = "https://jjj.bio.vu.nl/rest/experiments/?format=json"
+view_source = requests.get(url)
+json_string = view_source.text
+json_dictionary = json.loads(json_string)
+
+# parse url code of each model with loop over task2 and task3
+for iModel in range(0, len(json_dictionary)):
+    try:
+        current_model = json_dictionary[iModel]['id']                                                             # id =/= name !!!!  need id instead of name
+        file_to_download = "https://jjj.bio.vu.nl/models/experiments/" + current_model + "/export/sedml"
+        #file_to_download = "file:///tmp/mozilla_paulstapor0/" + current_model + ".sedml"
+        urllib.request.urlretrieve(file_to_download, '/home/paulstapor/Downloads/' + current_model + '.sedml')
+    except:
+        current_model = json_dictionary[iModel]['name']                                                             # id =/= name !!!!  need name instead of id
+        file_to_download = "https://jjj.bio.vu.nl/models/experiments/" + current_model + "/export/sedml"
+        #file_to_download = "file:///tmp/mozilla_paulstapor0/" + current_model + ".sedml"
+        urllib.request.urlretrieve(file_to_download, '/home/paulstapor/Downloads/' + current_model + '.sedml')
+
+    #### Task 2: Move Sed-ML file to new directory
+    # path to download directory
+    path = "/home/paulstapor/Downloads/" + current_model + ".sedml"          # iModel
+
+    # take model name                                                    # iModel
+    model_signiture = os.path.basename(path)
+
+    # copy file in new directory
+    # if "adlung" in model_signiture:
+    #    print("hi")
+    if "_" in model_signiture:
+        model_name, other_stuff = model_signiture.split("_",1)
+        underscores, tail = other_stuff.split(".")
+        total_name = model_name + "_" + underscores
+        if not os.path.exists("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name):
+            os.makedirs("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name)
+        if not os.path.exists("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + total_name):
+            os.makedirs("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + total_name)
+        shutil.move(path, "/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + total_name + "/" + total_name + ".sedml")
+
+        #### Task 3: Read Sed-ML file + Find specific url for SBML file + Download it
+        sedml_file = libsedml.readSedML("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + total_name + "/" + total_name + ".sedml")
+        n_sbml_models = sedml_file.getNumModels()
+        for i_sbml_model in range(n_sbml_models):
+            sbml_model = sedml_file.getModel(i_sbml_model)
+            source = sbml_model.getSource()
+            urllib.request.urlretrieve(source, "/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + total_name + "/" +
+                                       total_name + "_" + str(i_sbml_model + 1) + ".xml")
+
+    else:
+        model_name = current_model
+        if not os.path.exists("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name):             # check if directory already exists
+            os.makedirs("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name)
+        if not os.path.exists("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + model_name):
+            os.makedirs("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + model_name)
+        shutil.move(path, "/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + model_name + "/" + model_name + ".sedml")
+
+        #### Task 3: Read Sed-ML file + Find specific url for SBML file + Download it
+        sedml_file = libsedml.readSedML("/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + model_name + "/" + model_name + ".sedml")
+        n_sbml_models = sedml_file.getNumModels()
+        for i_sbml_model in range(n_sbml_models):
+            sbml_model = sedml_file.getModel(i_sbml_model)
+            source = sbml_model.getSource()
+            urllib.request.urlretrieve(source, "/home/paulstapor/Documents/Helmholtzzentrum/Import_SED-ML/" + model_name + "/" + model_name + "/" +
+                                       model_name + "_" + str(i_sbml_model + 1) + ".xml")
