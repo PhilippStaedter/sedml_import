@@ -5,10 +5,11 @@ import importlib
 import amici
 
 
-def LoadSpecificModel(model_name, explicit_model):
+def load_specific_model(model_name, explicit_model):
 
     # path to one specific model
-    model_output_dir = "/home/paulstapor/sbml2amici/amici_models/" + model_name + "/" + explicit_model
+    path = '../sbml2amici/amici_models'
+    model_output_dir = path + '/' + model_name + "/" + explicit_model
 
     # load specific model
     sys.path.insert(0, os.path.abspath(model_output_dir))

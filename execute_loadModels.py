@@ -6,5 +6,5 @@ model_name = 'hockin2002_fig3-user'
 explicit_model = 'model4_hockin1'
 
 # run function
-LoadSpecificModel(model_name, explicit_model)
+load_specific_model(model_name, explicit_model)
 
