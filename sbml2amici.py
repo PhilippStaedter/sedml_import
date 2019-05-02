@@ -9,9 +9,14 @@ import logging
 import shutil
 
 
+# important paths
+models_path = "../sbml2amici/amici_models"
+base_path = "/sedml_models"
+
+
 # create directory for all future amici models
-if not os.path.exists("/home/paulstapor/sbml2amici/amici_models"):
-    os.makedirs("/home/paulstapor/sbml2amici/amici_models")
+if not os.path.exists(models_path):
+    os.makedirs(models_path)
 
 # Create logger object
 logger = logging.getLogger()
@@ -20,21 +25,21 @@ logger = logging.getLogger()
 logging.basicConfig(filename='all_logs',level=logging.DEBUG)
 
 # list of all directories + SBML files
-list_directory = os.listdir("/home/paulstapor/sedml_import/sedml_models")
+list_directory = os.listdir(base_path)
 
 for models in list_directory:
-    list_files = os.listdir("/home/paulstapor/sedml_import/sedml_models/" + models + "/sbml_models")
+    list_files = os.listdir(base_path + '/' + models + '/sbml_models')
     for files in list_files:
-        sbml_file = '/home/paulstapor/sedml_import/sedml_models/' + models + '/sbml_models/' + files                  # bachmann.sbml / adlung2017_fig2bto2e / model0_adlung1
+        sbml_file = base_path + '/' + models + '/sbml_models/' + files
         model_name, other_stuff = files.split(".",1)
-        model_output_dir = "/home/paulstapor/sbml2amici/amici_models/" + models + "/" + model_name                                   # model_name
+        model_output_dir = models_path + '/' + models + '/' + model_name
 
         try:
             # Create SBML importer
             sbml_importer = amici.SbmlImporter(sbml_file)
 
             # SBML2AMICI
-            sbml_importer.sbml2amici(model_name,                                                                          # crashes!
+            sbml_importer.sbml2amici(model_name,
                         model_output_dir,
                         verbose=False)
 
@@ -44,10 +49,10 @@ for models in list_directory:
             logging.info('\n')
             #logging.exception(str(Exception))
         #except Exception as e:
-         #   logging.exeption(str(e), exc_info=True)                                                                                   # no text saved?
+         #   logging.exeption(str(e), exc_info=True)
             #continue
 
 # copy file 'all_logs' in new directory 'sbml2amici'
-old_path = '/home/paulstapor/sedml_import/all_logs'
-new_path = '/home/paulstapor/sbml2amici/all_logs'
+old_path = '/all_logs'
+new_path = models_path + '/all_logs'
 shutil.move(old_path, new_path)

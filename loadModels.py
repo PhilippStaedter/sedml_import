@@ -1,21 +1,25 @@
-# load all 130 Models into workspace
-
+# load every one of the working 130 models into workspace
 import sys
 import os
 import importlib
 import amici
 
 
-# path to all models (now just)
-model_output_dir = '/home/paulstapor/sbml2amici/amici_models/hockin2002_fig3-user/model4_hockin1' # + models + "/" + model_name
-model_name = 'model4_hockin1'
+def LoadSpecificModel(model_name, explicit_model):
 
-# load models
-sys.path.insert(0, os.path.abspath(model_output_dir))
-model_module = importlib.import_module(model_name)
-model = model_module.getModel()
+    # path to one specific model
+    model_output_dir = "/home/paulstapor/sbml2amici/amici_models/" + model_name + "/" + explicit_model
 
-print("Model states: ", model.getStateIds())
+    # load specific model
+    sys.path.insert(0, os.path.abspath(model_output_dir))
+    model_module = importlib.import_module(explicit_model)
+    model = model_module.getModel()
+
+    # some useful properties
+    print("Model states: ", model.getStateIds())    # get states
+    print("Model observables:   ", model.getObservableIds())    # get observables
+    print("Model parameters:    ", model.getParameterIds())     # get parameters
+
 
 
 
