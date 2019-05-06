@@ -3,6 +3,7 @@ import sys
 import os
 import importlib
 import amici
+import numpy as np
 
 
 def load_specific_model(model_name, explicit_model):
@@ -21,14 +22,9 @@ def load_specific_model(model_name, explicit_model):
     print("Model observables:   ", model.getObservableIds())    # get observables
     print("Model parameters:    ", model.getParameterIds())     # get parameters
 
-    # simulate model
-    # set timepoints for which we want to simulate the model
-    model.setTimepoints(np.linspace(0, 60, 60))
+    return model
 
-    # Create solver instance
-    solver = model.getSolver()
 
-    # Run simulation using default model parameters and solver options
-    sim_data = amici.runAmiciSimulation(model, solver)
+
 
 
