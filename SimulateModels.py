@@ -9,7 +9,7 @@ def load_specific_model(model_name, explicit_model):
 
     # path to one specific model
     path = '../sbml2amici/amici_models'
-    model_output_dir = path + '/' + model_name + "/" + explicit_model
+    model_output_dir = path + '/' + model_name + '/' + explicit_model
 
     # load specific model
     sys.path.insert(0, os.path.abspath(model_output_dir))
@@ -21,6 +21,14 @@ def load_specific_model(model_name, explicit_model):
     print("Model observables:   ", model.getObservableIds())    # get observables
     print("Model parameters:    ", model.getParameterIds())     # get parameters
 
+    # simulate model
+    # set timepoints for which we want to simulate the model
+    model.setTimepoints(np.linspace(0, 60, 60))
 
+    # Create solver instance
+    solver = model.getSolver()
+
+    # Run simulation using default model parameters and solver options
+    sim_data = amici.runAmiciSimulation(model, solver)
 
 
