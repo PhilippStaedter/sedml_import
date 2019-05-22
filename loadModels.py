@@ -2,8 +2,6 @@
 import sys
 import os
 import importlib
-import amici
-import numpy as np
 
 
 def load_specific_model(model_name, explicit_model):
@@ -18,9 +16,10 @@ def load_specific_model(model_name, explicit_model):
     model = model_module.getModel()
 
     # some useful properties
-    print("Model states: ", model.getStateIds())    # get states
+    print("Model states: ", model.getStateIds())                # get states
     print("Model observables:   ", model.getObservableIds())    # get observables
     print("Model parameters:    ", model.getParameterIds())     # get parameters
+#     print("Model species:       ", model.getSpeciesIds())       # get species
 
     return model
 
