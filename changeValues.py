@@ -3,10 +3,8 @@ from loadModels import *
 import libsedml
 import libsbml
 import re
+import numpy as np
 
-
-# model_name = 'aguda1999_fig5c'
-# excplicit_model = 'model0_aguda1'
 
 def changeValues(model_name, explicit_model):
 
@@ -76,10 +74,20 @@ def changeValues(model_name, explicit_model):
                     counter = counter + 1
                 par_num[counter] = new_val
 
-    model.getParameterIds = tuple(par_id)
-    model.getParameters = tuple(par_num)
+    # transform par_num into an array
+    par_num = np.asarray(par_num)
+    p_num = []
+    for iCount in range(0, len(par_num)):
+        p_num.append(float(par_num[iCount]))
 
-    # all new settings
-    # return spcs_num, par_num
+    # transform spcs_id into an array
+    spcs_num = np.asarray(spcs_num)
+    s_num = []
+    for iCount in range(0, len(spcs_num)):
+        s_num.append(float(spcs_num[iCount]))
+
+    # replace old vector by new one
+    model.setParameters(p_num)
+    model.setInitialStates(s_num)
 
     return model
