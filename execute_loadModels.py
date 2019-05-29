@@ -19,6 +19,9 @@ def all_settings(iModel, iFile):
     # run function
     model = load_specific_model(iModel, iFile)                                  # call function from 'loadModels.py'
 
+    # change parameter and species according to SEDML file
+    model = changeValues(model, iModel, iFile)
+
     # open sedml to get tasks + time courses
     sedml_path = './sedml_models/' + iModel + '/' + iModel + '.sedml'
 
@@ -33,11 +36,16 @@ def all_settings(iModel, iFile):
         task_simReference = all_tasks.getSimulationReference()
 
         # time courses
-        all_simulations = sedml_file.getSimulation(iSBMLModel)
-        sim_Id = all_simulations.getId()
+        try:
+            all_simulations = sedml_file.getSimulation(iSBMLModel)
+            sim_Id = all_simulations.getId()
+        except:                                                                                         # need 'except' clause if more models have same time period
+            if all_simulations == None:
+                all_simulations = sedml_file.getSimulation(0)
+                sim_Id = all_simulations.getId()
 
         while task_simReference != sim_Id:
-            iSBMLModel = iSBMLModel + 1                                                         # only works if the list of models are somehow chronological and not random [iff task1 appears before task2]
+            iSBMLModel = iSBMLModel + 1
             all_simulations = sedml_file.getSimulation(iSBMLModel)
             sim_Id = all_simulations.getId()
 

@@ -6,14 +6,14 @@ import re
 import numpy as np
 
 
-def changeValues(model_name, explicit_model):
+def changeValues(model, model_name, explicit_model):
 
     # important paths
     sedml_path = './sedml_models/' + model_name + '/' + model_name + '.sedml'
     sbml_path = './sedml_models/' + model_name + '/sbml_models/' + explicit_model + '.sbml'
 
     # load model
-    model = load_specific_model(model_name, explicit_model)
+    # model = load_specific_model(model_name, explicit_model)
 
     # load SBML && SEDML models
     sbml_file = libsbml.readSBML(sbml_path)
@@ -75,7 +75,7 @@ def changeValues(model_name, explicit_model):
                 par_num[counter] = new_val
 
     # transform par_num into an array
-    par_num = np.asarray(par_num)
+    par_num = np.asarray(par_num)                                                   # is never being reached
     p_num = []
     for iCount in range(0, len(par_num)):
         p_num.append(float(par_num[iCount]))

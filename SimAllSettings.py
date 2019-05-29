@@ -11,6 +11,12 @@ import pandas as pd
 
 
 def simulate(atol, rtol, linSol, solAlg):
+
+    # Create new folder structure for study                                                                             # tolerance study
+    tolerance_path = '../bachelor_thesis/Tolerance'
+    if not os.path.exists(tolerance_path):
+        os.makedirs(tolerance_path)
+
     # save name
     s_atol = str(atol).split('-')[1]
     s_rtol = str(rtol).split('-')[1]
@@ -18,7 +24,7 @@ def simulate(atol, rtol, linSol, solAlg):
     s_solAlg = str(solAlg)
 
     # create .tsv file
-    tsv_table = pd.DataFrame(columns=['id', 't_intern_ms', 't_extern_ms', 'state_variables'])
+    tsv_table = pd.DataFrame(columns=['id', 't_intern_ms', 't_extern_ms', 'state_variables', 'error_message'])
 
     # set row counter for .tsv file
     counter = 0
@@ -45,7 +51,7 @@ def simulate(atol, rtol, linSol, solAlg):
                     # Append additional row in .tsv file
                     tsv_table = tsv_table.append({}, ignore_index=True)
 
-                    # read in SBML file for stae variables
+                    # read in SBML file for state variables
                     file = libsbml.readSBML(base_path_sedml + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
                     all_properties = file.getModel()
                     num_states = len(all_properties.getListOfSpecies())
@@ -130,4 +136,4 @@ def simulate(atol, rtol, linSol, solAlg):
                 print('Model ' + iModel + ' import to amici did not work!')
 
     # save data frame as .tsv file
-    tsv_table.to_csv(path_or_buf=tsv_file_path + '/simulation_' + s_atol + '_' + s_rtol + '_' + s_linSol + '_' + s_solAlg + '.tsv', sep='\t', index=False)
+    tsv_table.to_csv(path_or_buf=tolerance_path + '/' + s_atol + '_' + s_rtol + '.tsv', sep='\t', index=False)
