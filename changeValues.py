@@ -30,13 +30,20 @@ def changeValues(model, model_name, explicit_model):
 
     # old parameter settings of SBML model that have to be replaced
     par_id = model.getParameterIds()
-    par_id = list(par_id)
+    par_id = list(par_id)                                                                         # probelm: some IDs get changed to 'amici_'
+    for iCount in range(0, len(par_id)):                                                          # => solved only a few amount of models
+        try:
+            a, b = par_id[iCount].split('_', 1)
+            if a == 'amici':
+                par_id[iCount] = b
+        except:
+            'No split necessary!'
     par_num = model.getParameters()
     par_num = list(par_num)
 
     # new settings of SEDML parameters
-    for iSBMLModel in range(0, sedml_file.getNumModels()):
-        all_models = sedml_file.getModel(iSBMLModel)
+    for iModels in range(0, sedml_file.getNumModels()):
+        all_models = sedml_file.getModel(iModels)
         for iAttribute in range (0, all_models.getNumChanges()):
             all_changes = all_models.getChange(iAttribute)
             new_targ = all_changes.getTarget()

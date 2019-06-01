@@ -28,8 +28,8 @@ def all_settings(iModel, iFile):
     # tasks
     sedml_file = libsedml.readSedML(sedml_path)
 
-    for iSBMLModel in range(0, sedml_file.getNumTasks()):
-        all_tasks = sedml_file.getTask(iSBMLModel)
+    for iTask in range(0, sedml_file.getNumTasks()):
+        all_tasks = sedml_file.getTask(iTask)
         tsk_Id = all_tasks.getId()
         task_name = all_tasks.getName()
         task_modRef = all_tasks.getModelReference()
@@ -37,17 +37,23 @@ def all_settings(iModel, iFile):
 
         # time courses
         try:
-            all_simulations = sedml_file.getSimulation(iSBMLModel)
+            all_simulations = sedml_file.getSimulation(iTask)
             sim_Id = all_simulations.getId()
         except:                                                                                         # need 'except' clause if more models have same time period
             if all_simulations == None:
                 all_simulations = sedml_file.getSimulation(0)
                 sim_Id = all_simulations.getId()
-
-        while task_simReference != sim_Id:
-            iSBMLModel = iSBMLModel + 1
-            all_simulations = sedml_file.getSimulation(iSBMLModel)
-            sim_Id = all_simulations.getId()
+        try:
+            while task_simReference != sim_Id:
+                iTask = iTask + 1
+                all_simulations = sedml_file.getSimulation(iTask)
+                sim_Id = all_simulations.getId()
+        except:
+            iTask = 0
+            while task_simReference != sim_Id:
+                all_simulations = sedml_file.getSimulation(iTask)
+                sim_Id = all_simulations.getId()
+                iTask = iTask + 1
 
         sim_start_time = all_simulations.getOutputStartTime()
         sim_end_time = all_simulations.getOutputEndTime()

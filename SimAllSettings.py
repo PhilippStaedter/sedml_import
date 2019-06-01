@@ -47,10 +47,13 @@ def simulate(atol, rtol, linSol, solAlg):
 
             for iFile in list_files:
 
-                try:
-                    # Append additional row in .tsv file
-                    tsv_table = tsv_table.append({}, ignore_index=True)
+                # Append additional row in .tsv file
+                tsv_table = tsv_table.append({}, ignore_index=True)
 
+                # save id in .tsv
+                tsv_table.loc[counter].id = '{' + iModel + '}' + '_' + '{' + iFile + '}'
+
+                try:
                     # read in SBML file for state variables
                     file = libsbml.readSBML(base_path_sedml + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
                     all_properties = file.getModel()
@@ -74,9 +77,6 @@ def simulate(atol, rtol, linSol, solAlg):
                     external_time = []
                     ind_time = []
                     end_time = []
-
-                    # save id in .tsv
-                    tsv_table.loc[counter].id = '{' + iModel + '}' + '_' + '{' + iFile + '}'
 
                     try:
                         for iSim in range(0,99):
@@ -121,19 +121,28 @@ def simulate(atol, rtol, linSol, solAlg):
                         # raise counter
                         counter = counter + 1
 
-                    except:
+                    except Exception as e:
+                        error_info_3 = str(e)
                         # print('Model ' + iModel + '_' + iFile + ' could not be simulated with this setting!')
-                        tsv_table.loc[counter].t_intern_ms = 'Model could not be simulated with this setting!'
-                        tsv_table.loc[counter].t_extern_ms = 'Model could not be simulated with this setting!'
+                        tsv_table.loc[counter].t_intern_ms = 'nan'
+                        tsv_table.loc[counter].t_extern_ms = 'nan'
+                        tsv_table.loc[counter].error_message = 'Error_3: ' + error_info_3
 
                         # raise counter
                         counter = counter + 1
 
-                except:
-                    print('Loading Model ' + iModel + '_' + iFile + ' did not work!')
+                except Exception as e:
+                    error_info_2 = str(e)
+                    # print('Error_2: Loading Model ' + iModel + '_' + iFile + ' did not work!')
+                    tsv_table.loc[counter].t_intern_ms = 'nan'
+                    tsv_table.loc[counter].t_extern_ms = 'nan'
+                    tsv_table.loc[counter].error_message = 'Error_2: ' + error_info_2
 
-            else:
-                print('Model ' + iModel + ' import to amici did not work!')
+                    # raise counter
+                    counter = counter + 1
+
+        else:
+            print('Error_1: Model ' + iModel + ' import to amici did not work!')
 
     # save data frame as .tsv file
     tsv_table.to_csv(path_or_buf=tolerance_path + '/' + s_atol + '_' + s_rtol + '.tsv', sep='\t', index=False)
