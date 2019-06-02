@@ -31,7 +31,7 @@ def changeValues(model, model_name, explicit_model):
     # old parameter settings of SBML model that have to be replaced
     par_id = model.getParameterIds()
     par_id = list(par_id)                                                                         # probelm: some IDs get changed to 'amici_'
-    for iCount in range(0, len(par_id)):                                                          # => solved only a few amount of models
+    for iCount in range(0, len(par_id)):
         try:
             a, b = par_id[iCount].split('_', 1)
             if a == 'amici':
@@ -40,6 +40,15 @@ def changeValues(model, model_name, explicit_model):
             'No split necessary!'
     par_num = model.getParameters()
     par_num = list(par_num)
+
+    # old compartment settings of SBML model that have to be replaced
+    all_properties = sbml_file.getModel()
+    comp = all_properties.getListOfCompartments()
+    comp_id = []
+    comp_num = []
+    for iCount in range(0, len(comp)):
+        comp_id.append(comp[iCount].id)
+        comp_num.append(comp[iCount].size)
 
     # new settings of SEDML parameters
     for iModels in range(0, sedml_file.getNumModels()):
@@ -56,30 +65,55 @@ def changeValues(model, model_name, explicit_model):
             div = div[4]
 
             if div == 'species':
-                # parse right id out of new_trag string
+                # parse right id out of new_targ string
                 id = new_targ.split('\'', )
                 id = id[1]
 
                 # counter
                 counter = 0
 
-                # swap species settings
-                while id != spcs_id[counter]:
-                    counter = counter + 1
-                spcs_num[counter] = new_val
+                try:                                                                    # SBML model sometimes doesn't have the SEDML ID
+                    # swap species settings
+                    while id != spcs_id[counter]:
+                        counter = counter + 1
+                    spcs_num[counter] = new_val
+                except:
+                    # species id from SEDML not in SBML
+                    'Species-ID can be omitted'
 
             elif div == 'parameter':
-                # parse right id out of new_trag string
+                # parse right id out of new_targ string
                 id = new_targ.split('\'',)
                 id = id[1]
 
                 # counter
                 counter = 0
 
-                # swap parameter settings
-                while id != par_id[counter]:
-                    counter = counter + 1
-                par_num[counter] = new_val
+                try:
+                    # swap parameter settings
+                    while id != par_id[counter]:
+                        counter = counter + 1
+                    par_num[counter] = new_val
+                except:
+                    # parameter id from SEDML not in SBML
+                    'Parameter-ID can be omitted'
+
+            elif div == 'compartment':
+                # parse right id out of new_targ string
+                id = new_targ.split('\'', )
+                id = id[1]
+
+                # counter
+                counter = 0
+
+                try:  # SBML model sometimes doesn't have the SEDML ID
+                    # swap compartment settings
+                    while id != comp_id[counter]:
+                        counter = counter + 1
+                    comp_num[counter] = new_val
+                except:
+                    # species id from SEDML not in SBML
+                    'Compartment-ID can be omitted'
 
     # transform par_num into an array
     par_num = np.asarray(par_num)                                                   # is never being reached

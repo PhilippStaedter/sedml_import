@@ -142,7 +142,7 @@ def simulate(atol, rtol, linSol, solAlg):
                     counter = counter + 1
 
         else:
-            print('Error_1: Model ' + iModel + ' import to amici did not work!')
+            'Error_1: Model ' + iModel + ' import to amici did not work!'
 
     # save data frame as .tsv file
     tsv_table.to_csv(path_or_buf=tolerance_path + '/' + s_atol + '_' + s_rtol + '.tsv', sep='\t', index=False)
