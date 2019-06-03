@@ -51,11 +51,10 @@ for iTask in range(0, num_task):
 
         if task_id == task_ref:
             # create formula
-            assignmentRule = sedml_file.createDataGenerator()
-            # assignmentRule = sbml_file.createAssignmentRule()     # not availabale
+            assignmentRule = sbml_file.createModel()
+            assignmentRule.createAssignmentRule()
             assignmentRule.setId(new_obs_Id)
-            assignmentRule.createVariable()
-            #assignmentRule.setVariable(new_obs_Id)                 # not available
+            assignmentRule.setVariable(new_obs_Id)
             assignmentRule.setFormula(obs_Formula)
 
             # create parameter to formula for observables
