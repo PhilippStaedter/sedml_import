@@ -24,10 +24,13 @@ def simulate(atol, rtol, linSol, solAlg):
     s_solAlg = str(solAlg)
 
     # create .tsv file
-    tsv_table = pd.DataFrame(columns=['id', 't_intern_ms', 't_extern_ms', 'state_variables', 'error_message'])
+    tsv_table = pd.DataFrame(columns=['id', 't_intern_ms', 't_extern_ms', 'state_variables', 'parameters', 'status', 'error_message'])
 
     # set row counter for .tsv file
     counter = 0
+
+    # set number of repetitions for simulation
+    sim_rep = 50
 
     # insert specific model properties as strings, e.g.:
     base_path_sbml2amici = '../sbml2amici/amici_models'
@@ -54,11 +57,13 @@ def simulate(atol, rtol, linSol, solAlg):
                 tsv_table.loc[counter].id = '{' + iModel + '}' + '_' + '{' + iFile + '}'
 
                 try:
-                    # read in SBML file for state variables
+                    # read in SBML file for state variables and parameters
                     file = libsbml.readSBML(base_path_sedml + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
                     all_properties = file.getModel()
                     num_states = len(all_properties.getListOfSpecies())
+                    num_par = len(all_properties.getListOfParameters())
                     tsv_table.loc[counter].state_variables = num_states
+                    tsv_table.loc[counter].parameters = num_par
 
                     # read in model
                     model = all_settings(iModel, iFile)                                         # call function from 'lexecute_loadModels.py'
@@ -79,7 +84,7 @@ def simulate(atol, rtol, linSol, solAlg):
                     end_time = []
 
                     try:
-                        for iSim in range(0,99):
+                        for iSim in range(0, sim_rep):
                             start_time = time.time()
 
                             sim_data = amici.runAmiciSimulation(model, solver)
@@ -93,12 +98,13 @@ def simulate(atol, rtol, linSol, solAlg):
                             else:
                                 built_in_time.append(ind_time[iSim] - ind_time[iSim - 1])
 
-                        # take median of time_vector
-                        # built_in_time.append(sim_data['cpu_time'])
+                        # take status + median of time_vector
+                        sim_status = sim_data['status']
                         internal = statistics.median(built_in_time)                                   # median internal data
                         external = statistics.median(external_time)
 
-                        # save time data in .tsv
+                        # save status + time data in .tsv
+                        tsv_table.loc[counter].status = sim_status
                         tsv_table.loc[counter].t_intern_ms = internal                                    # add internal to .tsv file
                         tsv_table.loc[counter].t_extern_ms = external
 

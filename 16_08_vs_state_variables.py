@@ -26,11 +26,12 @@ for iLine in range(len(tsv_file['id']) - 1):
 # scatter plot of data
 plt.scatter(state_variable, intern_time, alpha=0.8, c='blue', edgecolors='none', s=30, label='Intern Time')
 plt.scatter(state_variable, extern_time, alpha=0.8, c='red', edgecolors='none', s=30, label='Extern Time')
-plt.xlabel('Amount of state variables')
+# plt.xscale("log")
+plt.xlabel('Number of state variables')
 plt.ylabel('Simulation time in milliseconds')
 
 # title + legend
-plt.title('Intern vs Extern')
+plt.title('Intern vs Extern Timekeeping')
 plt.legend(loc=2)
 
 # better layout
