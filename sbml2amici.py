@@ -39,10 +39,13 @@ counter = 0
 for models in list_directory:
     list_files = os.listdir(base_path + '/' + models + '/sbml_models')
     list_files = sorted(list_files)
+
     for files in list_files:
         sbml_file = base_path + '/' + models + '/sbml_models/' + files
         model_name, other_stuff = files.split(".",1)
         model_output_dir = models_path + '/' + models + '/' + model_name
+
+        # get new_observables()
 
         try:
             ## entry = {'id': None, 'states': None, 'reactions': None, 'parameters': None, 'error_message': None}
@@ -68,7 +71,7 @@ for models in list_directory:
             # SBML2AMICI
             sbml_importer.sbml2amici(model_name,
                         model_output_dir,
-                        verbose=False)
+                        verbose=False)                                                                  # TRUE instead of FALSE?
 
             # Write 'OK' in 'error_message' coloumn
             tsv_table.loc[counter].error_message = 'OK'
