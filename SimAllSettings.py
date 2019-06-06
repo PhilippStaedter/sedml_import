@@ -4,7 +4,7 @@ from execute_loadModels import *
 import amici.plotting
 import numpy as np
 import matplotlib.pyplot as plt
-import libsedml
+import libsbml
 import time
 import statistics
 import pandas as pd
@@ -58,15 +58,21 @@ def simulate(atol, rtol, linSol, solAlg):
 
                 try:
                     # read in SBML file for state variables and parameters
-                    file = libsbml.readSBML(base_path_sedml + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
-                    all_properties = file.getModel()
-                    num_states = len(all_properties.getListOfSpecies())
-                    num_par = len(all_properties.getListOfParameters())
-                    tsv_table.loc[counter].state_variables = num_states
-                    tsv_table.loc[counter].parameters = num_par
+                    #file = libsbml.readSBML(base_path_sedml + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
+                    #all_properties = file.getModel()
+                    #num_states = len(all_properties.getListOfSpecies())
+                    #num_par = len(all_properties.getListOfParameters())
+                    #tsv_table.loc[counter].state_variables = num_states
+                    #tsv_table.loc[counter].parameters = num_par
 
                     # read in model
                     model = all_settings(iModel, iFile)                                         # call function from 'lexecute_loadModels.py'
+
+                    # save state_variables and parameters
+                    num_states = len(model.getStateNames())
+                    num_par = len(model.getParameters())
+                    tsv_table.loc[counter].state_variables = num_states
+                    tsv_table.loc[counter].parameters = num_par
 
                     # Create solver instance
                     solver = model.getSolver()

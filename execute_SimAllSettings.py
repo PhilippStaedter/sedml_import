@@ -19,4 +19,4 @@ solAlg = 2
 
 
 simulate(atol, rtol, linSol, solAlg)
-useless = os.system('clear')
+# useless = os.system('clear')
