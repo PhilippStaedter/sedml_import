@@ -52,6 +52,11 @@ def timePointsBioModels(iModel):
         sim_end_time = 20000
         sim_num_time_points = 1000
 
+    elif iModel == 'Nakakuki2010':
+        sim_start_time = 0
+        sim_end_time = 5500
+        sim_num_time_points = 1000
+
     elif iModel == 'ODea2007':
         sim_start_time = 0
         sim_end_time = 4000
@@ -101,6 +106,11 @@ def timePointsBioModels(iModel):
         sim_start_time = 0
         sim_end_time = 100
         sim_num_time_points = 10
+
+    elif iModel == 'Ueda2001':
+        sim_start_time = 0
+        sim_end_time = 72
+        sim_num_time_points = 1000
 
     elif iModel == 'Ung2008':
         sim_start_time = 0

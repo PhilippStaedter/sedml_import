@@ -66,7 +66,7 @@ def simulate(atol, rtol, linSol, solAlg):
                     #tsv_table.loc[counter].parameters = num_par
 
                     # read in model
-                    model = all_settings(iModel, iFile)                                         # call function from 'lexecute_loadModels.py'
+                    model = all_settings(iModel, iFile)                                         # call function from 'execute_loadModels.py'
 
                     # save state_variables and parameters
                     num_states = len(model.getStateNames())

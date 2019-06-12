@@ -12,8 +12,8 @@
 from SimAllSettings import *
 
 # settings
-atol = 1e-16
-rtol = 1e-8
+atol = 1e-8
+rtol = 1e-6
 linSol = 9
 solAlg = 2
 
