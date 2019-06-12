@@ -1,6 +1,7 @@
 # script to compute a linear regression given the data points (x_i,y_i)
 
 import numpy as np
+import math
 
 def linearRegression(tsv_file, x_catagory, y_catagory):
 
@@ -10,7 +11,7 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     # take those num_x and num_p where 'error_message' == nan
     x_data_point = []
     y_data_point = []
-    for iCount in range(0, len(tsv_file[x_catagory])):
+    for iCount in range(24, len(tsv_file[x_catagory])):                                     # switch between 0 and 24
         if type(tsv_file['error_message'][iCount]) != type(x_catagory):
             x_data_point.append(tsv_file[x_catagory][iCount])
             y_data_point.append(tsv_file[y_catagory][iCount])
