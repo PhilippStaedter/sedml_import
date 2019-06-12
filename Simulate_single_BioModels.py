@@ -9,7 +9,7 @@ import amici
 import amici.plotting as aplt
 import matplotlib.pyplot as plt
 
-iModel = 'Lai2014'
+iModel = 'Yang2007'
 iFile = iModel
 
 path = '../sbml2amici/amici_models'
@@ -23,7 +23,7 @@ model_module = importlib.import_module(iFile)
 model = model_module.getModel()
 
 # set timepoints for which we want to simulate the model
-model.setTimepoints(np.linspace(0, 100, 10))
+model.setTimepoints(np.linspace(0, 400000, 10000))
 
 # Create solver instance
 solver = model.getSolver()
