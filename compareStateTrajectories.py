@@ -15,16 +15,31 @@ import statistics
 import pandas as pd
 import os
 import urllib.request
+import requests
+import json
+import itertools
 
+
+# create folder for all results
+if not os.path.exists('./json_files'):
+    os.makedirs('./json_files')
 
 # set counter
 counter = 0
 
+# get name of jws reference
+url = "https://jjj.bio.vu.nl/rest/models/?format=json"
+view_source = requests.get(url)
+json_string = view_source.text
+json_dictionary = json.loads(json_string)
+
 # get all models
 list_directory_sedml = sorted(os.listdir('../sbml2amici/amici_models'))
+del list_directory_sedml[0:64]                                                                                          # delete until model with error to avoid repeating all
 
-for iModel in list_directory_sedml:
+for iMod in range(0, len(list_directory_sedml)):
 
+    iModel = list_directory_sedml[iMod]
     list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
 
     for iFile in list_files:
@@ -45,8 +60,13 @@ for iModel in list_directory_sedml:
         if os.path.exists(BioModels_path + '/' + iModel):
             print('Model is not part of JWS-database!')
         else:
-            # parse correct name for url
-            sbml_name, mod_iFile = iFile.split('_', 1)
+            # get right model reference
+            parse_name_model = ["".join(x) for _, x in itertools.groupby(iModel, key=str.isdigit)]
+            for iCount in range(0, len(json_dictionary)):
+                parse_name_jws = ["".join(x) for _, x in itertools.groupby(json_dictionary[iCount]['slug'], key=str.isdigit)]
+                if parse_name_model[0] == parse_name_jws[0]:
+                    model_reference = json_dictionary[iCount]['slug']
+                    break
 
             try:
                 # Get whole model
@@ -76,7 +96,8 @@ for iModel in list_directory_sedml:
             # Get Url with all changes
             # <species 1>=<amount>
             # <parameter 1>=<value>, compartment == parameter (in this case)
-            url = 'https://jjj.bio.vu.nl/rest/models/' + mod_iFile + '/time_evolution?time_end=' + str(sim_end_time) + ';species=all;'
+            url = 'https://jjj.bio.vu.nl/rest/models/' + model_reference + '/time_evolution?time_end=' + str(sim_end_time) + ';species=all;'
+
             for iStr in list_of_strings:
                 url = url + iStr
 
@@ -114,20 +135,26 @@ for iModel in list_directory_sedml:
             sbml_model = libsbml.readSBML(sbml_path)
 
             # Delete all trajectories for boundary conditions
+            delete_counter = 0
             all_properties = sbml_model.getModel()
             for iSpec in range(0, all_properties.getNumSpecies()):
                 all_species = all_properties.getSpecies(iSpec)
                 if all_species.getBoundaryCondition() == True:
                     state_trajectory = state_trajectory.transpose()
-                    state_trajectory = np.delete(state_trajectory, iSpec,0)
+                    if delete_counter == 0:
+                        state_trajectory = np.delete(state_trajectory, iSpec, 0)
+                    else:
+                        state_trajectory = np.delete(state_trajectory, iSpec - delete_counter, 0)
                     state_trajectory = state_trajectory.transpose()
+                    delete_counter = delete_counter + 1
 
             # Convert ndarray 'state-trajectory' to data frame
             df_state_trajectory = pd.DataFrame(columns=column_names, data=state_trajectory)
 
 
             ########## comparison
-            error = 1e-3                                                                                                            # tighter conditions give back 'False' most of the time
+            abs_error = 1e-3                                                                                                            # tighter conditions give back 'False' most of the time
+            rel_error = 1e-5
             amount_col = len(column_names)
             first_col = column_names[0]
             amount_row = len(df_state_trajectory[first_col])
@@ -138,9 +165,9 @@ for iModel in list_directory_sedml:
             # single error
             for iCol in column_names:
                 for iRow in range(0, amount_row):
-                    rel_error = abs((df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])/df_state_trajectory[iCol][iRow])
-                    abs_error = abs(df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])
-                    if rel_error <= error or abs_error <= error:
+                    rel_tol = abs((df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])/df_state_trajectory[iCol][iRow])
+                    abs_tol = abs(df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])
+                    if rel_tol <= rel_error or abs_tol <= abs_error:
                         df_single_error[iCol][iRow] = True
                     else:
                         df_single_error[iCol][iRow] = False
@@ -154,10 +181,10 @@ for iModel in list_directory_sedml:
                     df_trajectory_error[iCol][0] = False
 
             # whole error
-            list = []
+            error_list = []
             for iCol in column_names:
-                list.append(df_trajectory_error[iCol][0])
-            if sum(list) == amount_col:
+                error_list.append(df_trajectory_error[iCol][0])
+            if sum(error_list) == amount_col:
                 df_whole_error['trajectories_match'][0] = True
             else:
                 df_whole_error['trajectories_match'][0] = False
