@@ -35,7 +35,7 @@ json_dictionary = json.loads(json_string)
 
 # get all models
 list_directory_sedml = sorted(os.listdir('../sbml2amici/amici_models'))
-del list_directory_sedml[0:64]                                                                                          # delete until model with error to avoid repeating all
+del list_directory_sedml[0:153]                                                                                          # delete until model with error to avoid repeating all
 
 for iMod in range(0, len(list_directory_sedml)):
 
@@ -60,14 +60,31 @@ for iMod in range(0, len(list_directory_sedml)):
         if os.path.exists(BioModels_path + '/' + iModel):
             print('Model is not part of JWS-database!')
         else:
-            # get right model reference
-            parse_name_model = ["".join(x) for _, x in itertools.groupby(iModel, key=str.isdigit)]
+
+            # Open SBML file
+            sbml_model = libsbml.readSBML(sbml_path)
+
+            # get right model reference from sbml model
+            parse_name_model = sbml_model.getModel().getId()
             for iCount in range(0, len(json_dictionary)):
-                parse_name_jws = ["".join(x) for _, x in itertools.groupby(json_dictionary[iCount]['slug'], key=str.isdigit)]
-                if parse_name_model[0] == parse_name_jws[0]:
+                parse_name_jws = json_dictionary[iCount]['slug']
+                if parse_name_model == parse_name_jws:
                     model_reference = json_dictionary[iCount]['slug']
                     break
-
+            # elements in json_dictionary are only lower case --- the sbml model has upper case models
+            try:
+                model_reference
+            except:
+                wrong_model_name = ["".join(x) for _, x in itertools.groupby(parse_name_model, key=str.isdigit)]
+                if wrong_model_name[0].islower() == False:
+                    correct_model_letters = wrong_model_name[0].lower()
+                    correct_model_name = correct_model_letters + wrong_model_name[1]
+                    for iCount in range(0, len(json_dictionary)):
+                        parse_name_jws = json_dictionary[iCount]['slug']
+                        if correct_model_name == parse_name_jws:
+                            model_reference = json_dictionary[iCount]['slug']
+                            break
+            # check if all_settings works
             try:
                 # Get whole model
                 model = all_settings(iModel,iFile)
@@ -131,9 +148,6 @@ for iMod in range(0, len(list_directory_sedml)):
             # Get state trajectory
             state_trajectory = sim_data['x']
 
-            # Open SBML file
-            sbml_model = libsbml.readSBML(sbml_path)
-
             # Delete all trajectories for boundary conditions
             delete_counter = 0
             all_properties = sbml_model.getModel()
@@ -153,8 +167,8 @@ for iMod in range(0, len(list_directory_sedml)):
 
 
             ########## comparison
-            abs_error = 1e-3                                                                                                            # tighter conditions give back 'False' most of the time
-            rel_error = 1e-5
+            abs_error = 1e-4                                                                                                            # tighter conditions give back 'False' most of the time
+            rel_error = 1e-4
             amount_col = len(column_names)
             first_col = column_names[0]
             amount_row = len(df_state_trajectory[first_col])
@@ -194,9 +208,9 @@ for iMod in range(0, len(list_directory_sedml)):
                 counter = counter +1
 
             ############ save outcome
-            # df_single_error.to_csv(path_or_buf= json_save_path + '/single_error.csv', sep='\t', index=False)
-            # df_trajectory_error.to_csv(path_or_buf= json_save_path + '/trajectory_error.csv', sep='\t', index=False)
-            # df_whole_error.to_csv(path_or_buf= json_save_path + '/whole_error.csv', sep='\t', index=False)
+            df_single_error.to_csv(path_or_buf= json_save_path + '/single_error.csv', sep='\t', index=False)
+            df_trajectory_error.to_csv(path_or_buf= json_save_path + '/trajectory_error.csv', sep='\t', index=False)
+            df_whole_error.to_csv(path_or_buf= json_save_path + '/whole_error.csv', sep='\t', index=False)
 
 
 # print number of all models with correct state trajectories
