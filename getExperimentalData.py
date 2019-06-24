@@ -50,5 +50,6 @@ print(331 - counter)
 
 # names of those models with experimental data
 for iModel in list_directory_sedml:
-    if len(os.listdir('./sedml_models/' + iModel + '/experimental_data')) != 0:
-        print(iModel)
+    if os.path.exists('./sedml_models/' + iModel + '/experimental_data'):
+        AmountFiles = len(os.listdir('./sedml_models/' + iModel + '/experimental_data'))
+        print(iModel + ': ' + str(AmountFiles))
