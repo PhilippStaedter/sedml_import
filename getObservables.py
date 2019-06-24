@@ -58,7 +58,7 @@ for iSEDML in list_directory_sedml:
                 task_id = sedml_file.getTask(iTask).getId()
 
                 # create list with all parameter-ids to check for uniqueness
-                all_par_id = []
+                almost_all_par_id = []
 
                 for iObservable in range(0, num_obs):
                     # get important formula
@@ -76,12 +76,15 @@ for iSEDML in list_directory_sedml:
                     else:
                         for iCount in range(0, num_par):
                             list_par_id.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getId())
-                            list_par_value.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getValue())
-                            all_par_id.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getId())
+                            list_par_value.append(
+                                sedml_file.getDataGenerator(iObservable).getParameter(iCount).getValue())
+                            almost_all_par_id.append(
+                                sedml_file.getDataGenerator(iObservable).getParameter(iCount).getId())
 
                             # check for uniqueness of parameter-ids
-                            for iNum in range(0, len(all_par_id)):
-                                almost_all_par_id = all_par_id.remove(all_par_id[len(all_par_id) - 1])
+                            for iNum in range(0, len(almost_all_par_id)):
+                                all_par_id = almost_all_par_id[iNum]
+                                almost_all_par_id.remove(almost_all_par_id[len(almost_all_par_id) - 1])
                                 last_element = list(all_par_id[len(all_par_id) - 1])
                                 intersection = [i for i in last_element if i in almost_all_par_id]
                                 if len(intersection) != 0:
