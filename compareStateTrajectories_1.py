@@ -35,7 +35,7 @@ json_dictionary = json.loads(json_string)
 
 # get all models
 list_directory_sedml = sorted(os.listdir('../sbml2amici/amici_models'))
-del list_directory_sedml[0:153]                                                                                          # delete until model with error to avoid repeating all
+# del list_directory_sedml[0:31]                                                                                          # delete until model with error to avoid repeating all
 
 for iMod in range(0, len(list_directory_sedml)):
 
@@ -107,7 +107,7 @@ for iMod in range(0, len(list_directory_sedml)):
             # Open sedml file
             sedml_model = libsedml.readSedML(sedml_path)
 
-            # import all cahnges from SEDML
+            # import all changes from SEDML
             list_of_strings = JWS_changeValues(iFile, sedml_model)
 
             # Get Url with all changes
@@ -118,10 +118,10 @@ for iMod in range(0, len(list_directory_sedml)):
             for iStr in list_of_strings:
                 url = url + iStr
 
-            # Save .json file
+            #### Save .json file
             urllib.request.urlretrieve(url, json_save_path + '/' + iFile + '.json')
 
-            # write as .csv file
+            #### write as .csv file
             json_2_csv = pd.read_json(json_save_path + '/' + iFile + '.json')
             json_2_csv.to_csv(json_save_path + '/' + iFile + '.csv', sep='\t', index=False)
 
