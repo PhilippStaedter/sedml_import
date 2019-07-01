@@ -1,4 +1,5 @@
-# script to compare state trajectories from JWS with trajectories of the simulation
+# script 1 to compare state trajectories from JWS with trajectories of the simulation
+# => creates two important .tsv files
 
 # Attention:    boundary conditions are not being simualted by JWS!
 
@@ -20,12 +21,9 @@ import json
 import itertools
 
 
-# create folder for all results
+# create folder for all .csv files of the trajectories
 if not os.path.exists('./json_files'):
     os.makedirs('./json_files')
-
-# set counter
-counter = 0
 
 # get name of jws reference
 url = "https://jjj.bio.vu.nl/rest/models/?format=json"
@@ -34,12 +32,12 @@ json_string = view_source.text
 json_dictionary = json.loads(json_string)
 
 # get all models
-list_directory_sedml = sorted(os.listdir('../sbml2amici/amici_models'))
-# del list_directory_sedml[0:31]                                                                                          # delete until model with error to avoid repeating all
+list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
+# del list_directory_amici[0:193]                                                                                          # delete until model with error to avoid repeating all
 
-for iMod in range(0, len(list_directory_sedml)):
+for iMod in range(0, len(list_directory_amici)):
 
-    iModel = list_directory_sedml[iMod]
+    iModel = list_directory_amici[iMod]
     list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
 
     for iFile in list_files:
@@ -58,7 +56,7 @@ for iMod in range(0, len(list_directory_sedml)):
 
 
         if os.path.exists(BioModels_path + '/' + iModel):
-            print('Model is not part of JWS-database!')
+            print('Model is not part of JWS-database!')                                                                                             # error 1
         else:
 
             # Open SBML file
@@ -93,7 +91,7 @@ for iMod in range(0, len(list_directory_sedml)):
                 if not os.path.exists('./json_files/' + iModel + '/' + iFile):
                     os.makedirs('./json_files/' + iModel + '/' + iFile)
             except:
-                print('Model ' + iModel + ' extension is missing!')
+                print('Model ' + iModel + ' extension is missing!')                                                                                 # error 2
                 continue
 
             ######### jws simulation
@@ -119,14 +117,14 @@ for iMod in range(0, len(list_directory_sedml)):
                 url = url + iStr
 
             #### Save .json file
-            urllib.request.urlretrieve(url, json_save_path + '/' + iFile + '.json')
+            urllib.request.urlretrieve(url, json_save_path + '/' + iFile + '_JWS_simulation.json')
 
             #### write as .csv file
-            json_2_csv = pd.read_json(json_save_path + '/' + iFile + '.json')
-            json_2_csv.to_csv(json_save_path + '/' + iFile + '.csv', sep='\t', index=False)
+            json_2_csv = pd.read_json(json_save_path + '/' + iFile + '_JWS_simulation.json')
+            json_2_csv.to_csv(json_save_path + '/' + iFile + '_JWS_simulation.csv', sep='\t', index=False)
 
             # open new .csv file
-            tsv_file = pd.read_csv(json_save_path + '/' + iFile + '.csv', sep='\t')
+            tsv_file = pd.read_csv(json_save_path + '/' + iFile + '_JWS_simulation.csv', sep='\t')
 
             # columns names of .tsv file
             column_names = list(tsv_file.columns)
@@ -162,56 +160,6 @@ for iMod in range(0, len(list_directory_sedml)):
                     state_trajectory = state_trajectory.transpose()
                     delete_counter = delete_counter + 1
 
-            # Convert ndarray 'state-trajectory' to data frame
+            # Convert ndarray 'state-trajectory' to data frame + save it
             df_state_trajectory = pd.DataFrame(columns=column_names, data=state_trajectory)
-
-
-            ########## comparison
-            abs_error = 1e-4                                                                                                            # tighter conditions give back 'False' most of the time
-            rel_error = 1e-4
-            amount_col = len(column_names)
-            first_col = column_names[0]
-            amount_row = len(df_state_trajectory[first_col])
-            df_single_error = pd.DataFrame(columns=column_names, data=np.zeros((amount_row, amount_col)))
-            df_trajectory_error = pd.DataFrame(columns=column_names, data=np.zeros((1, amount_col)))
-            df_whole_error = pd.DataFrame(columns=['trajectories_match'], data=np.zeros((1, 1)))
-
-            # single error
-            for iCol in column_names:
-                for iRow in range(0, amount_row):
-                    rel_tol = abs((df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])/df_state_trajectory[iCol][iRow])
-                    abs_tol = abs(df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])
-                    if rel_tol <= rel_error or abs_tol <= abs_error:
-                        df_single_error[iCol][iRow] = True
-                    else:
-                        df_single_error[iCol][iRow] = False
-            # df_error.style.applymap(colour)
-
-            # trajectory error
-            for iCol in column_names:
-                if sum(df_single_error[iCol]) == amount_row:
-                    df_trajectory_error[iCol][0] = True
-                else:
-                    df_trajectory_error[iCol][0] = False
-
-            # whole error
-            error_list = []
-            for iCol in column_names:
-                error_list.append(df_trajectory_error[iCol][0])
-            if sum(error_list) == amount_col:
-                df_whole_error['trajectories_match'][0] = True
-            else:
-                df_whole_error['trajectories_match'][0] = False
-
-            # adjust counter
-            if df_whole_error['trajectories_match'][0] == True:
-                counter = counter +1
-
-            ############ save outcome
-            df_single_error.to_csv(path_or_buf= json_save_path + '/single_error.csv', sep='\t', index=False)
-            df_trajectory_error.to_csv(path_or_buf= json_save_path + '/trajectory_error.csv', sep='\t', index=False)
-            df_whole_error.to_csv(path_or_buf= json_save_path + '/whole_error.csv', sep='\t', index=False)
-
-
-# print number of all models with correct state trajectories
-print(counter)
+            df_state_trajectory.to_csv(json_save_path + '/' + iFile + '_model_simulation.csv', sep='\t')
