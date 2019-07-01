@@ -33,7 +33,7 @@ def simulate(atol, rtol, linSol, solAlg):
     sim_rep = 50
 
     # insert specific model properties as strings, e.g.:
-    base_path_sbml2amici = '../sbml2amici/amici_models'
+    base_path_sbml2amici = '../sbml2amici/correct_amici_models'
     base_path_sedml = './sedml_models'
     tsv_file_path = '../sbml2amici'
 

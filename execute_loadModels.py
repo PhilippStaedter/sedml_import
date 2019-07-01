@@ -12,18 +12,18 @@ import libsedml
 def all_settings(iModel, iFile):
 
     # insert specific model properties as strings, e.g.:
-    base_path_sbml2amici = '../sbml2amici/amici_models'
+    base_path_sbml2amici = '../sbml2amici/correct_amici_models'
     base_path_sedml = './sedml_models'
     BioModels_path = './BioModelsDatabase_models'
 
     # run function
-    model = load_specific_model(iModel, iFile)                                  # call function from 'loadModels.py'
+    model = load_specific_model(iModel, iFile)                                                          # call function from 'loadModels.py'
 
     if os.path.exists(BioModels_path + '/' + iModel):
-        sim_start_time, sim_end_time, sim_num_time_points = timePointsBioModels(iModel)
+        sim_start_time, sim_end_time, sim_num_time_points = timePointsBioModels(iModel)                 # call function from 'setTime_BioModels.py'
     else:
         # change parameter and species according to SEDML file
-        model = changeValues(model, iModel, iFile)                              # call function from 'changeValues.py'
+        model = changeValues(model, iModel, iFile)                                                      # call function from 'changeValues.py'
 
         # open sedml to get tasks + time courses
         sedml_path = './sedml_models/' + iModel + '/' + iModel + '.sedml'

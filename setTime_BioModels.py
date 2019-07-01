@@ -22,14 +22,19 @@ def timePointsBioModels(iModel):
         sim_end_time = 30000
         sim_num_time_points = 50
 
+    elif iModel == 'Froehlich2018':
+        sim_start_time = 0
+        sim_end_time = 100000000
+        sim_num_time_points = 2
+
     elif iModel == 'Holzhutter2004':
         sim_start_time = 0
-        sim_end_time = 0.00001                                              # what is the smallest justifiable unit?
+        sim_end_time = 0.00001
         sim_num_time_points = 50
 
     elif iModel == 'Hui2014':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # what about steady state?
+        sim_end_time = 1000
         sim_num_time_points = 50
 
     elif iModel == 'Lai2014':
@@ -44,8 +49,8 @@ def timePointsBioModels(iModel):
 
     elif iModel == 'Levchenko2000a':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
-        sim_num_time_points = 50
+        sim_end_time = 500
+        sim_num_time_points = 1000
 
     elif iModel == 'Liu2011':
         sim_start_time = 0
@@ -56,7 +61,7 @@ def timePointsBioModels(iModel):
         sim_start_time = 0
         sim_end_time = 5500
         sim_num_time_points = 1000
-#--------------------------------------------------------------------------------# I came until here
+
     elif iModel == 'ODea2007':
         sim_start_time = 0
         sim_end_time = 4000
@@ -64,17 +69,17 @@ def timePointsBioModels(iModel):
 
     elif iModel == 'Ouzounoglou2014':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
+        sim_end_time = 600000
         sim_num_time_points = 50
 
     elif iModel == 'Pathak2013':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
+        sim_end_time = 150
         sim_num_time_points = 50
 
     elif iModel == 'Pathak2013a':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
+        sim_end_time = 120
         sim_num_time_points = 50
 
     elif iModel == 'Pritchard2002':
@@ -82,9 +87,19 @@ def timePointsBioModels(iModel):
         sim_end_time = 1
         sim_num_time_points = 50
 
+    elif iModel == 'Proctor2010a':
+        sim_start_time = 0
+        sim_end_time = 15000000
+        sim_num_time_points = 50
+
     elif iModel == 'Proctor2013a':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
+        sim_end_time = 15000000
+        sim_num_time_points = 50
+
+    elif iModel == 'Qi2013a':
+        sim_start_time = 0
+        sim_end_time = 15000000
         sim_num_time_points = 50
 
     elif iModel == 'Sasagawa2005':
@@ -104,7 +119,7 @@ def timePointsBioModels(iModel):
 
     elif iModel == 'Sivakumar2011c':
         sim_start_time = 0
-        sim_end_time = 0.1                                                  # steady state
+        sim_end_time = 2000
         sim_num_time_points = 50
 
     elif iModel == 'Ueda2001':

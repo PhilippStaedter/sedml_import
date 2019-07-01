@@ -3,7 +3,7 @@
 ######################################################################################
 # very important: linSol, nonLinSolIter, solAlg must be their corresponding integers #
 #                                                                                    #
-# linSol:           Dense == 1  GMRES == 6  BiCGStab == 7   SPTFQMR == 8    KLU 00 9 #
+# linSol:           Dense == 1  GMRES == 6  BiCGStab == 7   SPTFQMR == 8    KLU == 9 #
 # nonLinSolIter:    Functional == 1     Newton-type == 2                             #
 # solAlg:           Adams == 1      BDF == 2                                         #
 #                                                                                    #

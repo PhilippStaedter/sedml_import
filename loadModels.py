@@ -7,7 +7,7 @@ import importlib
 def load_specific_model(model_name, explicit_model):
 
     # path to one specific model
-    path = '../sbml2amici/amici_models'
+    path = '../sbml2amici/correct_amici_models'
     model_output_dir = path + '/' + model_name + '/' + explicit_model
 
     # load specific model
