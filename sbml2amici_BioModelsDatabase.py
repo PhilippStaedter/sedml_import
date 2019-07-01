@@ -37,6 +37,9 @@ list_directory = sorted(list_directory)
 counter = 0
 
 for models in list_directory:
+
+    models = 'Bungay2003'
+
     list_files = os.listdir(base_path + '/' + models + '/sbml_models')
     list_files = sorted(list_files)
 
@@ -101,7 +104,7 @@ for models in list_directory:
             # continue
 
 # print tsv_table + save it
-print(tsv_table)
+# print(tsv_table)
 tsv_table.to_csv(path_or_buf=models_base_path + '/table_BioModelsDatabase.tsv', sep='\t', index=True)
 
 # copy file 'all_logs' in new directory 'sbml2amici'

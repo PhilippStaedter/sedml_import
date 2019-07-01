@@ -8,7 +8,8 @@ import numpy as np
 import logging
 import shutil
 import pandas as pd
-
+import petab
+from transferObservables import *
 
 # create .tsv file
 tsv_table = pd.DataFrame(columns=['id', 'states', 'reactions', 'error_message'])      # index=range() can be left out
@@ -40,6 +41,9 @@ for models in list_directory:
     list_files = os.listdir(base_path + '/' + models + '/sbml_models')
     list_files = sorted(list_files)
 
+# models = 'Froehlich2018'
+# files = 'Froehlich2018.xml'
+
     for files in list_files:
         sbml_file = base_path + '/' + models + '/sbml_models/' + files
         model_name, other_stuff = files.split(".",1)
@@ -65,12 +69,16 @@ for models in list_directory:
             tsv_table.loc[counter].states = num_states
             tsv_table.loc[counter].reactions = num_reactions
 
+            # Get observables
+            # observables = get_observables()                                             # call function from 'transferObservables.py'
+
             # Create SBML importer
             sbml_importer = amici.SbmlImporter(sbml_file)
 
             # SBML2AMICI
             sbml_importer.sbml2amici(model_name,
                         model_output_dir,
+                        #observables=observables,
                         verbose=False)                                                                  # TRUE instead of FALSE?
 
             # Write 'OK' in 'error_message' coloumn
