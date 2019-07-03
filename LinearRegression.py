@@ -11,10 +11,10 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     # take those num_x and num_p where 'error_message' == nan
     x_data_point = []
     y_data_point = []
-    for iCount in range(24, len(tsv_file[x_catagory])):                                     # switch between 0 and 24
-        if type(tsv_file['error_message'][iCount]) != type(x_catagory):
-            x_data_point.append(tsv_file[x_catagory][iCount])
-            y_data_point.append(tsv_file[y_catagory][iCount])
+    for iCount in range(27, len(tsv_file[x_catagory])):                                     # switch between 0 and 27
+        # if type(tsv_file['error_message'][iCount]) != type(x_catagory):
+        x_data_point.append(tsv_file[x_catagory][iCount])
+        y_data_point.append(tsv_file[y_catagory][iCount])
 
     Num_data_points = len(x_data_point)
     x_data_point = np.asarray(x_data_point)
@@ -29,4 +29,27 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     a = numerical_solution[0]
     b = numerical_solution[1]
 
-    return a,b
+################## only for comparison ##################
+    x_data_point_bio = []
+    y_data_point_bio = []
+    for iCount in range(0, 27):  # switch between 0 and 27
+        # if type(tsv_file['error_message'][iCount]) != type(x_catagory):
+        x_data_point_bio.append(tsv_file[x_catagory][iCount])
+        y_data_point_bio.append(tsv_file[y_catagory][iCount])
+
+    Num_data_points_bio = len(x_data_point_bio)
+    x_data_point_bio = np.asarray(x_data_point_bio)
+    y_data_point_bio = np.asarray(y_data_point_bio)
+
+    # solve linear system of equations Ax = b
+    A_bio = np.asarray([[Num_data_points_bio, sum(x_data_point_bio)], [sum(x_data_point_bio), sum(x_data_point_bio * x_data_point_bio)]])
+    c_bio = np.asarray([[sum(y_data_point_bio)], [sum(x_data_point_bio * y_data_point_bio)]])
+    A_inv_bio = np.linalg.inv(A_bio)
+
+    numerical_solution = A_inv_bio.dot(c_bio)
+    d = numerical_solution[0]
+    e = numerical_solution[1]
+
+    ########################################################
+
+    return a,b,d,e
