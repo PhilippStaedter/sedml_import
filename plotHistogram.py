@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-
+import numpy as np
 
 # important paths
 tolerance_path = '../bachelor_thesis/Tolerance'
@@ -28,6 +28,13 @@ for iTolerance in range(0, len(tolerance_files)):
             quotient = next_intern/main_intern
         normed_list.append(quotient)
 
+    # for xlim control
+    if sorted(normed_list, reverse=True)[0] > 10:
+        print('Need bigger xlim: ' + str(sorted(normed_list, reverse=True)[0]) + ' ; ' + main_tsv['id'][iFile] + ' ; ' + tolerance_files[iTolerance])
+
+    # get absolute and relative tolerance number
+    abs_tol, rest = tolerance_files[iTolerance].split('_')
+    rel_tol = rest.split('.')[0]
 
     # plot as histogram
     left = 0.08
@@ -36,47 +43,69 @@ for iTolerance in range(0, len(tolerance_files)):
     height = 0.12
     row_factor = 0.15
     column_factor = 0.13
+    rotation_factor = 70
+
     # create axes
     if iTolerance in range(0,6):
         ax1 = plt.axes([left + iTolerance * row_factor, bottom, width, height])                                                                              # [left, bottom, width, height]
+        ax1.set_ylim([0, 50])
         ax1.get_xaxis().set_visible(False)
+        if iTolerance == 0:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(0.3, 1.1, 'rtol = 1e-' + str(rel_tol), fontsize=14, fontweight='bold', transform=ax1.transAxes)
         if iTolerance in range(1,6):
             ax1.get_yaxis().set_visible(False)
+            ax1.text(0.35, 1.1, 'rtol = 1e-' + str(rel_tol), fontsize=14, fontweight='bold', transform=ax1.transAxes)
     elif iTolerance in range(6,12):
         ax1 = plt.axes([left + (iTolerance -6) * row_factor, bottom - 1 * column_factor ,width, height])
+        ax1.set_ylim([0, 50])
         ax1.get_xaxis().set_visible(False)
+        if iTolerance == 6:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(7,12):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(12,18):
         ax1 = plt.axes([left + (iTolerance - 12) * row_factor, bottom - 2 * column_factor , width, height])
+        ax1.set_ylim([0, 50])
         ax1.get_xaxis().set_visible(False)
+        if iTolerance == 12:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(13,18):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(18, 24):
         ax1 = plt.axes([left + (iTolerance - 18) * row_factor, bottom - 3 * column_factor , width, height])
+        ax1.set_ylim([0, 50])
         ax1.get_xaxis().set_visible(False)
+        if iTolerance == 18:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(19,24):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(24,30):
         ax1 = plt.axes([left + (iTolerance - 24) * row_factor, bottom - 4 * column_factor , width, height])
+        ax1.set_ylim([0, 50])
         ax1.get_xaxis().set_visible(False)
+        if iTolerance == 24:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(25,30):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(30,36):
         ax1 = plt.axes([left + (iTolerance - 30) * row_factor, bottom- 5 * column_factor , width, height])
+        ax1.set_ylim([0, 50])
+        if iTolerance == 30:
+            ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(31,36):
             ax1.get_yaxis().set_visible(False)
 
-    plott = ax1.hist(x=normed_list, range=[0, 10], bins=200) #, log=True)
+    plot_histogram = ax1.hist(x=normed_list, range=[0, 10], bins=200) #, log=True)
+    ax1.plot(np.percentile(normed_list, [20,50,80]))
 
-    # show figure
-    #plt.show()
+# set global labels
+plt.text(-3, -0.5, 'Quotient', fontsize=24, transform=ax1.transAxes)
+plt.text(-6.3, 4, 'Amount of models', fontsize=24, transform=ax1.transAxes, rotation=90)
+plt.text(-5.2, 7, 'Simulation time distribution of models for different tolerance combinations', fontsize=24, transform=ax1.transAxes)  # -60 , 350
 
-axes = plt.gca()
-axes.set_ylim([0, 50])
-ax1.set_xlabel('Quotient')
-ax1.set_ylabel('Amount of models')
-ax1.set_title('Simulation time distribution of models for different tolerance combinations')
+# adds major gridlines
+# plt.grid(color='grey', linestyle='-', linewidth=0.15, alpha=0.5)
 
 # fig, ax2 = plt.subplot(6, 6, iTolerance + 1)
 #plt.xlim((None, 250))  # Froehlich2018: 1396
@@ -86,7 +115,7 @@ ax1.set_title('Simulation time distribution of models for different tolerance co
 
 
 # better layout
-# plt.tight_layout()
+plt.tight_layout()
 
 # save figure
 # plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Tolerance_study.png')
