@@ -75,12 +75,15 @@ ax.set_xlabel('All tolerance combinations', fontsize=24)
 ax.set_ylabel('Quotient', fontsize=24)
 plt.setp(xtickNames, rotation=45, fontsize=12, fontweight='bold')
 
+# add legend
+# plt.text(0.01, 0.9, bp['medians'][0] + ': ' + 'median', color='black', weight='roman', size='x-small', fontsize=24, transform=ax.transAxes)
+# plt.legend((bp['medians'], bp['fliers']), ('median', 'outliers'), loc=2, frameon=False)
 
 ## better layout
 plt.tight_layout()
 
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Tolerance_study.png')
+# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Tolerance_Boxplot.png')
 
 # show figure
 plt.show()

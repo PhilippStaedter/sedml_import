@@ -48,7 +48,7 @@ for iTolerance in range(0, len(tolerance_files)):
     # create axes
     if iTolerance in range(0,6):
         ax1 = plt.axes([left + iTolerance * row_factor, bottom, width, height])                                                                              # [left, bottom, width, height]
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         ax1.get_xaxis().set_visible(False)
         if iTolerance == 0:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
@@ -58,7 +58,7 @@ for iTolerance in range(0, len(tolerance_files)):
             ax1.text(0.35, 1.1, 'rtol = 1e-' + str(rel_tol), fontsize=14, fontweight='bold', transform=ax1.transAxes)
     elif iTolerance in range(6,12):
         ax1 = plt.axes([left + (iTolerance -6) * row_factor, bottom - 1 * column_factor ,width, height])
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         ax1.get_xaxis().set_visible(False)
         if iTolerance == 6:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
@@ -66,7 +66,7 @@ for iTolerance in range(0, len(tolerance_files)):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(12,18):
         ax1 = plt.axes([left + (iTolerance - 12) * row_factor, bottom - 2 * column_factor , width, height])
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         ax1.get_xaxis().set_visible(False)
         if iTolerance == 12:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
@@ -74,7 +74,7 @@ for iTolerance in range(0, len(tolerance_files)):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(18, 24):
         ax1 = plt.axes([left + (iTolerance - 18) * row_factor, bottom - 3 * column_factor , width, height])
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         ax1.get_xaxis().set_visible(False)
         if iTolerance == 18:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
@@ -82,7 +82,7 @@ for iTolerance in range(0, len(tolerance_files)):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(24,30):
         ax1 = plt.axes([left + (iTolerance - 24) * row_factor, bottom - 4 * column_factor , width, height])
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         ax1.get_xaxis().set_visible(False)
         if iTolerance == 24:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
@@ -90,14 +90,13 @@ for iTolerance in range(0, len(tolerance_files)):
             ax1.get_yaxis().set_visible(False)
     elif iTolerance in range(30,36):
         ax1 = plt.axes([left + (iTolerance - 30) * row_factor, bottom- 5 * column_factor , width, height])
-        ax1.set_ylim([0, 50])
+        ax1.set_ylim([0, 40])
         if iTolerance == 30:
             ax1.text(-0.35, 0.85, 'atol = 1e-' + str(abs_tol), fontsize=12, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(31,36):
             ax1.get_yaxis().set_visible(False)
 
     plot_histogram = ax1.hist(x=normed_list, range=[0, 10], bins=200) #, log=True)
-    ax1.plot(np.percentile(normed_list, [20,50,80]))
 
 # set global labels
 plt.text(-3, -0.5, 'Quotient', fontsize=24, transform=ax1.transAxes)
@@ -118,7 +117,7 @@ plt.text(-5.2, 7, 'Simulation time distribution of models for different toleranc
 plt.tight_layout()
 
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Tolerance_study.png')
+# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Tolerance_Histogram.png')
 
 # show figure
 plt.show()
