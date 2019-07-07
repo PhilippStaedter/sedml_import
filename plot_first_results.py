@@ -49,7 +49,7 @@ plt.ylabel('Amount of models')
 plt.tight_layout()
 
 # save figure
-plt.savefig('../sbml2amici/Figures/zzz_Figures_new/stat_reac_par.png')
+# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/stat_reac_par.png')
 
 # show figure
 plt.show()

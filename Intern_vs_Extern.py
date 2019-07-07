@@ -96,7 +96,7 @@ plt.title('Intern vs Extern Time-derivation')
 plt.tight_layout()
 
 # save figure
-plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Intern_vs_Extern.png')
+# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Intern_vs_Extern.png')
 
 # show figure
 plt.show()
