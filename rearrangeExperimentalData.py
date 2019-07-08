@@ -8,18 +8,12 @@ import libsbml
 
 
 
-
-# build new data frame
-df = pd.DataFrame(columns=['observableId', 'preequilibrationConditionId', 'simulationConditionId',
-                           'measurment', 'time', 'observableParameters', 'noiseParameters',
-                           'observableTransformation', 'noiseDistribution'], data=[])
-
 # get all experimental data files
 list_directory_sedml = sorted(os.listdir('./sedml_models'))
 
-for iModel in list_directory_sedml:
+for iModel in list_directory_sedml:                                                                                     # each sedmml model
 
-    iModel = 'bachmann2011'
+    iModel = 'stafford2000_fig2'
 
     # create new folder for all new dataframes
     if not os.path.exists('./sedml_models/' + iModel + '/experimental_data_rearranged'):
@@ -27,24 +21,69 @@ for iModel in list_directory_sedml:
 
     if os.path.exists('./sedml_models/' + iModel + '/experimental_data'):
         list_directory_expdata = sorted(os.listdir('./sedml_models/' + iModel + '/experimental_data'))
-        del list_directory_expdata[0]
+        # del list_directory_expdata[0]
 
-        for iData in list_directory_expdata:
+        for iData in list_directory_expdata:                                                                            # each exp_data_frame
+
+            # build/reset new data frame
+            df = pd.DataFrame(columns=['observableId', 'preequilibrationConditionId', 'simulationConditionId',
+                                       'measurment', 'time', 'observableParameters', 'noiseParameters',
+                                       'observableTransformation', 'noiseDistribution'], data=[])
 
             # read .xls file
             xls_file_path = './sedml_models/' + iModel + '/experimental_data/'+ iData
             expdata_name, rest = iData.split('.',1)
-            expdata_file = pd.read_excel(xls_file_path)
 
-            # time column
-            time_data = expdata_file['time']
-            del time_data[0]
-            time_data.reset_index(inplace=True, drop=True)
+            # count number of sheets in excel file
+            xls_file = pd.ExcelFile(xls_file_path)
+            if len(xls_file.sheet_names) > 1:
+                expdata_file = pd.read_excel(xls_file, 'Data')
 
-            # get data frames as functions
-            columns = list(expdata_file.columns)
+                # time column
+                try:
+                    time_data = expdata_file['time']
+                except:
+                    all_columns = expdata_file.columns
+                    smth_with_time = all_columns[0]
+                    time_data = expdata_file[smth_with_time]
 
-            for iDataFrame in range(0, len(columns) - 1):
+                if str(time_data[0]).isdigit() == False:
+                    del time_data[0]
+                    time_data.reset_index(inplace=True, drop=True)
+
+                # get column names for data frame
+                counter = 1
+                columns = list(expdata_file.columns)
+                for iCol in columns:
+                    try:
+                        name = iCol.split('.')
+                        if len(name) == 2:
+                            if name[0] == 'time':
+                                counter = counter + 1
+                    except:
+                        counter = 1
+
+
+            else:
+                expdata_file = pd.read_excel(xls_file_path)
+
+                # time column
+                try:
+                    time_data = expdata_file['time']
+                except:
+                    all_columns = expdata_file.columns
+                    smth_with_time = all_columns[0]
+                    time_data = expdata_file[smth_with_time]
+
+                if str(time_data[0]).isdigit() == False:
+                    del time_data[0]
+                    time_data.reset_index(inplace=True, drop=True)
+
+                # get column names for data frame
+                counter = 1
+                columns = list(expdata_file.columns)
+
+            for iDataFrame in range(0, len(columns) - counter):                                                               # each data frame to merge together
 
                 # build new data frame
                 df_new = pd.DataFrame(columns=['observableId', 'preequilibrationConditionId', 'simulationConditionId',
@@ -55,13 +94,14 @@ for iModel in list_directory_sedml:
                 ###### species
                 new_species = []
                 for iNumber in range(0, len(time_data)):
-                    new_species.append(columns[iDataFrame + 1])
+                    new_species.append(columns[iDataFrame + counter])
                 new_species = pd.Series(new_species)
 
-                ###### measurment
-                new_measurment = expdata_file[columns[iDataFrame + 1]]
-                del new_measurment[0]
-                new_measurment.reset_index(inplace=True, drop=True)                                                     # need reindexing from e.g. [1:14] to [0:13]
+                ###### measurment + reindex from e.g. [1:14] to [0:13]
+                new_measurment = expdata_file[columns[iDataFrame + counter]]
+                if str(new_measurment[0]).isdigit() == False:
+                    del new_measurment[0]
+                    new_measurment.reset_index(inplace=True, drop=True)
 
                 ###### observable parameters
                 new_observables = []
@@ -72,13 +112,24 @@ for iModel in list_directory_sedml:
                 num_task = sedml_file.getNumTasks()
                 num_obs = sedml_file.getNumDataGenerators()
 
-                for iTask in range(0, num_task):
-                    task_id = sedml_file.getTask(iTask).getId()
+                #for iTask in range(0, num_task):                                                                        # each task with task_referance [no tasks needed]
+                    #task_id = sedml_file.getTask(iTask).getId()
 
-                    # create list with all parameter-ids to check for uniqueness
-                    almost_all_par_id = []
+                # create list with all parameter-ids to check for uniqueness
+                almost_all_par_id = []
 
-                    for iObservable in range(0, num_obs):
+                # check if parameter in data generators even exist + if not, write pd.Series(NaN)
+                all_observables = []
+                for iObservable in range(0, num_obs):
+                    num_par_all = sedml_file.getDataGenerator(iObservable).getNumParameters()
+                    all_observables.append(num_par_all)
+
+                if sum(all_observables) == 0:
+                    for iNan in range(0, len(new_species)):
+                        new_observables.append('NaN')
+                else:
+
+                    for iObservable in range(0, num_obs):                                                               # each observable from data generator
                         # get important formula
                         obs_Formula = libsedml.formulaToString(sedml_file.getDataGenerator(iObservable).getMath())
                         obs_Id = sedml_file.getDataGenerator(iObservable).getId()
@@ -89,17 +140,26 @@ for iModel in list_directory_sedml:
                         list_par_id = []
                         list_par_value = []
                         num_par = sedml_file.getDataGenerator(iObservable).getNumParameters()
-                        if num_par == 0:
-                            print(obs_Id + ' has no parameters as observables!')
+
+                        # get observable name
+                        data_generator_name = sedml_file.getDataGenerator(iObservable).getName()
+
+                        if num_par == 0:                                                                                # parameter from each observable
+                            print(iModel + '_' + iData + '_' + obs_Id + ' has no parameters as observables!')
+                            new_observables.append(pd.Series('NaN'))
+                            #if data_generator_name == new_species[0]:                                                   ########## error: some sedml observables don't have a name
+                                #for iNumber in range(0, len(time_data)):
+                                    #new_observables.append(pd.Series('NaN'))
+                                #new_observables = pd.Series(new_observables)
+
                         else:
-                            data_generator_name = sedml_file.getDataGenerator(iObservable).getName()
-                            for iCount in range(0, num_par):
+                            for iCount in range(0, num_par):                                                            # add parameters + values
                                 list_par_id.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getId())
                                 list_par_value.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getValue())
                                 almost_all_par_id.append(sedml_file.getDataGenerator(iObservable).getParameter(iCount).getId())
 
                                 # check for uniqueness of parameter-ids
-                                for iNum in range(0, len(almost_all_par_id)):
+                                for iNum in range(0, len(almost_all_par_id)):                                           # unique?
                                     all_par_id = almost_all_par_id[iNum]
                                     almost_all_par_id.remove(almost_all_par_id[len(almost_all_par_id) - 1])
                                     last_element = list(all_par_id[len(all_par_id) - 1])
@@ -109,7 +169,7 @@ for iModel in list_directory_sedml:
                                         # sys.exit(1)
 
                             # get correct observables
-                            if data_generator_name == new_species[0]:
+                            if data_generator_name == new_species[0]:                                                   # get list of len(measurment) for all parameters + values of one observable
                                 correct_string = list_par_id[0]
                                 del list_par_id[0]
                                 for iObs in list_par_id:
@@ -124,14 +184,22 @@ for iModel in list_directory_sedml:
                 df_new['observableId'] = new_species
                 df_new['measurment'] = new_measurment
                 df_new['time'] = time_data
-                df_new['observableParameters'] = new_observables
 
+                try:                                                                                                    # short fix
+                    df_new['observableParameters'] = new_observables
+                except:
+                    for iNumber in range(0, len(time_data)):
+                        new_observables.append('NaN')
+                    new_observables = pd.Series(new_observables)
+                    df_new['observableParameters'] = new_observables
 
                 # concatenate data frames
                 df = df.append(df_new, ignore_index=True)
 
             #### save data frame as .tsv
-            df.to_csv('./sedml_models/' + iModel + '/experimental_data_rearranged/' + iModel + '.tsv', sep='\t', index=False)
+            df.to_csv('./sedml_models/' + iModel + '/experimental_data_rearranged/' + iModel + '_' + iData + '.tsv', sep='\t', index=False)
 
     else:
         print(iModel + ' has no experimental data file!')
+
+    just_for_debugging_purposes = 4
