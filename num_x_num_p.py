@@ -35,16 +35,16 @@ not_bio = plt.scatter(num_x, num_p, alpha=0.8, c='blue', edgecolors='none', s=30
 bio = plt.scatter(num_x_bio, num_p_bio, alpha=0.8, c='red', edgecolors='none', s=30)
 
 # for section 1 figure
-#plt.xlim(-5, 250)                                                                   # switch between section and whole figure
-#plt.ylim(-10, 450)
+plt.xlim(-5, 250)                                                                   # switch between section and whole figure
+plt.ylim(-10, 450)
 
 # for section 2 figure
-#plt.xlim(-5, 80)
-#plt.ylim(-10, 200)
+plt.xlim(-5, 80)
+plt.ylim(-10, 200)
 
 # for section 3 figure
-#plt.xlim(-5, 20)
-#plt.ylim(-10, 40)
+plt.xlim(-5, 20)
+plt.ylim(-10, 40)
 
 # plt.xscale("log")
 # plt.yscale("log")
@@ -89,8 +89,12 @@ plt.legend((not_bio, bio, reg1[0], reg2[0]), ('all models from JWS only', 'all m
 # better layout
 plt.tight_layout()
 
+# change plotting size
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10.5)
+
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Num_x_vs_Num_p_section_2_comparison_regression.png')
+plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Num_x_vs_Num_p_section_3_with_BioModels_regression.pdf')
 
 # show figure
 plt.show()

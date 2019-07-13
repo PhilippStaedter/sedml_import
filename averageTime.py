@@ -39,7 +39,7 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].t_intern_ms = ''
                     new_df.loc[iFile - repetition].t_extern_ms = ''
                     new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = ''
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
             else:
@@ -69,7 +69,7 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].t_intern_ms = ''
                     new_df.loc[iFile - repetition].t_extern_ms = ''
                     new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = ''
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
 
@@ -101,7 +101,7 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].t_intern_ms = ''
                     new_df.loc[iFile - repetition].t_extern_ms = ''
                     new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = ''
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
             else:

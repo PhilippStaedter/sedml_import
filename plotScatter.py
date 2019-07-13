@@ -1,9 +1,10 @@
-# script to plot a scatter plot for study 3
+# script to plot a scatter plot for study 2
 
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
 from LinearRegression import *
+from averageTime import *
 
 # important paths
 tolerance_path = '../bachelor_thesis/LinearSolver'
@@ -33,7 +34,7 @@ all_intern_columns = [pd.DataFrame(columns=[]),
 
 column_names = []
 
-# open all .tsv linera solver files + save rigth column in data frame
+# open all .tsv linear solver files + save right column in data frame
 linSol_files = sorted(os.listdir(tolerance_path))
 for iLinSol in range(0, len(linSol_files)):                                                                             # each .tsv file
     next_tsv = pd.read_csv(tolerance_path + '/' + linSol_files[iLinSol], sep='\t')
@@ -44,6 +45,11 @@ for iLinSol in range(0, len(linSol_files)):                                     
     # reset after each iteration
     next_time_value = []
     num_x = []
+
+############## calculate average values of certain models ####################
+    next_tsv = averaging(next_tsv)
+
+##############################################################################
 
     for iFile in range(0, len(next_tsv['id'])):                                                                         # each file
         if next_tsv['t_intern_ms'][iFile] != 0:
@@ -117,10 +123,10 @@ for iCounter in range(0, int(len(linSol_files)/4)):
     fourth_data = all_intern_columns[4*iCounter + 3][column_names[4*iCounter + 3]]
 
     # change .tsv-id form e.g. 1_06_10.tsv to 06_10
-    linSol4legend_1 = column_names[iCounter].split('_',1)[1]
-    linSol4legend_2 = column_names[iCounter + 1].split('_',1)[1]
-    linSol4legend_3 = column_names[iCounter + 2].split('_',1)[1]
-    linSol4legend_4 = column_names[iCounter + 3].split('_',1)[1]
+    linSol4legend_1 = column_names[4*iCounter].split('_',1)[1]
+    linSol4legend_2 = column_names[4*iCounter + 1].split('_',1)[1]
+    linSol4legend_3 = column_names[4*iCounter + 2].split('_',1)[1]
+    linSol4legend_4 = column_names[4*iCounter + 3].split('_',1)[1]
 
     # scatter plot
     ax1.set_xlim([0.5, 1500])
@@ -134,10 +140,10 @@ for iCounter in range(0, int(len(linSol_files)/4)):
 
     # plot two legends
     leg1 = ax1.legend(loc=2)
-    leg2 = ax1.legend([str(round(len(all_intern_columns[iCounter]['state_variables'])*100/210,2)) + ' %',
-                       str(round(len(all_intern_columns[iCounter + 1]['state_variables'])*100/210,2)) + ' %',
-                       str(round(len(all_intern_columns[iCounter + 2]['state_variables'])*100/210,2)) + ' %',
-                       str(round(len(all_intern_columns[iCounter + 3]['state_variables'])*100/210,2)) + ' %'], loc=4)
+    leg2 = ax1.legend([str(round(len(all_intern_columns[iCounter]['state_variables'])*100/166,2)) + ' %',
+                       str(round(len(all_intern_columns[iCounter + 1]['state_variables'])*100/166,2)) + ' %',
+                       str(round(len(all_intern_columns[iCounter + 2]['state_variables'])*100/166,2)) + ' %',
+                       str(round(len(all_intern_columns[iCounter + 3]['state_variables'])*100/166,2)) + ' %'], loc=4)
     ax1.add_artist(leg1)
 
 # set global labels
@@ -146,8 +152,12 @@ plt.text(0.1, 4, 'Simulation time distribution of models for different linear so
 # better layout
 plt.tight_layout()
 
+# change plotting size
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10.5)
+
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/LinSol_Scatter_1.png')
+#plt.savefig('../sbml2amici/Figures/zzz_Figures_new/LinSol_Scatter.pdf')
 
 # show figure
 plt.show()

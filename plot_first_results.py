@@ -1,6 +1,7 @@
 # plot a bar plot for num_states and num_species
 import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib as mplt
 
 # open two .tsv file
 path = '../sbml2amici/stat_reac_par.tsv'
@@ -20,6 +21,7 @@ for iLine in range(0, len(tsv_file['id'])):
 data_parameters_ok = []
 for iLine in range(0, len(tsv_file['id'])):
     data_parameters_ok.append(tsv_file['parameters'][iLine])
+
 
 # histogram of states
 plt.subplot(3,1,1)
@@ -48,8 +50,12 @@ plt.ylabel('Amount of models')
 # better layout
 plt.tight_layout()
 
+# change plotting size
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10.5)
+
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/stat_reac_par.png')
+#plt.savefig('../sbml2amici/Figures/zzz_Figures_new/stat_reac_par.pdf')
 
 # show figure
 plt.show()

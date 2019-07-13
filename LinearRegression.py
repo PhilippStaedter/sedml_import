@@ -50,6 +50,6 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     d = numerical_solution[0]
     e = numerical_solution[1]
 
-    ########################################################
+    ######################################################
 
     return a,b,d,e

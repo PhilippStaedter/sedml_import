@@ -2,10 +2,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from averageTime import *
 
 # open .tsv file
 path = '../bachelor_thesis/Tolerance/16_08.tsv'
 tsv_file = pd.read_csv(path, sep='\t')
+
+# get new .tsv file
+tsv_file = averaging(tsv_file)
 
 # take intern_time
 intern_time = []
@@ -22,10 +26,11 @@ state_variable = []
 for iLine in range(len(tsv_file['id']) - 1):
     state_variable.append(tsv_file['state_variables'][iLine])
 
-# take number of parameters
+# take number of reactions
 parameters = []
 for iLine in range(len(tsv_file['id']) - 1):
     parameters.append(tsv_file['parameters'][iLine])
+
 
 ##### several plots
 plt.subplot(2,2,1)
@@ -95,8 +100,12 @@ plt.title('Intern vs Extern Time-derivation')
 # better layout
 plt.tight_layout()
 
+# change plotting size
+fig = plt.gcf()
+fig.set_size_inches(18.5, 10.5)
+
 # save figure
-# plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Intern_vs_Extern.png')
+#plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Intern_vs_Extern.pdf')
 
 # show figure
 plt.show()

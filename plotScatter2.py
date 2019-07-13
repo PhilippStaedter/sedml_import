@@ -150,7 +150,7 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 # save figure
-plt.savefig('../sbml2amici/Figures/zzz_Figures_new/SolAlg_Scatter_BDF.pdf')
+#plt.savefig('../sbml2amici/Figures/zzz_Figures_new/SolAlg_Scatter_BDF.pdf')
 
 # show figure
 plt.show()
