@@ -73,10 +73,6 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
 
-                    # jump over one file
-                    #for counter in range(0, 1):
-                     #   iFile = next(iter_object)
-                     #   repetition = repetition + 1
             else:
                 new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                 new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
@@ -189,5 +185,9 @@ def averaging(next_tsv):
             divided_numbers_1.pop(0)
             divided_numbers_2.pop(0)
 
+    # change id for uniquenes of kolodkin
+    for iMod in range(0, len(new_df['id'])):
+        if new_df['id'][iMod] == '{kolodkin2010_figure2b}':
+            new_df['id'][iMod] = '{kolodkin2010_figure2b}' + '_' + str(iMod)
 
     return(new_df)
