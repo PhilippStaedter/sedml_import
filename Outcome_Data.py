@@ -19,7 +19,6 @@ first_tsv = pd.read_csv(first_tsv_path, sep='\t')
 first_tsv = averaging(first_tsv)
 model_names = first_tsv['id']
 
-
 ######### create data frame for all models #############
 all_models = []
 for iCount in range(0, len(model_names)):
