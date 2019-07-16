@@ -33,11 +33,11 @@ for iFile in range(0, len(solAlg_files)):
     all_tsv_files.append(next_file)
 
 
-################ get test data #### 160 * [0,1]^32 ############
+################ get test data #### 166 * [0,1]^32 ############
 for iModel in range(0, len(model_names)):
 
     t_intern = []
-    # open all .tsv tolernace files
+    # open all .tsv tolerance files
     solAlg_files = sorted(os.listdir(total_models_path))
     for iFile in range(0, len(solAlg_files)):
 
