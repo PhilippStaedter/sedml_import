@@ -18,7 +18,7 @@ def plotObservables(iModel,iFile):
 
 
     # call function 'getObservables()'
-    #get_observables(iModel,iFile)
+    getAllObservables(iModel,iFile)
 
     # create folder for models with observables
     if not os.path.exists('../sbml2amici/amici_models_with_observables'):

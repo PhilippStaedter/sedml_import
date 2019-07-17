@@ -14,7 +14,7 @@ sedml_path = './sedml_models'
 #sedml_models = sorted(os.listdir(sedml_path))
 #for iModel in sedml_models:
 
-for iModel in ['adlung2017_fig2bto2e']:
+for iModel in ['bachmann2011']:
 
     # new folder for all figures
     if not os.path.exists(sedml_path + '/' + iModel + '/figures_observables'):
