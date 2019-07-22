@@ -4,6 +4,8 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 from setObservables import *
+import libsbml
+import libsedml
 
 
 # important paths
@@ -14,13 +16,13 @@ sedml_path = './sedml_models'
 #sedml_models = sorted(os.listdir(sedml_path))
 #for iModel in sedml_models:
 
-for iModel in ['adlung2017_fig2bto2e']: #['adlung2017_fig2bto2e']:
-
-    # new folder for all figures
-    if not os.path.exists(sedml_path + '/' + iModel + '/figures_observables'):
-        os.makedirs(sedml_path + '/' + iModel + '/figures_observables')
+for iModel in ['kouril2017_figs3b']: #['perelson1996_fig1b_top']:
 
     if os.path.exists(sedml_path + '/' + iModel + '/experimental_data_rearranged'):
+
+        # new folder for all figures
+        if not os.path.exists(sedml_path + '/' + iModel + '/figures_observables'):
+            os.makedirs(sedml_path + '/' + iModel + '/figures_observables')
 
         sbml_models = sorted(os.listdir(sedml_path + '/' + iModel + '/sbml_models'))
         for iFile in sbml_models:
@@ -41,6 +43,14 @@ for iModel in ['adlung2017_fig2bto2e']: #['adlung2017_fig2bto2e']:
                 # extend folder structure
                 if not os.path.exists(sedml_path + '/' + iModel + '/figures_observables/' + iFile):
                     os.makedirs(sedml_path + '/' + iModel + '/figures_observables/' + iFile)
+
+                # open sbml file
+                sbml_file = libsbml.readSBML(sedml_path + '/' + iModel + '/sbml_models/' + iFile + '.sbml')
+                species_Id = []
+                num_spec = sbml_file.getModel().getNumSpecies()
+                for iSpec in range(0, num_spec):
+                    species_Id.append(sbml_file.getModel().getSpecies(iSpec).getId())
+                del species_Id[0]
 
                 # get time and measurment column
                 species = list(expdata_file.columns)
@@ -91,12 +101,13 @@ for iModel in ['adlung2017_fig2bto2e']: #['adlung2017_fig2bto2e']:
                     #if iObs == 4 or iObs == 5:
                       #  ax = plt.axes([left + (iObs - 4) * row_counter, bottom - 2 * bottom_counter, width, height])
                     amici.plotting.plotObservableTrajectories(sim_data, observable_indices=range(0,len(obs_data))[iObs:iObs+1], ax=ax)
-                    ax.scatter(df[iObs]['time'], df[iObs]['data'], c='red')
-                    ax.set_title(species[iObs])
+                    try:
+                        ax.scatter(df[iObs]['time'], df[iObs]['data'], c='red')
+                    except:
+                        print('Not more experimental data available!')
+                    ax.set_title(species_Id[iObs])
                     #ax.set_xlim([-0.5, 240])
                     #ax.set_ylim([-0.01, 1.1])
                     plt.tight_layout()
-                    plt.savefig(sedml_path + '/' + iModel + '/figures_observables/' + iFile + '/' + iFile + '_' + iObs)
+                    plt.savefig(sedml_path + '/' + iModel + '/figures_observables/' + iFile + '/' + iFile + '_' + str(iObs))
                     plt.show()
-
-debug = 4

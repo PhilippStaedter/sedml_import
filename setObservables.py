@@ -2,6 +2,7 @@
 
 from transferObservables import *
 import libsbml
+import libsedml
 import sys
 import os
 import importlib
