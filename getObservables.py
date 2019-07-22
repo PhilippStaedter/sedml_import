@@ -57,12 +57,38 @@ def getAllObservables(iSEDML, core_iSbml):
             # all_par_id = []
             almost_all_par_id = []
 
+            # get all species-Ids
+            num_spec = len(model.getListOfSpecies())
+            list_spec = []
+            for iSpec in range(0, num_spec):
+                spec_Id = model.getSpecies(iSpec).getId()
+                list_spec.append(spec_Id)
+
+            # get all parameter-Ids
+            num_par_old = len(model.getListOfParameters())
+            list_par_old = []
+            for iPar in range(0, num_par_old):
+                par_Id = model.getParameter(iPar).getId()
+                list_par_old.append(par_Id)
+
             for iObservable in range(0, num_obs):
                 # get important formula
                 obs_Formula = libsedml.formulaToString(sedml_file.getDataGenerator(iObservable).getMath())
                 obs_Id = sedml_file.getDataGenerator(iObservable).getId()
                 # SBML_model_Id,Observable_Id = obs_Id.split('_',1)
                 new_obs_Id = 'observable_' + obs_Id
+                # get variables
+                num_var = sedml_file.getDataGenerator(iObservable).getNumVariables()
+                list_var_id = []
+                for iVar in range(0,num_var):
+                    var_Id = sedml_file.getDataGenerator(iObservable).getVariable(iVar).getId()
+                    # only if it was not defined earlier
+                    if not var_Id in list_spec:
+                        if not var_Id in list_par_old:
+                            if not var_Id in list_var_id:
+                                list_var_id.append(var_Id)
+                # get right compartment
+                compartment = model.getCompartment(0).getId()
                 # get list of parameters
                 list_par_id = []
                 list_par_value = []
@@ -114,4 +140,13 @@ def getAllObservables(iSEDML, core_iSbml):
                             parameter.setId(iPar_id)
                             parameter.setConstant(False)
                             parameter.setValue(iPar_value)
+                        # create species to formula
+                        for iCount in range(0, len(list_var_id)):
+                            iVar_id = list_var_id[iCount]
+                            variable = model.createSpecies()
+                            variable.setId(iVar_id)
+                            variable.setCompartment(compartment)
+                            variable.setHasOnlySubstanceUnits(False)
+                            variable.setBoundaryCondition(False)
+                            variable.setConstant(False)
         libsbml.writeSBMLToFile(sbml_file, new_sbml_path)

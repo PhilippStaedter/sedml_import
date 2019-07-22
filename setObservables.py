@@ -18,7 +18,7 @@ def plotObservables(iModel,iFile):
 
 
     # call function 'getObservables()'
-    getAllObservables(iModel,iFile)
+    #getAllObservables(iModel,iFile)
 
     # create folder for models with observables
     if not os.path.exists('../sbml2amici/amici_models_with_observables'):
@@ -54,7 +54,7 @@ def plotObservables(iModel,iFile):
         observables = get_observables(model, False)
 
         # sbml2amici import
-        sbml_importer = amici.SbmlImporter('./sedml_models/adlung2017_fig2bto2e/sbml_models_with_observables/model0_adlung1_with_observabels.xml')
+        sbml_importer = amici.SbmlImporter('./sedml_models/' + iModel + '/sbml_models_with_observables/' + iFile + '_with_observabels.xml')
         sbml_importer.sbml2amici(iModel, model_output_dir, observables=observables, verbose=False)
 
         # load specific model

@@ -14,7 +14,7 @@ sedml_path = './sedml_models'
 #sedml_models = sorted(os.listdir(sedml_path))
 #for iModel in sedml_models:
 
-for iModel in ['bachmann2011']:
+for iModel in ['adlung2017_fig2bto2e']: #['adlung2017_fig2bto2e']:
 
     # new folder for all figures
     if not os.path.exists(sedml_path + '/' + iModel + '/figures_observables'):
@@ -96,7 +96,7 @@ for iModel in ['bachmann2011']:
                     #ax.set_xlim([-0.5, 240])
                     #ax.set_ylim([-0.01, 1.1])
                     plt.tight_layout()
-                    plt.savefig(sedml_path + '/' + iModel + '/figures_observables/' + iFile + '/' + iFile)
-                    #plt.show()
+                    plt.savefig(sedml_path + '/' + iModel + '/figures_observables/' + iFile + '/' + iFile + '_' + iObs)
+                    plt.show()
 
 debug = 4
