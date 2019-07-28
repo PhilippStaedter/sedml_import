@@ -17,6 +17,7 @@ sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
 # open SBML file
 sbml_file = libsbml.readSBML(sbml_path)
 
+###### change all Ids in the formula to the unique MetaIds
 # get number of tasks, observables and variables
 num_comp = sbml_file.getModel().getNumCompartments()
 num_spec = sbml_file.getModel().getNumSpecies()
@@ -57,7 +58,33 @@ for iSorted in range(0, len(all_sorted)):
             if all_comp[iComp] == all_sorted[iSorted]:
                 all_metaid.append(sbml_file.getModel().getCompartment(iComp).getMetaId())
 
-###### get kinetic law
+# change Ids again!!! for uniqueness
+for iMeta in range(0, len(all_metaid)):
+    if len(all_metaid[iMeta].split('_')[1]) == 1:
+        all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_A_' + all_metaid[iMeta].split('_')[1]
+    elif len(all_metaid[iMeta].split('_')[1]) == 2:
+        all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_B_' + all_metaid[iMeta].split('_')[1]
+    elif len(all_metaid[iMeta].split('_')[1]) == 3:
+        all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_C_' + all_metaid[iMeta].split('_')[1]
+
+
+# get only the species MetaIds()
+all_spec_metaids = []
+for iMeta in range(0, num_spec):
+    all_spec_metaids.append(sbml_file.getModel().getSpecies(iMeta).getMetaId())
+
+# change species Ids as previously shown
+for iSpecMeta in range(0, len(all_spec_metaids)):
+    if len(all_spec_metaids[iSpecMeta].split('_')[1]) == 1:
+        all_spec_metaids[iSpecMeta] = all_spec_metaids[iSpecMeta].split('_')[0] + '_A_' + all_spec_metaids[iSpecMeta].split('_')[1]
+    elif len(all_spec_metaids[iSpecMeta].split('_')[1]) == 2:
+        all_spec_metaids[iSpecMeta] = all_spec_metaids[iSpecMeta].split('_')[0] + '_B_' + all_spec_metaids[iSpecMeta].split('_')[1]
+    elif len(all_spec_metaids[iSpecMeta].split('_')[1]) == 3:
+        all_spec_metaids[iSpecMeta] = all_spec_metaids[iSpecMeta].split('_')[0] + '_C_' + all_spec_metaids[iSpecMeta].split('_')[1]
+
+
+###### get Kinetic Law
+all_formulas_kinetics = [[] for i in range(0,num_reac)]
 for iReact in range(0, num_reac):
 
     # get MathMl formula as string
@@ -73,36 +100,36 @@ for iReact in range(0, num_reac):
 
     # assign number of 0 - 8 ///   assign True(1) or False(0)
     kinetic_list = []
-    for iSpec in range(0, len(all_spec)):
+    for iMetaId in range(0, len(all_spec_metaids)):
         spec_list = []
         for iCat in range(0, len(list_of_categories)):
-            if not all_spec[iSpec] in list_of_categories[iCat]:
+            if not all_spec_metaids[iMetaId] in list_of_categories[iCat]:
                 spec_list.append(0)
                 print('Categorie: ' + str(0))                                                                           # 0
-                print('Species ' + all_spec[iSpec] + ' is not in the compartment!')
+                print('Species ' + all_spec_metaids[iMetaId] + ' is not in the compartment!')
             else:
                 if not '/' in list_of_categories[iCat]:
                     if not 'pow(' in list_of_categories[iCat]:
                         spec_list.append(1)
                         print('Categorie: ' + str(1))                                                                   # 1
-                        print('Variable ' + all_spec[iSpec] + ' is linear!')
+                        print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                     else:
-                        _, b = list_of_categories[iCat].split(all_spec[iSpec] + ', ')
+                        _, b = list_of_categories[iCat].split(', ')
                         exp, _ = b.split(')', 1)
-                        if exp == 2:
+                        if exp == str(2):
                             spec_list.append(2)
                             print('Categorie: ' + str(2))                                                               # 2
-                            print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                            print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
                         else:
                             try:
                                 int(exp)
                                 spec_list.append(3)
                                 print('Categorie: ' + str(3))                                                           # 3
-                                print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
+                                print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
                             except:
                                 spec_list.append(4)
                                 print('Categorie: ' + str(4))                                                           # 4
-                                print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
+                                print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
                 else:
                     if '(' in list_of_categories[iCat]:
                         if list_of_categories[iCat][0] == '(':
@@ -110,222 +137,193 @@ for iReact in range(0, num_reac):
                             slash_index = matching_index + 2
                             nominator = list_of_categories[iCat][0 : matching_index + 1]
                             denominator = list_of_categories[iCat][slash_index + 2 : len(list_of_categories[iCat])]
-                            if all_spec[iSpec] in nominator and all_spec[iSpec] not in denominator:
+                            if all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] not in denominator:
                                 if not 'pow(' in nominator:
                                     spec_list.append(1)
                                     print('Categorie: ' + str(1))  # 1
-                                    print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                    print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                 else:
-                                    _, b = nominator.split(all_spec[iSpec] + ', ')
-                                    exp, _ = b.split(')', 1)
-                                    if exp == 2:
-                                        spec_list.append(2)
-                                        print('Categorie: ' + str(2))  # 2
-                                        print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                    close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
+                                    if not all_spec_metaids[iMetaId] in nominator[nominator.find('pow(') + 4 : close_power_index + 1]:
+                                        spec_list.append(1)
+                                        print('Categorie: ' + str(1))  # 1
+                                        print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                     else:
-                                        try:
-                                            int(exp)
-                                            spec_list.append(3)
-                                            print('Categorie: ' + str(3))  # 3
-                                            print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
-                                        except:
-                                            spec_list.append(4)
-                                            print('Categorie: ' + str(4))  # 4
-                                            print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                            elif all_spec[iSpec] not in nominator and all_spec[iSpec] in denominator:
+                                        _, b = nominator.split(', ')
+                                        exp, _ = b.split(')', 1)
+                                        if exp == str(2):
+                                            spec_list.append(2)
+                                            print('Categorie: ' + str(2))  # 2
+                                            print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
+                                        else:
+                                            try:
+                                                int(exp)
+                                                spec_list.append(3)
+                                                print('Categorie: ' + str(3))  # 3
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
+                                            except:
+                                                spec_list.append(4)
+                                                print('Categorie: ' + str(4))  # 4
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                            elif all_spec_metaids[iMetaId] not in nominator and all_spec_metaids[iMetaId] in denominator:
                                 if not 'pow(' in denominator:
                                     spec_list.append(5)
                                     print('Categorie: ' + str(5))                                                       # 5
-                                    print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                    print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                 else:
-                                    _, b = denominator.split(all_spec[iSpec] + ', ')
-                                    exp, _ = b.split(')', 1)
-                                    if exp == 2:
-                                        spec_list.append(6)
-                                        print('Categorie: ' + str(6))                                                   # 6
-                                        print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                    close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
+                                    if not all_spec_metaids[iMetaId] in nominator[nominator.find('pow(') + 4: close_power_index + 1]:
+                                        spec_list.append(5)
+                                        print('Categorie: ' + str(5))  # 5
+                                        print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                     else:
-                                        try:
-                                            int(exp)
-                                            spec_list.append(7)
-                                            print('Categorie: ' + str(7))                                               # 7
-                                            print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
-                                        except:
-                                            spec_list.append(8)
-                                            print('Categorie: ' + str(8))                                               # 8
-                                            print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                            elif all_spec[iSpec] in nominator and all_spec[iSpec] in denominator:
-                                print('What to do with species ' + all_spec[iSpec] + ' ?')
+                                        _, b = denominator.split(', ')
+                                        exp, _ = b.split(')', 1)
+                                        if exp == str(2):
+                                            spec_list.append(6)
+                                            print('Categorie: ' + str(6))                                                   # 6
+                                            print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
+                                        else:
+                                            try:
+                                                int(exp)
+                                                spec_list.append(7)
+                                                print('Categorie: ' + str(7))                                               # 7
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
+                                            except:
+                                                spec_list.append(8)
+                                                print('Categorie: ' + str(8))                                               # 8
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                            elif all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] in denominator:
+                                print('What to do with species ' + all_spec_metaids[iMetaId] + ' ?')
                         else:
                             slash_index = list_of_categories[iCat].find('/')
                             nominator = list_of_categories[iCat][0: slash_index - 1]
                             denominator = list_of_categories[iCat][slash_index + 2: len(list_of_categories[iCat])]
-                            if all_spec[iSpec] in nominator and all_spec[iSpec] not in denominator:
+                            if all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] not in denominator:
                                 if not 'pow(' in nominator:
                                     spec_list.append(1)
                                     print('Categorie: ' + str(1))  # 1
-                                    print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                    print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                 else:
-                                    _, b = nominator.split(all_spec[iSpec] + ', ')
+                                    _, b = nominator.split(', ')    #all_spec_metaids[iMetaId] +
                                     exp, _ = b.split(')', 1)
-                                    if exp == 2:
+                                    if exp == str(2):
                                         spec_list.append(2)
                                         print('Categorie: ' + str(2))  # 2
-                                        print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                        print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
                                     else:
                                         try:
                                             int(exp)
                                             spec_list.append(3)
                                             print('Categorie: ' + str(3))  # 3
-                                            print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
+                                            print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
                                         except:
                                             spec_list.append(4)
                                             print('Categorie: ' + str(4))  # 4
-                                            print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                            elif all_spec[iSpec] not in nominator and all_spec[iSpec] in denominator:
-                                if not 'pow(' in denominator:
+                                            print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                            elif all_spec_metaids[iMetaId] not in nominator and all_spec_metaids[iMetaId] in denominator:
+                                if not 'pow(' + all_spec_metaids[iMetaId] in denominator:
                                     spec_list.append(5)
                                     print('Categorie: ' + str(5))                                                       # 5
-                                    print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                    print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                 else:
-                                    _, b = denominator.split(all_spec[iSpec] + ', ')
-                                    exp, _ = b.split(')', 1)
-                                    if exp == 2:
-                                        spec_list.append(6)
-                                        print('Categorie: ' + str(6))                                                   # 6
-                                        print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                    close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
+                                    if not all_spec_metaids[iMetaId] in nominator[nominator.find('pow(') + 4: close_power_index + 1]:
+                                        spec_list.append(5)
+                                        print('Categorie: ' + str(5))  # 5
+                                        print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                                     else:
-                                        try:
-                                            int(exp)
-                                            spec_list.append(7)
-                                            print('Categorie: ' + str(7))                                               # 7
-                                            print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
-                                        except:
-                                            spec_list.append(8)
-                                            print('Categorie: ' + str(8))                                               # 8
-                                            print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                            elif all_spec[iSpec] in nominator and all_spec[iSpec] in denominator:
-                                print('What to do with species ' + all_spec[iSpec] + ' ?')
+                                        _, b = denominator.split(', ')
+                                        exp, _ = b.split(')', 1)
+                                        if exp == str(2):
+                                            spec_list.append(6)
+                                            print('Categorie: ' + str(6))                                                   # 6
+                                            print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
+                                        else:
+                                            try:
+                                                int(exp)
+                                                spec_list.append(7)
+                                                print('Categorie: ' + str(7))                                               # 7
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
+                                            except:
+                                                spec_list.append(8)
+                                                print('Categorie: ' + str(8))                                               # 8
+                                                print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                            elif all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] in denominator:
+                                print('What to do with species ' + all_spec_metaids[iMetaId] + ' ?')
                     else:
                         slash_index = list_of_categories[iCat].find('/')
                         nominator = list_of_categories[iCat][0 : slash_index - 1]
                         denominator = list_of_categories[iCat][slash_index + 2 : len(list_of_categories[iCat])]
-                        if all_spec[iSpec] in nominator and all_spec[iSpec] not in denominator:
+                        if all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] not in denominator:
                             if not 'pow(' in nominator:
                                 spec_list.append(1)
                                 print('Categorie: ' + str(1))  # 1
-                                print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                             else:
-                                _, b = nominator.split(all_spec[iSpec] + ', ')
+                                _, b = nominator.split(', ')
                                 exp, _ = b.split(')', 1)
-                                if exp == 2:
+                                if exp == str(2):
                                     spec_list.append(2)
                                     print('Categorie: ' + str(2))  # 2
-                                    print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                    print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
                                 else:
                                     try:
                                         int(exp)
                                         spec_list.append(3)
                                         print('Categorie: ' + str(3))  # 3
-                                        print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
+                                        print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
                                     except:
                                         spec_list.append(4)
                                         print('Categorie: ' + str(4))  # 4
-                                        print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                        elif all_spec[iSpec] not in nominator and all_spec[iSpec] in denominator:
+                                        print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                        elif all_spec_metaids[iMetaId] not in nominator and all_spec_metaids[iMetaId] in denominator:
                             if not 'pow(' in denominator:
                                 spec_list.append(5)
                                 print('Categorie: ' + str(5))  # 5
-                                print('Variable ' + all_spec[iSpec] + ' is linear!')
+                                print('Variable ' + all_spec_metaids[iMetaId] + ' is linear!')
                             else:
-                                _, b = denominator.split(all_spec[iSpec] + ', ')
+                                _, b = denominator.split(', ')
                                 exp, _ = b.split(')', 1)
-                                if exp == 2:
+                                if exp == str(2):
                                     spec_list.append(6)
                                     print('Categorie: ' + str(6))  # 6
-                                    print('Species ' + all_spec[iSpec] + ' is quadratic!')
+                                    print('Species ' + all_spec_metaids[iMetaId] + ' is quadratic!')
                                 else:
                                     try:
                                         int(exp)
                                         spec_list.append(7)
                                         print('Categorie: ' + str(7))  # 7
-                                        print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
+                                        print('Species ' + all_spec_metaids[iMetaId] + ' has a natural exponent!')
                                     except:
                                         spec_list.append(8)
                                         print('Categorie: ' + str(8))  # 8
-                                        print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                        elif all_spec[iSpec] in nominator and all_spec[iSpec] in denominator:
-                            print('What to do with species ' + all_spec[iSpec] + ' ?')
+                                        print('Species ' + all_spec_metaids[iMetaId] + ' has a rational exponent!')
+                        elif all_spec_metaids[iMetaId] in nominator and all_spec_metaids[iMetaId] in denominator:
+                            print('What to do with species ' + all_spec_metaids[iMetaId] + ' ?')
 
         kinetic_list.append(spec_list)
 
+    # check what kinetics are available by concatenating all elements of 'kinetic_list'
+    conc_kinetic_list = []
+    for iList in range(0, len(kinetic_list)):
+        conc_kinetic_list = conc_kinetic_list + kinetic_list[iList]
 
-# give total kinetic number from 0 - 8
-kin = sorted(kinetic_list, reverse=True)[0]
+    for item in [0,1,2,3,4,5,6,7,8,9]:
+        if item in conc_kinetic_list:
+            all_formulas_kinetics[iReact].append(1)
+        else:
+            all_formulas_kinetics[iReact].append(0)
 
 
-# if formula.find(all_spec[iSpec], index + 1, len(formula)) != -1
+# give total kinetic number from 0 - 9
+total_kinetics = [sum(x) for x in zip(*all_formulas_kinetics)]
+for iKinetic in range(0, len(total_kinetics)):
+    if total_kinetics[iKinetic] > 0:
+        total_kinetics[iKinetic] = 1
+    else:
+        total_kinetics[iKinetic] = 0
 
-'''
-    if '(' in formula:
-        num_bracket = formula.count('(')
-        index_bracket = formula.find('(')
-        matching_bracket_index = getIndex(formula, index_bracket)
-        if '/' in formula:
-            num_slash = formula.count('/')
-            if formula[index_bracket - 2] == '/':
-                for iSlash in range(0, num_slash):
-                    if iSlash == 0:
-                        index_slash = formula.find('/')
-                        if all_spec[iSpec] in formula[0:index_slash]:
-                            if 'pow' in formula[0:index_slash]:
-                                _,b = formula[0:index_slash].split(all_spec[iSpec] + ', ')
-                                exp,_ = b.split(')',1)
-                                if exp == 2:
-                                    spec_list.append(2)
-                                    print('Categorie: ' + str(2))                                                       # 2
-                                    print('Species ' + all_spec[iSpec] + ' is quadratic!')
-                                else:
-                                    try:
-                                        int(exp)
-                                        spec_list.append(3)
-                                        print('Categorie: ' + str(3))                                                   # 3
-                                        print('Species ' + all_spec[iSpec] + ' has a natural exponent!')
-                                    except:
-                                        spec_list.append(4)
-                                        print('Categorie: ' + str(4))                                                   # 4
-                                        print('Species ' + all_spec[iSpec] + ' has a rational exponent!')
-                            else:
-                                spec_list.append(1)
-                                print('Categorie: ' + str(1))                                                           # 1
-                                print('Variable ' + all_spec[iSpec] + ' is linear!')
-                    elif iSlash != 0:
-                        index_1 = formula.find('/')
-                        index_2 = formula.find('/', formula.find('/') + 1)
-                        subformula = formula[index_1 + 2 : index_2 - 1]
-                        if subformula[0] == '(':
-                            matching_bracket_index = getIndex(subformula,0)
-                            if all_spec[iSpec] in subformula[0:matching_bracket_index + 1]:
-                                if 'pow' in subformula[0:matching_bracket_index + 1]:
-                                    _, b = subformula[0:matching_bracket_index + 1].split(all_spec[iSpec] + ', ')
-                                    exp, _ = b.split(')', 1)
-                                    if exp == 2:
-                                        spec_list.append(6)
-                                        print('Categorie: ' + str(6))                                                   # 6
-                                        print('Species ' + all_spec[iSpec] + ' has a quadratic Hill Kinetic!')
-                                    else:
-                                        try:
-                                            int(exp)
-                                            spec_list.append(7)
-                                            print('Categorie: ' + str(7))                                               # 7
-                                            print('Species ' + all_spec[iSpec] + ' has a polynomial Hill Kinetic!')
-                                        except:
-                                            spec_list.append(8)
-                                            print('Categorie: ' + str(8))                                               # 8
-                                            print('Species ' + all_spec[iSpec] + ' has a rational Hill Kinetic!')
-                                else:
-                                    spec_list.append(5)
-                                    print('Categorie: ' + str(5))                                                       # 5
-                                    print('Species ' + all_spec[iSpec] + ' has a Michaelis-Menten Kinetic!')
-    kinetic_list.append(spec_list)
-'''
+only_for_debugging = 'just_debugging'
+
+#return total_kinetics
