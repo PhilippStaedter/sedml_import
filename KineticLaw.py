@@ -320,7 +320,7 @@ for iReact in range(0, num_reac):
 total_kinetics = [sum(x) for x in zip(*all_formulas_kinetics)]
 for iKinetic in range(0, len(total_kinetics)):
     if total_kinetics[iKinetic] > 0:
-        total_kinetics[iKinetic] = 1
+        total_kinetics[iKinetic] = total_kinetics[iKinetic]/len(total_kinetics)
     else:
         total_kinetics[iKinetic] = 0
 
