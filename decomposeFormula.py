@@ -7,6 +7,12 @@ from opposingBracket import *
 
 def decomposition(formula):
 
+    formula = formula.replace('( ', '(')
+    formula = formula.replace(' )', ')')
+    formula = formula.replace(' ,', ',')
+    formula = formula[1:]
+    formula = formula[:len(formula) - 1]
+
     list_of_compartments = []
 
     iter_object = len(formula)
