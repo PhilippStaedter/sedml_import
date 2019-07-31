@@ -3,7 +3,7 @@
 
 from opposingBracket import *
 
-#formula = 'pow(FFF, 4) / (A() + Q) + D / A * (AA + DD) * V * Y + ABCABC * B - C * (ZZZZ + R) * pow(X, 3)'
+##formula = 'pow(FFF, 4) / (A() + Q) + D / A * (AA + DD) * V * Y + ABCABC * B - C * (ZZZZ + R) * pow(X, 3)'
 
 def decomposition(formula):
 
