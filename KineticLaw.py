@@ -136,9 +136,6 @@ def getKineticLaw(iModel, iFile):
                 for iCat in range(0, len(list_of_categories)):
                     if not all_spec[iSpecId] in list_of_categories[iCat]:
                         'Do nothing'
-                        #spec_list.append(0)
-                        #print('Categorie: ' + str(0))                                                                      # 0
-                        #print('Species ' + all_spec[iSpecId] + ' is not in the compartment!')
                     else:
                         if not '/' in list_of_categories[iCat]:
                             if not 'pow(' in list_of_categories[iCat]:
@@ -164,12 +161,21 @@ def getKineticLaw(iModel, iFile):
                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                         else:
                             if '(' in list_of_categories[iCat]:
-                                if list_of_categories[iCat][0] == '(':
-                                    matching_index = getIndex(list_of_categories[iCat], 0)
+                                if list_of_categories[iCat][1] == '(':                                                              # [1], because 0 is a white space!
+                                    matching_index = getIndex(list_of_categories[iCat], 1)
                                     slash_index = matching_index + 2
-                                    nominator = list_of_categories[iCat][0 : matching_index]
+                                    nominator = list_of_categories[iCat][1 : matching_index]
                                     denominator = list_of_categories[iCat][slash_index + 1 : len(list_of_categories[iCat])]
                                     if all_spec[iSpecId] in nominator and all_spec[iSpecId] not in denominator:
+
+                                        ##### posiibility: more '/' in nominator  => e.g. (A + B/C) / D   =>   KinLaw(C ) == 5 (!= 1)
+                                        # repeat whole categories again + pow(A + B/C) also possible!
+                                        # get rid of starting brackets
+                                        if '/' in nominator:
+                                            nominator = nominator[2 : len(nominator) - 1]
+                                            list_of_categories2 = decomposition(nominator)
+
+
                                         if not 'pow(' in nominator:
                                             spec_list.append(1)
                                             print('Categorie: ' + str(1))  # 1
@@ -227,7 +233,7 @@ def getKineticLaw(iModel, iFile):
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                     elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
                                         spec_list.append(9)                                                                 # 9
-                                        print('What to do with species ' + all_spec[iSpecId] + ' from' + iModel + '_' + iFile + ' ?')
+                                        print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
                                 else:
                                     slash_index = list_of_categories[iCat].find('/')
                                     nominator = list_of_categories[iCat][0: slash_index]
@@ -238,6 +244,16 @@ def getKineticLaw(iModel, iFile):
                                             print('Categorie: ' + str(1))  # 1
                                             print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                         else:
+
+                                            ##### possibility: more '/' in pow() in nominator  => e.g. pow((A + B)/C, 2) / D   =>   KinLaw(C) == 6 (!= 1)
+                                            #                                                  => e.g. pow(A + B/C, 2) / D     =>   KinLaw(C) == 6 (!= 5, != 1)
+                                            # repeat whole categories again + pow(A + B/C) also possible!
+                                            # get rid of power and brackets
+                                            if '/' in nominator:
+                                                nominator = nominator[5: len(nominator) - 4]
+                                                list_of_categories3 = decomposition(nominator)
+
+
                                             _, b = nominator.split(', ')    #all_spec[iSpecId] +
                                             exp, _ = b.split(')', 1)
                                             if exp == str(2) + ' ':
@@ -284,7 +300,7 @@ def getKineticLaw(iModel, iFile):
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                     elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
                                         spec_list.append(9)
-                                        print('What to do with species ' + all_spec[iSpecId] + ' from' + iModel + '_' + iFile + ' ?')
+                                        print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
                             else:
                                 slash_index = list_of_categories[iCat].find('/')
                                 nominator = list_of_categories[iCat][0 : slash_index]
@@ -295,8 +311,18 @@ def getKineticLaw(iModel, iFile):
                                         print('Categorie: ' + str(1))  # 1
                                         print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                     else:
+
+                                        ##### possibility: more '/' in pow() in nominator  => e.g. pow((A + B)/C, 2) / D   =>   KinLaw(C) == 6 (!= 1)
+                                        #                                                  => e.g. pow(A + B/C, 2) / D     =>   KinLaw(C) == 6 (!= 5, != 1)
+                                        # repeat whole categories again + pow(A + B/C) also possible!
+                                        # get rid of power and brackets
+                                        if '/' in nominator:
+                                            nominator = nominator[5: len(nominator) - 4]
+                                            list_of_categories3 = decomposition(nominator)
                                         _, b = nominator.split(', ')
                                         exp, _ = b.split(')', 1)
+
+
                                         if exp == str(2) + ' ':
                                             spec_list.append(2)
                                             print('Categorie: ' + str(2))  # 2
@@ -335,7 +361,7 @@ def getKineticLaw(iModel, iFile):
                                                 print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                 elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
                                     spec_list.append(9)
-                                    print('What to do with species ' + all_spec[iSpecId] + ' from' + iModel + '_' + iFile + ' ?')
+                                    print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
 
                 kinetic_list.append(spec_list)
 
