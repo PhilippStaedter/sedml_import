@@ -1,8 +1,6 @@
 # determine kinetic law after in depth1 analysis of special cases
 
 
-
-
 def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
 
     group1 = [1,2,3,4]

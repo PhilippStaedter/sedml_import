@@ -3,6 +3,7 @@
 import numpy as np
 from decomposeFormula import *
 from opposingBracket import *
+from Depth1_KinLaw import *
 
 
 def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
@@ -41,6 +42,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                 if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                     break
+                        kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                        spec_list.append(kinlaw)
+                        '''            
                         if exp == str(2) + ' ':
                             spec_list.append(2)
                             print('Categorie: ' + str(2))  # 2
@@ -55,6 +59,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                 spec_list.append(4)
                                 print('Categorie: ' + str(4))  # 4
                                 print('Species ' + iSpecId + ' has a rational exponent!')
+                        '''
                 else:
                     if '(' in list_of_categories[iCat]:
                         if list_of_categories[iCat][1] == '(':  # [1], because 0 is a white space!
@@ -95,6 +100,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                         exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                         break
+                                            kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                            spec_list.append(kinlaw)
+                                            '''            
                                             if exp == str(2) + ' ':
                                                 spec_list.append(2)
                                                 print('Categorie: ' + str(2))  # 2
@@ -109,6 +117,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
+                                            '''
                             elif iSpecId not in nominator and iSpecId in denominator:
                                 if not 'pow(' in denominator:
                                     spec_list.append(5)
@@ -131,6 +140,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                     break
+                                        kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                        spec_list.append(kinlaw)
+                                        '''            
                                         if exp == str(2) + ' ':
                                             spec_list.append(6)
                                             print('Categorie: ' + str(6))  # 6
@@ -145,6 +157,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
+                                        '''
                             elif iSpecId in nominator and iSpecId in denominator:
                                 spec_list.append(9)  # 9
                                 print('What to do with species ' + iSpecId + ' from Depth1 ?')
@@ -179,28 +192,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             nominator = nominator[5: len(nominator) - 4]
                                             list_of_categories4 = decomposition(nominator)
                                             kinlaw = depth1(nominator, list_of_categories4, iSpecId, sbml_file, iReact)
-                                            if kinlaw == 1:
-                                                if exp == 2:
-                                                    kinlaw = exp
-                                                else:
-                                                    try:
-                                                        int(exp)
-                                                        kinlaw = 3
-                                                    except:
-                                                        kinlaw = 4
-                                            elif kinlaw == 2:
-                                                kinlaw = 3
-                                            elif kinlaw == 5:
-                                                if exp == 2:
-                                                    kinlaw = 6
-                                                else:
-                                                    try:
-                                                        int(exp)
-                                                        kinlaw = 7
-                                                    except:
-                                                        kinlaw = 8
-                                            elif kinlaw == 6:
-                                                kinlaw = 7
+
+                                            # call function to get the right kinetic law for the special case
+                                            kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+
                                             spec_list.append(kinlaw)
                                             print('Species ' + iSpecId + ' had to go in depth!')
                                         else:
@@ -214,6 +209,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                         exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                         break
+                                            kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                            spec_list.append(kinlaw)
+                                            '''            
                                             if exp == str(2) + ' ':
                                                 spec_list.append(2)
                                                 print('Categorie: ' + str(2))  # 2
@@ -228,6 +226,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
+                                            '''
                                 elif iSpecId not in nominator and iSpecId in denominator:
                                     if not 'pow(' + iSpecId in denominator:
                                         spec_list.append(5)
@@ -251,6 +250,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                         iComma]:
                                                         exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                         break
+                                            kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                            spec_list.append(kinlaw)
+                                            '''            
                                             if exp == str(2) + ' ':
                                                 spec_list.append(6)
                                                 print('Categorie: ' + str(6))  # 6
@@ -265,6 +267,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     spec_list.append(8)
                                                     print('Categorie: ' + str(8))  # 8
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
+                                            '''
                                 elif iSpecId in nominator and iSpecId in denominator:
                                     spec_list.append(9)
                                     print('What to do with species ' + iSpecId + ' from depth1 ?')
@@ -283,54 +286,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                 nominator = list_of_categories[iCat][5: comma_index]
                                 list_of_categories3 = decomposition(nominator)
                                 kinlaw = depth1(nominator, list_of_categories3, iSpecId, sbml_file, iReact)
-                                if kinlaw == 1:
-                                    try:
-                                        if exp == 2:
-                                            kinlaw = exp
-                                        else:
-                                            float(exp)
-                                            try:
-                                                int(exp)
-                                                kinlaw = 3
-                                            except:
-                                                kinlaw = 4
-                                    except:
-                                        # the exponent is most likely a parameter with some numerical value
-                                        num_par = sbml_file.getModel().getReaction(iReact).getKineticLaw().getNumParameters()
-                                        all_parameters = []
-                                        for iPar in range(0, num_par):
-                                            all_parameters.append(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getId() + ' ')
-                                        for iPar in range(0, len(all_parameters)):
-                                            if exp == all_parameters[iPar]:
-                                                if int(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) == sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue():
-                                                    exp = str(int(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue())) + ' '
-                                                    break
-                                                else:
-                                                    exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) + ' '
-                                                    break
-                                        if exp == str(1) + ' ':
-                                            kinlaw = 1
-                                        elif exp == str(2) + ' ':
-                                            kinlaw = 2
-                                        else:
-                                            try:
-                                                int(exp)
-                                                kinlaw = 3
-                                            except:
-                                                kinlaw = 4
-                                elif kinlaw == 2:
-                                    kinlaw = 3
-                                elif kinlaw == 5:
-                                    if exp == 2:
-                                        kinlaw = 6
-                                    else:
-                                        try:
-                                            int(exp)
-                                            kinlaw = 7
-                                        except:
-                                            kinlaw = 8
-                                elif kinlaw == 6:
-                                    kinlaw = 7
+
+                                # call function to get the right kinetic law for the special case
+                                kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+
                                 spec_list.append(kinlaw)
                                 print('Species ' + iSpecId + ' had to go in depth!')
                         else:
@@ -362,28 +321,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         nominator = nominator[5: len(nominator) - 4]
                                         list_of_categories3 = decomposition(nominator)
                                         kinlaw = depth1(nominator, list_of_categories3, iSpecId, sbml_file, iReact)
-                                        if kinlaw == 1:
-                                            if exp == 2:
-                                                kinlaw = exp
-                                            else:
-                                                try:
-                                                    int(exp)
-                                                    kinlaw = 3
-                                                except:
-                                                    kinlaw = 4
-                                        elif kinlaw == 2:
-                                            kinlaw = 3
-                                        elif kinlaw == 5:
-                                            if exp == 2:
-                                                kinlaw = 6
-                                            else:
-                                                try:
-                                                    int(exp)
-                                                    kinlaw = 7
-                                                except:
-                                                    kinlaw = 8
-                                        elif kinlaw == 6:
-                                            kinlaw = 7
+
+                                        # call function to get the right kinetic law for the special case
+                                        kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+
                                         spec_list.append(kinlaw)
                                         print('Species ' + iSpecId + ' had to go in depth!')
                                     else:
@@ -398,6 +339,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     iComma]:
                                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                     break
+                                        kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                        spec_list.append(kinlaw)
+                                        '''            
                                         if exp == str(2) + ' ':
                                             spec_list.append(2)
                                             print('Categorie: ' + str(2))  # 2
@@ -412,6 +356,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 spec_list.append(4)
                                                 print('Categorie: ' + str(4))  # 4
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
+                                        '''
                             elif iSpecId not in nominator and iSpecId in denominator:
                                 if not 'pow(' + iSpecId in denominator:
                                     spec_list.append(5)
@@ -435,6 +380,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     iComma]:
                                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                     break
+                                        kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                        spec_list.append(kinlaw)
+                                        '''
                                         if exp == str(2) + ' ':
                                             spec_list.append(6)
                                             print('Categorie: ' + str(6))  # 6
@@ -449,6 +397,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
+                                        '''
                             elif iSpecId in nominator and iSpecId in denominator:
                                 spec_list.append(9)
                                 print('What to do with species ' + iSpecId + ' from depth1 ?')
@@ -481,28 +430,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                     nominator = nominator[5: len(nominator) - 4]
                                     list_of_categories4 = decomposition(nominator)
                                     kinlaw = depth1(nominator, list_of_categories4, iSpecId, sbml_file, iReact)
-                                    if kinlaw == 1:
-                                        if exp == 2:
-                                            kinlaw = exp
-                                        else:
-                                            try:
-                                                int(exp)
-                                                kinlaw = 3
-                                            except:
-                                                kinlaw = 4
-                                    elif kinlaw == 2:
-                                        kinlaw = 3
-                                    elif kinlaw == 5:
-                                        if exp == 2:
-                                            kinlaw = 6
-                                        else:
-                                            try:
-                                                int(exp)
-                                                kinlaw = 7
-                                            except:
-                                                kinlaw = 8
-                                    elif kinlaw == 6:
-                                        kinlaw = 7
+
+                                    # call function to get the right kinetic law for the special case
+                                    kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+
                                     spec_list.append(kinlaw)
                                     print('Species ' + iSpecId + ' had to go in depth!')
                                 else:
@@ -516,6 +447,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                 exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                                 break
+                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                    spec_list.append(kinlaw)
+                                    '''
                                     if exp == str(2) + ' ':
                                         spec_list.append(2)
                                         print('Categorie: ' + str(2))  # 2
@@ -530,6 +464,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             spec_list.append(4)
                                             print('Categorie: ' + str(4))  # 4
                                             print('Species ' + iSpecId + ' has a rational exponent!')
+                                    '''
                         elif iSpecId not in nominator and iSpecId in denominator:
                             if not 'pow(' in denominator:
                                 spec_list.append(5)
@@ -546,6 +481,9 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         if iSpecId in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
                                             break
+                                kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                spec_list.append(kinlaw)
+                                '''
                                 if exp == str(2) + ' ':
                                     spec_list.append(6)
                                     print('Categorie: ' + str(6))  # 6
@@ -560,6 +498,7 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         spec_list.append(8)
                                         print('Categorie: ' + str(8))  # 8
                                         print('Species ' + iSpecId + ' has a rational exponent!')
+                                '''
                         elif iSpecId in nominator and iSpecId in denominator:
                             spec_list.append(9)
                             print('What to do with species ' + iSpecId + ' from depth1 ?')
