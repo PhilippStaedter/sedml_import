@@ -151,6 +151,7 @@ def decomposition(formula):
 
 
 
+
 '''     
         elif formula[next_white_space + 1] == '*':
             list_of_compartments.append(formula[iElement : next_white_space])
