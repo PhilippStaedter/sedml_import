@@ -173,7 +173,7 @@ def getKineticLaw(iModel, iFile):
                                         if '/' in nominator:
                                             nominator = nominator[1 : len(nominator) - 1]
                                             list_of_categories2 = decomposition(nominator)
-                                            kinlaw = depth1(nominator, list_of_categories2, all_spec[iSpecId])
+                                            kinlaw = depth1(nominator, list_of_categories2, all_spec[iSpecId], sbml_file, iReact)
                                             spec_list.append(kinlaw)
                                             print('Species ' + all_spec[iSpec] + ' had to go in depth!')
                                         else:
@@ -255,7 +255,7 @@ def getKineticLaw(iModel, iFile):
                                                     exp, _ = b.split(')', 1)
                                                     nominator = nominator[5: len(nominator) - 4]
                                                     list_of_categories4 = decomposition(nominator)
-                                                    kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId])
+                                                    kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
                                                     if kinlaw == 1:
                                                         if exp == 2:
                                                             kinlaw = exp
@@ -330,7 +330,7 @@ def getKineticLaw(iModel, iFile):
                                         exp, _ = b.split(')', 1)
                                         nominator = list_of_categories[iCat][5: matching_index - 4]
                                         list_of_categories3 = decomposition(nominator)
-                                        kinlaw = depth1(nominator, list_of_categories3, all_spec[iSpecId])
+                                        kinlaw = depth1(nominator, list_of_categories3, all_spec[iSpecId], sbml_file, iReact)
                                         if kinlaw == 1:
                                             if exp == 2:
                                                 kinlaw = exp
@@ -374,7 +374,7 @@ def getKineticLaw(iModel, iFile):
                                                 exp, _ = b.split(')', 1)
                                                 nominator = nominator[5: len(nominator) - 4]
                                                 list_of_categories4 = decomposition(nominator)
-                                                kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId])
+                                                kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
                                                 if kinlaw == 1:
                                                     if exp == 2:
                                                         kinlaw = exp
@@ -463,7 +463,7 @@ def getKineticLaw(iModel, iFile):
                                             exp, _ = b.split(')', 1)
                                             nominator = nominator[5: len(nominator) - 4]
                                             list_of_categories5 = decomposition(nominator)
-                                            kinlaw = depth1(nominator, list_of_categories5, all_spec[iSpecId])
+                                            kinlaw = depth1(nominator, list_of_categories5, all_spec[iSpecId], sbml_file, iReact)
                                             if kinlaw == 1:
                                                 if exp == 2:
                                                     kinlaw = exp

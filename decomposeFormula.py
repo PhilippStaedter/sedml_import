@@ -87,9 +87,14 @@ def decomposition(formula):
 
                     else:
                         next_white_space = formula.find(' ', matching_index + 4)
-                        list_of_compartments.append(formula[iElement: next_white_space])
-                        formula = formula[next_white_space + 3:]
-                        iter_object = len(formula)
+                        if next_white_space != -1:
+                            list_of_compartments.append(formula[iElement: next_white_space])
+                            formula = formula[next_white_space + 3:]
+                            iter_object = len(formula)
+                        else:
+                            list_of_compartments.append(formula[iElement: len(formula)])
+                            # get to return value
+                            iElement = iter_object
 
                 else:
                     print('This case 2 must not happen ... Something is wrong!')
@@ -120,9 +125,14 @@ def decomposition(formula):
 
                     else:
                         next_white_space = formula.find(' ', next_white_space + 3)
-                        list_of_compartments.append(formula[iElement: next_white_space])
-                        formula = formula[next_white_space + 3:]
-                        iter_object = len(formula)
+                        if next_white_space != -1:
+                            list_of_compartments.append(formula[iElement: next_white_space])
+                            formula = formula[next_white_space + 3:]
+                            iter_object = len(formula)
+                        else:
+                            list_of_compartments.append(formula[iElement: len(formula)])
+                            # get to return value
+                            iElement = iter_object
 
                 else:
                     print('This case 3 must not happen ... Something is wrong!')

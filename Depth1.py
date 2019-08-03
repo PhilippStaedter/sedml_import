@@ -5,7 +5,7 @@ from decomposeFormula import *
 from opposingBracket import *
 
 
-def depth1(formula, list_of_categories, iSpecId):
+def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
 
     # replace all brackets and commas by themselfes and spaces before and after + add spaces in front of and behind the category
     for iCat in range(0, len(list_of_categories)):
@@ -61,7 +61,7 @@ def depth1(formula, list_of_categories, iSpecId):
                                 if '/' in nominator:
                                     nominator = nominator[1 : len(nominator) - 1]
                                     list_of_categories2 = decomposition(nominator)
-                                    kinlaw = depth1(nominator, list_of_categories2, iSpecId)
+                                    kinlaw = depth1(nominator, list_of_categories2, iSpecId, sbml_file, iReact)
                                     spec_list.append(kinlaw)
                                     print('Species ' + iSpecId + ' had to go in depth!')
                                 else:
@@ -145,7 +145,7 @@ def depth1(formula, list_of_categories, iSpecId):
                                             exp, _ = b.split(')', 1)
                                             nominator = nominator[5: len(nominator) - 4]
                                             list_of_categories4 = decomposition(nominator)
-                                            kinlaw = depth1(nominator, list_of_categories4, iSpecId)
+                                            kinlaw = depth1(nominator, list_of_categories4, iSpecId, sbml_file, iReact)
                                             if kinlaw == 1:
                                                 if exp == 2:
                                                     kinlaw = exp
@@ -219,15 +219,34 @@ def depth1(formula, list_of_categories, iSpecId):
                                 exp, _ = b.split(')', 1)
                                 nominator = list_of_categories[iCat][5: matching_index - 4]
                                 list_of_categories3 = decomposition(nominator)
-                                kinlaw = depth1(nominator, list_of_categories3, iSpecId)
+                                kinlaw = depth1(nominator, list_of_categories3, iSpecId, sbml_file, iReact)
                                 if kinlaw == 1:
-                                    if exp == 2:
-                                        kinlaw = exp
-                                    else:
-                                        if int(exp) == exp:
-                                            kinlaw = 3
+                                    try:
+                                        if exp == 2:
+                                            kinlaw = exp
                                         else:
-                                            kinlaw = 4
+                                            if int(exp) == exp:
+                                                kinlaw = 3
+                                            else:
+                                                kinlaw = 4
+                                    except:
+                                        # the exponent is most likely a parameter with some numerical value
+                                        num_par = sbml_file.getModel().getReaction(iReact).getKineticLaw().getNumParameters()
+                                        all_parameters = []
+                                        for iPar in range(0, num_par):
+                                            all_parameters.append(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getId() + ' ')
+                                        for iPar in range(0, len(all_parameters)):
+                                            if exp == all_parameters[iPar]:
+                                                exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) + ' '
+                                        if exp == str(1) + ' ':
+                                            kinlaw = 1
+                                        elif exp == str(2) + ' ':
+                                            kinlaw = 2
+                                        else:
+                                            if int(exp) == exp:
+                                                kinlaw = 3
+                                            else:
+                                                kinlaw = 4
                                 elif kinlaw == 2:
                                     kinlaw = 3
                                 elif kinlaw == 5:
@@ -262,7 +281,7 @@ def depth1(formula, list_of_categories, iSpecId):
                                         exp, _ = b.split(')', 1)
                                         nominator = nominator[5: len(nominator) - 4]
                                         list_of_categories3 = decomposition(nominator)
-                                        kinlaw = depth1(nominator, list_of_categories3, iSpecId)
+                                        kinlaw = depth1(nominator, list_of_categories3, iSpecId, sbml_file, iReact)
                                         if kinlaw == 1:
                                             if exp == 2:
                                                 kinlaw = exp
@@ -352,7 +371,7 @@ def depth1(formula, list_of_categories, iSpecId):
                                     exp, _ = b.split(')', 1)
                                     nominator = nominator[5: len(nominator) - 4]
                                     list_of_categories4 = decomposition(nominator)
-                                    kinlaw = depth1(nominator, list_of_categories4, iSpecId)
+                                    kinlaw = depth1(nominator, list_of_categories4, iSpecId, sbml_file, iReact)
                                     if kinlaw == 1:
                                         if exp == 2:
                                             kinlaw = exp
