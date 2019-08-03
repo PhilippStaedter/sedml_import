@@ -49,8 +49,6 @@ def depth1(formula, list_of_categories, iSpecId):
                                 print('Species ' + iSpecId + ' has a rational exponent!')
                 else:
                     if '(' in list_of_categories[iCat]:
-                        pass
-                    else:
                         if list_of_categories[iCat][1] == '(':  # [1], because 0 is a white space!
                             matching_index = getIndex(list_of_categories[iCat], 1)
                             slash_index = matching_index + 2
@@ -351,6 +349,7 @@ def depth1(formula, list_of_categories, iSpecId):
                             elif iSpecId in nominator and iSpecId in denominator:
                                 spec_list.append(9)
                                 print('What to do with species ' + iSpecId + ' from depth1 ?')
+                    else:
                         slash_index = list_of_categories[iCat].find('/')
                         nominator = list_of_categories[iCat][0: slash_index]
                         denominator = list_of_categories[iCat][slash_index + 1: len(list_of_categories[iCat])]
