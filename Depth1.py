@@ -38,12 +38,11 @@ def depth1(formula, list_of_categories, iSpecId):
                             print('Categorie: ' + str(2))  # 2
                             print('Species ' + iSpecId + ' is quadratic!')
                         else:
-                            try:
-                                int(exp)
+                            if int(exp) == exp:
                                 spec_list.append(3)
                                 print('Categorie: ' + str(3))  # 3
                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                            except:
+                            else:
                                 spec_list.append(4)
                                 print('Categorie: ' + str(4))  # 4
                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -52,7 +51,7 @@ def depth1(formula, list_of_categories, iSpecId):
                         if list_of_categories[iCat][1] == '(':  # [1], because 0 is a white space!
                             matching_index = getIndex(list_of_categories[iCat], 1)
                             slash_index = matching_index + 2
-                            nominator = list_of_categories[iCat][1: matching_index]
+                            nominator = list_of_categories[iCat][1: matching_index + 1]
                             denominator = list_of_categories[iCat][slash_index + 1: len(list_of_categories[iCat])]
                             if iSpecId in nominator and iSpecId not in denominator:
 
@@ -60,13 +59,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                 # repeat whole categories again + pow(A + B/C) also possible!
                                 # get rid of starting brackets
                                 if '/' in nominator:
-                                    nominator = nominator[2: len(nominator) - 1]
-                                    '''
+                                    nominator = nominator[1 : len(nominator) - 1]
                                     list_of_categories2 = decomposition(nominator)
                                     kinlaw = depth1(nominator, list_of_categories2, iSpecId)
                                     spec_list.append(kinlaw)
                                     print('Species ' + iSpecId + ' had to go in depth!')
-                                    '''
                                 else:
                                     if not 'pow(' in nominator:
                                         spec_list.append(1)
@@ -87,13 +84,12 @@ def depth1(formula, list_of_categories, iSpecId):
                                                 print('Categorie: ' + str(2))  # 2
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                try:
-                                                    int(exp)
+                                                if int(exp) == exp:
                                                     spec_list.append(3)
                                                     print('Categorie: ' + str(3))  # 3
                                                     print(
                                                         'Species ' + iSpecId + ' has a natural exponent!')
-                                                except:
+                                                else:
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -117,12 +113,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                             print('Categorie: ' + str(6))  # 6
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            try:
-                                                int(exp)
+                                            if int(exp) == exp:
                                                 spec_list.append(7)
                                                 print('Categorie: ' + str(7))  # 7
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            except:
+                                            else:
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -155,10 +150,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                                 if exp == 2:
                                                     kinlaw = exp
                                                 else:
-                                                    try:
-                                                        int(exp)
+                                                    if int(exp) == exp:
                                                         kinlaw = 3
-                                                    except:
+                                                    else:
                                                         kinlaw = 4
                                             elif kinlaw == 2:
                                                 kinlaw = 3
@@ -166,10 +160,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                                 if exp == 2:
                                                     kinlaw = 6
                                                 else:
-                                                    try:
-                                                        int(exp)
+                                                    if int(exp) == exp:
                                                         kinlaw = 7
-                                                    except:
+                                                    else:
                                                         kinlaw = 8
                                             elif kinlaw == 6:
                                                 kinlaw = 7
@@ -183,12 +176,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                                 print('Categorie: ' + str(2))  # 2
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                try:
-                                                    int(exp)
+                                                if int(exp) == exp:
                                                     spec_list.append(3)
                                                     print('Categorie: ' + str(3))  # 3
                                                     print('Species ' + iSpecId + ' has a natural exponent!')
-                                                except:
+                                                else:
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -211,12 +203,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                                 print('Categorie: ' + str(6))  # 6
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                try:
-                                                    int(exp)
+                                                if int(exp) == exp:
                                                     spec_list.append(7)
                                                     print('Categorie: ' + str(7))  # 7
                                                     print('Species ' + iSpecId + ' has a natural exponent!')
-                                                except:
+                                                else:
                                                     spec_list.append(8)
                                                     print('Categorie: ' + str(8))  # 8
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -233,10 +224,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                     if exp == 2:
                                         kinlaw = exp
                                     else:
-                                        try:
-                                            int(exp)
+                                        if int(exp) == exp:
                                             kinlaw = 3
-                                        except:
+                                        else:
                                             kinlaw = 4
                                 elif kinlaw == 2:
                                     kinlaw = 3
@@ -244,10 +234,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                     if exp == 2:
                                         kinlaw = 6
                                     else:
-                                        try:
-                                            int(exp)
+                                        if int(exp) == exp:
                                             kinlaw = 7
-                                        except:
+                                        else:
                                             kinlaw = 8
                                 elif kinlaw == 6:
                                     kinlaw = 7
@@ -270,7 +259,6 @@ def depth1(formula, list_of_categories, iSpecId):
                                     # get rid of power and brackets
                                     if '/' in nominator:
                                         _, b = nominator.split(', ')
-                                        '''
                                         exp, _ = b.split(')', 1)
                                         nominator = nominator[5: len(nominator) - 4]
                                         list_of_categories3 = decomposition(nominator)
@@ -279,10 +267,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                             if exp == 2:
                                                 kinlaw = exp
                                             else:
-                                                try:
-                                                    int(exp)
+                                                if int(exp) == exp:
                                                     kinlaw = 3
-                                                except:
+                                                else:
                                                     kinlaw = 4
                                         elif kinlaw == 2:
                                             kinlaw = 3
@@ -290,16 +277,14 @@ def depth1(formula, list_of_categories, iSpecId):
                                             if exp == 2:
                                                 kinlaw = 6
                                             else:
-                                                try:
-                                                    int(exp)
+                                                if int(exp) == exp:
                                                     kinlaw = 7
-                                                except:
+                                                else:
                                                     kinlaw = 8
                                         elif kinlaw == 6:
                                             kinlaw = 7
                                         spec_list.append(kinlaw)
                                         print('Species ' + iSpecId + ' had to go in depth!')
-                                        '''
                                     else:
                                         _, b = nominator.split(', ')
                                         exp, _ = b.split(')', 1)
@@ -308,12 +293,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                             print('Categorie: ' + str(2))  # 2
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            try:
-                                                int(exp)
+                                            if int(exp) == exp:
                                                 spec_list.append(3)
                                                 print('Categorie: ' + str(3))  # 3
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            except:
+                                            else:
                                                 spec_list.append(4)
                                                 print('Categorie: ' + str(4))  # 4
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -337,12 +321,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                             print('Categorie: ' + str(6))  # 6
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            try:
-                                                int(exp)
+                                            if int(exp) == exp:
                                                 spec_list.append(7)
                                                 print('Categorie: ' + str(7))  # 7
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            except:
+                                            else:
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -366,7 +349,6 @@ def depth1(formula, list_of_categories, iSpecId):
                                 # get rid of power and brackets
                                 if '/' in nominator:
                                     _, b = nominator.split(', ')
-                                    '''
                                     exp, _ = b.split(')', 1)
                                     nominator = nominator[5: len(nominator) - 4]
                                     list_of_categories4 = decomposition(nominator)
@@ -375,10 +357,9 @@ def depth1(formula, list_of_categories, iSpecId):
                                         if exp == 2:
                                             kinlaw = exp
                                         else:
-                                            try:
-                                                int(exp)
+                                            if int(exp) == exp:
                                                 kinlaw = 3
-                                            except:
+                                            else:
                                                 kinlaw = 4
                                     elif kinlaw == 2:
                                         kinlaw = 3
@@ -386,16 +367,14 @@ def depth1(formula, list_of_categories, iSpecId):
                                         if exp == 2:
                                             kinlaw = 6
                                         else:
-                                            try:
-                                                int(exp)
+                                            if int(exp) == exp:
                                                 kinlaw = 7
-                                            except:
+                                            else:
                                                 kinlaw = 8
                                     elif kinlaw == 6:
                                         kinlaw = 7
                                     spec_list.append(kinlaw)
                                     print('Species ' + iSpecId + ' had to go in depth!')
-                                    '''
                                 else:
                                     _, b = nominator.split(', ')
                                     exp, _ = b.split(')', 1)
@@ -404,12 +383,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                         print('Categorie: ' + str(2))  # 2
                                         print('Species ' + iSpecId + ' is quadratic!')
                                     else:
-                                        try:
-                                            int(exp)
+                                        if int(exp) == exp:
                                             spec_list.append(3)
                                             print('Categorie: ' + str(3))  # 3
                                             print('Species ' + iSpecId + ' has a natural exponent!')
-                                        except:
+                                        else:
                                             spec_list.append(4)
                                             print('Categorie: ' + str(4))  # 4
                                             print('Species ' + iSpecId + ' has a rational exponent!')
@@ -426,12 +404,11 @@ def depth1(formula, list_of_categories, iSpecId):
                                     print('Categorie: ' + str(6))  # 6
                                     print('Species ' + iSpecId + ' is quadratic!')
                                 else:
-                                    try:
-                                        int(exp)
+                                    if int(exp) == exp:
                                         spec_list.append(7)
                                         print('Categorie: ' + str(7))  # 7
                                         print('Species ' + iSpecId + ' has a natural exponent!')
-                                    except:
+                                    else:
                                         spec_list.append(8)
                                         print('Categorie: ' + str(8))  # 8
                                         print('Species ' + iSpecId + ' has a rational exponent!')
@@ -443,11 +420,8 @@ def depth1(formula, list_of_categories, iSpecId):
 
     # check how often the species appears
     conc_kinetic_list = []
-    if len(kinetic_list) == 1:
-        conc_kinetic_list = kinetic_list
-    else:
-        for iList in range(0, len(kinetic_list)):
-            conc_kinetic_list = conc_kinetic_list + kinetic_list[iList]
+    for iList in range(0, len(kinetic_list)):
+        conc_kinetic_list = conc_kinetic_list + kinetic_list[iList]
 
     if np.count_nonzero(conc_kinetic_list) == 0:
         kinlaw = 0
