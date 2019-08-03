@@ -19,8 +19,12 @@ def decomposition(formula):
         formula = formula[1:]
         if formula[0] == '(':
             matching_index = getIndex(formula,0)
-            if formula[matching_index + 2] == '+' or formula[matching_index + 2] == '-':
-                formula = formula[:matching_index] + formula[matching_index + 1:]
+            if matching_index + 2 < len(formula):
+                if formula[matching_index + 2] == '+' or formula[matching_index + 2] == '-':                            # for '*' or '/' have the brackets to stay
+                    formula = formula[:matching_index] + formula[matching_index + 1:]
+                    formula = formula[1:]
+            else:
+                formula = formula[:len(formula)]
                 formula = formula[1:]
 
     list_of_compartments = []

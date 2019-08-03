@@ -63,7 +63,7 @@ df['model'] = model_names
 list_directory_sedml = sorted(os.listdir(sedml_base_path))
 for iSEDML in list_directory_sedml:
 
-    iSEDML = 'Ueda2001'
+    iSEDML = 'chassagnole2002_fig4-user'
 
     mod_SEDML = '{' + iSEDML + '}'
     print(mod_SEDML)

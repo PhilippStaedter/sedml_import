@@ -143,8 +143,16 @@ def getKineticLaw(iModel, iFile):
                                 print('Categorie: ' + str(1))                                                               # 1
                                 print('Variable ' + all_spec[iSpecId] + ' is linear!')
                             else:
-                                _, b = list_of_categories[iCat].split(', ')
-                                exp, _ = b.split(')', 1)
+                                num_comma = list_of_categories[iCat].count(', ')
+                                if num_comma == 1:
+                                    _, b = list_of_categories[iCat].split(', ')
+                                    exp, _ = b.split(')', 1)
+                                else:
+                                    for iComma in range(0, num_comma):
+                                        list_of_splits = list_of_categories[iCat].split(', ', iComma + 1)
+                                        if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                            exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                            break
                                 if exp == str(2) + ' ':
                                     spec_list.append(2)
                                     print('Categorie: ' + str(2))                                                           # 2
@@ -183,14 +191,22 @@ def getKineticLaw(iModel, iFile):
                                                 print('Categorie: ' + str(1))  # 1
                                                 print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                             else:
-                                                close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
-                                                if not all_spec[iSpecId] in nominator[nominator.find('pow(') + 4 : close_power_index + 1]:
+                                                close_power_index = getIndex(nominator, nominator.find('pow(') + 3)
+                                                if not all_spec[iSpecId] in nominator[nominator.find('pow(') + 3 : close_power_index + 1]:
                                                     spec_list.append(1)
                                                     print('Categorie: ' + str(1))  # 1
                                                     print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                                 else:
-                                                    _, b = nominator.split(', ')
-                                                    exp, _ = b.split(')', 1)
+                                                    num_comma = nominator.count(', ')
+                                                    if num_comma == 1:
+                                                        _, b = nominator.split(', ')
+                                                        exp, _ = b.split(')', 1)
+                                                    else:
+                                                        for iComma in range(0, num_comma):
+                                                            list_of_splits = nominator.split(', ', iComma + 1)
+                                                            if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                                exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                                break
                                                     if exp == str(2) + ' ':
                                                         spec_list.append(2)
                                                         print('Categorie: ' + str(2))  # 2
@@ -211,14 +227,22 @@ def getKineticLaw(iModel, iFile):
                                             print('Categorie: ' + str(5))                                                   # 5
                                             print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                         else:
-                                            close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
-                                            if not all_spec[iSpecId] in nominator[nominator.find('pow(') + 4: close_power_index + 1]:
+                                            close_power_index = getIndex(denominator, denominator.find('pow(') + 3)
+                                            if not all_spec[iSpecId] in denominator[denominator.find('pow(') + 3: close_power_index + 1]:
                                                 spec_list.append(5)
                                                 print('Categorie: ' + str(5))  # 5
                                                 print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                             else:
-                                                _, b = denominator.split(', ')
-                                                exp, _ = b.split(')', 1)
+                                                num_comma = denominator.count(', ')
+                                                if num_comma == 1:
+                                                    _, b = denominator.split(', ')
+                                                    exp, _ = b.split(')', 1)
+                                                else:
+                                                    for iComma in range(0, num_comma):
+                                                        list_of_splits = denominator.split(', ', iComma + 1)
+                                                        if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                            exp, _ = list_of_splits[len(list_of_splits) - 1].split(')',1)
+                                                            break
                                                 if exp == str(2) + ' ':
                                                     spec_list.append(6)
                                                     print('Categorie: ' + str(6))                                           # 6
@@ -254,8 +278,16 @@ def getKineticLaw(iModel, iFile):
                                                 # repeat whole categories again + pow(A + B/C) also possible!
                                                 # get rid of power and brackets
                                                 if '/' in nominator:
-                                                    _, b = nominator.split(', ')
-                                                    exp, _ = b.split(')', 1)
+                                                    num_comma = nominator.count(', ')
+                                                    if num_comma == 1:
+                                                        _, b = nominator.split(', ')
+                                                        exp, _ = b.split(')', 1)
+                                                    else:
+                                                        for iComma in range(0, num_comma):
+                                                            list_of_splits = nominator.split(', ', iComma + 1)
+                                                            if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                                exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                                break
                                                     nominator = nominator[5: len(nominator) - 4]
                                                     list_of_categories4 = decomposition(nominator)
                                                     kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
@@ -284,8 +316,16 @@ def getKineticLaw(iModel, iFile):
                                                     spec_list.append(kinlaw)
                                                     print('Species ' + all_spec[iSpecId] + ' had to go in depth!')
                                                 else:
-                                                    _, b = nominator.split(', ')
-                                                    exp, _ = b.split(')', 1)
+                                                    num_comma = nominator.count(', ')
+                                                    if num_comma == 1:
+                                                        _, b = nominator.split(', ')
+                                                        exp, _ = b.split(')', 1)
+                                                    else:
+                                                        for iComma in range(0, num_comma):
+                                                            list_of_splits = nominator.split(', ', iComma + 1)
+                                                            if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                                exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                                break
                                                     if exp == str(2) + ' ':
                                                         spec_list.append(2)
                                                         print('Categorie: ' + str(2))  # 2
@@ -301,20 +341,27 @@ def getKineticLaw(iModel, iFile):
                                                             print('Categorie: ' + str(4))  # 4
                                                             print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                         elif all_spec[iSpecId] not in nominator and all_spec[iSpecId] in denominator:
-                                            if not 'pow(' + all_spec[iSpecId] in denominator:
+                                            if not 'pow(' in denominator:
                                                 spec_list.append(5)
                                                 print('Categorie: ' + str(5))  # 5
                                                 print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                             else:
-                                                close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
-                                                if not all_spec[iSpecId] in nominator[
-                                                                  nominator.find('pow(') + 4: close_power_index + 1]:
+                                                close_power_index = getIndex(denominator, denominator.find('pow(') + 3)
+                                                if not all_spec[iSpecId] in denominator[denominator.find('pow(') + 3: close_power_index + 1]:
                                                     spec_list.append(5)
                                                     print('Categorie: ' + str(5))  # 5
                                                     print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                                 else:
-                                                    _, b = denominator.split(', ')
-                                                    exp, _ = b.split(')', 1)
+                                                    num_comma = denominator.count(', ')
+                                                    if num_comma == 1:
+                                                        _, b = denominator.split(', ')
+                                                        exp, _ = b.split(')', 1)
+                                                    else:
+                                                        for iComma in range(0, num_comma):
+                                                            list_of_splits = denominator.split(', ', iComma + 1)
+                                                            if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                                exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                                break
                                                     if exp == str(2) + ' ':
                                                         spec_list.append(6)
                                                         print('Categorie: ' + str(6))  # 6
@@ -333,9 +380,18 @@ def getKineticLaw(iModel, iFile):
                                             spec_list.append(9)
                                             print('What to do with species ' + all_spec[iSpecId] + ' from depth1 ?')
                                     else:
-                                        _, b = list_of_categories[iCat].split(', ')
-                                        exp, _ = b.split(')', 1)
-                                        nominator = list_of_categories[iCat][5: matching_index - 4]
+                                        num_comma = list_of_categories[iCat].count(', ')
+                                        if num_comma == 1:
+                                            _, b = list_of_categories[iCat].split(', ')
+                                            exp, _ = b.split(')', 1)
+                                        else:
+                                            for iComma in range(0, num_comma):
+                                                list_of_splits = list_of_categories[iCat].split(', ', iComma + 1)
+                                                if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                    exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                    break
+                                        comma_index = list_of_categories[iCat].find(',')
+                                        nominator = list_of_categories[iCat][5: comma_index]
                                         list_of_categories3 = decomposition(nominator)
                                         kinlaw = depth1(nominator, list_of_categories3, all_spec[iSpecId], sbml_file, iReact)
                                         if kinlaw == 1:
@@ -379,8 +435,16 @@ def getKineticLaw(iModel, iFile):
                                             # repeat whole categories again + pow(A + B/C) also possible!
                                             # get rid of power and brackets
                                             if '/' in nominator:
-                                                _, b = nominator.split(', ')
-                                                exp, _ = b.split(')', 1)
+                                                num_comma = nominator.count(', ')
+                                                if num_comma == 1:
+                                                    _, b = nominator.split(', ')
+                                                    exp, _ = b.split(')', 1)
+                                                else:
+                                                    for iComma in range(0, num_comma):
+                                                        list_of_splits = nominator.split(', ', iComma + 1)
+                                                        if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                            exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                            break
                                                 nominator = nominator[5: len(nominator) - 4]
                                                 list_of_categories4 = decomposition(nominator)
                                                 kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
@@ -409,8 +473,16 @@ def getKineticLaw(iModel, iFile):
                                                 spec_list.append(kinlaw)
                                                 print('Species ' + all_spec[iSpec] + ' had to go in depth!')
                                             else:
-                                                _, b = nominator.split(', ')
-                                                exp, _ = b.split(')', 1)
+                                                num_comma = nominator.count(', ')
+                                                if num_comma == 1:
+                                                    _, b = nominator.split(', ')
+                                                    exp, _ = b.split(')', 1)
+                                                else:
+                                                    for iComma in range(0, num_comma):
+                                                        list_of_splits = nominator.split(', ', iComma + 1)
+                                                        if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                            exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                            break
                                                 if exp == str(2) + ' ':
                                                     spec_list.append(2)
                                                     print('Categorie: ' + str(2))  # 2
@@ -426,19 +498,27 @@ def getKineticLaw(iModel, iFile):
                                                         print('Categorie: ' + str(4))  # 4
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                     elif all_spec[iSpecId] not in nominator and all_spec[iSpecId] in denominator:
-                                        if not 'pow(' + all_spec[iSpecId] in denominator:
+                                        if not 'pow(' in denominator:
                                             spec_list.append(5)
                                             print('Categorie: ' + str(5))                                                   # 5
                                             print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                         else:
-                                            close_power_index = getIndex(nominator, nominator.find('pow(') + 4)
-                                            if not all_spec[iSpecId] in nominator[nominator.find('pow(') + 4: close_power_index + 1]:
+                                            close_power_index = getIndex(denominator, denominator.find('pow(') + 3)
+                                            if not all_spec[iSpecId] in denominator[denominator.find('pow(') + 3: close_power_index + 1]:
                                                 spec_list.append(5)
                                                 print('Categorie: ' + str(5))  # 5
                                                 print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                             else:
-                                                _, b = denominator.split(', ')
-                                                exp, _ = b.split(')', 1)
+                                                num_comma = denominator.count(', ')
+                                                if num_comma == 1:
+                                                    _, b = denominator.split(', ')
+                                                    exp, _ = b.split(')', 1)
+                                                else:
+                                                    for iComma in range(0, num_comma):
+                                                        list_of_splits = denominator.split(', ', iComma + 1)
+                                                        if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                            exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                            break
                                                 if exp == str(2) + ' ':
                                                     spec_list.append(6)
                                                     print('Categorie: ' + str(6))                                           # 6
@@ -472,8 +552,17 @@ def getKineticLaw(iModel, iFile):
                                         # repeat whole categories again + pow(A + B/C) also possible!
                                         # get rid of power and brackets
                                         if '/' in nominator:
-                                            _, b = nominator.split(', ')
-                                            exp, _ = b.split(')', 1)
+                                            num_comma = nominator.count(', ')
+                                            if num_comma == 1:
+                                                _, b = nominator.split(', ')
+                                                exp, _ = b.split(')', 1)
+                                            else:
+                                                for iComma in range(0, num_comma):
+                                                    list_of_splits = nominator.split(', ', iComma + 1)
+                                                    if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][
+                                                        iComma]:
+                                                        exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                        break
                                             nominator = nominator[5: len(nominator) - 4]
                                             list_of_categories5 = decomposition(nominator)
                                             kinlaw = depth1(nominator, list_of_categories5, all_spec[iSpecId], sbml_file, iReact)
@@ -502,8 +591,16 @@ def getKineticLaw(iModel, iFile):
                                             spec_list.append(kinlaw)
                                             print('Species ' + all_spec[iSpec] + ' had to go in depth!')
                                         else:
-                                            _, b = nominator.split(', ')
-                                            exp, _ = b.split(')', 1)
+                                            num_comma = nominator.count(', ')
+                                            if num_comma == 1:
+                                                _, b = nominator.split(', ')
+                                                exp, _ = b.split(')', 1)
+                                            else:
+                                                for iComma in range(0, num_comma):
+                                                    list_of_splits = nominator.split(', ', iComma + 1)
+                                                    if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                        exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                        break
                                             if exp == str(2) + ' ':
                                                 spec_list.append(2)
                                                 print('Categorie: ' + str(2))  # 2
@@ -524,8 +621,16 @@ def getKineticLaw(iModel, iFile):
                                         print('Categorie: ' + str(5))  # 5
                                         print('Variable ' + all_spec[iSpecId] + ' is linear!')
                                     else:
-                                        _, b = denominator.split(', ')
-                                        exp, _ = b.split(')', 1)
+                                        num_comma = denominator.count(', ')
+                                        if num_comma == 1:
+                                            _, b = denominator.split(', ')
+                                            exp, _ = b.split(')', 1)
+                                        else:
+                                            for iComma in range(0, num_comma):
+                                                list_of_splits = denominator.split(', ', iComma + 1)
+                                                if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                                    exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                                    break
                                         if exp == str(2) + ' ':
                                             spec_list.append(6)
                                             print('Categorie: ' + str(6))  # 6
