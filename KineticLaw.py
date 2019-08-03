@@ -150,11 +150,12 @@ def getKineticLaw(iModel, iFile):
                                     print('Categorie: ' + str(2))                                                           # 2
                                     print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                 else:
-                                    if int(exp) == exp:
+                                    try:
+                                        int(exp)
                                         spec_list.append(3)
                                         print('Categorie: ' + str(3))                                                       # 3
                                         print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                    else:
+                                    except:
                                         spec_list.append(4)
                                         print('Categorie: ' + str(4))                                                       # 4
                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -195,11 +196,12 @@ def getKineticLaw(iModel, iFile):
                                                         print('Categorie: ' + str(2))  # 2
                                                         print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                     else:
-                                                        if int(exp) == exp:
+                                                        try:
+                                                            int(exp)
                                                             spec_list.append(3)
                                                             print('Categorie: ' + str(3))  # 3
                                                             print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                        else:
+                                                        except:
                                                             spec_list.append(4)
                                                             print('Categorie: ' + str(4))  # 4
                                                             print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -222,11 +224,12 @@ def getKineticLaw(iModel, iFile):
                                                     print('Categorie: ' + str(6))                                           # 6
                                                     print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         spec_list.append(7)
                                                         print('Categorie: ' + str(7))                                       # 7
                                                         print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                    else:
+                                                    except:
                                                         spec_list.append(8)
                                                         print('Categorie: ' + str(8))                                       # 8
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -260,9 +263,10 @@ def getKineticLaw(iModel, iFile):
                                                         if exp == 2:
                                                             kinlaw = exp
                                                         else:
-                                                            if int(exp) == exp:
+                                                            try:
+                                                                int(exp)
                                                                 kinlaw = 3
-                                                            else:
+                                                            except:
                                                                 kinlaw = 4
                                                     elif kinlaw == 2:
                                                         kinlaw = 3
@@ -270,9 +274,10 @@ def getKineticLaw(iModel, iFile):
                                                         if exp == 2:
                                                             kinlaw = 6
                                                         else:
-                                                            if int(exp) == exp:
+                                                            try:
+                                                                int(exp)
                                                                 kinlaw = 7
-                                                            else:
+                                                            except:
                                                                 kinlaw = 8
                                                     elif kinlaw == 6:
                                                         kinlaw = 7
@@ -286,11 +291,12 @@ def getKineticLaw(iModel, iFile):
                                                         print('Categorie: ' + str(2))  # 2
                                                         print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                     else:
-                                                        if int(exp) == exp:
+                                                        try:
+                                                            int(exp)
                                                             spec_list.append(3)
                                                             print('Categorie: ' + str(3))  # 3
                                                             print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                        else:
+                                                        except:
                                                             spec_list.append(4)
                                                             print('Categorie: ' + str(4))  # 4
                                                             print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -314,11 +320,12 @@ def getKineticLaw(iModel, iFile):
                                                         print('Categorie: ' + str(6))  # 6
                                                         print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                     else:
-                                                        if int(exp) == exp:
+                                                        try:
+                                                            int(exp)
                                                             spec_list.append(7)
                                                             print('Categorie: ' + str(7))  # 7
                                                             print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                        else:
+                                                        except:
                                                             spec_list.append(8)
                                                             print('Categorie: ' + str(8))  # 8
                                                             print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -335,9 +342,10 @@ def getKineticLaw(iModel, iFile):
                                             if exp == 2:
                                                 kinlaw = exp
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     kinlaw = 3
-                                                else:
+                                                except:
                                                     kinlaw = 4
                                         elif kinlaw == 2:
                                             kinlaw = 3
@@ -345,9 +353,10 @@ def getKineticLaw(iModel, iFile):
                                             if exp == 2:
                                                 kinlaw = 6
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     kinlaw = 7
-                                                else:
+                                                except:
                                                     kinlaw = 8
                                         elif kinlaw == 6:
                                             kinlaw = 7
@@ -379,9 +388,10 @@ def getKineticLaw(iModel, iFile):
                                                     if exp == 2:
                                                         kinlaw = exp
                                                     else:
-                                                        if int(exp) == exp:
+                                                        try:
+                                                            int(exp)
                                                             kinlaw = 3
-                                                        else:
+                                                        except:
                                                             kinlaw = 4
                                                 elif kinlaw == 2:
                                                     kinlaw = 3
@@ -389,9 +399,10 @@ def getKineticLaw(iModel, iFile):
                                                     if exp == 2:
                                                         kinlaw = 6
                                                     else:
-                                                        if int(exp) == exp:
+                                                        try:
+                                                            int(exp)
                                                             kinlaw = 7
-                                                        else:
+                                                        except:
                                                             kinlaw = 8
                                                 elif kinlaw == 6:
                                                     kinlaw = 7
@@ -405,11 +416,12 @@ def getKineticLaw(iModel, iFile):
                                                     print('Categorie: ' + str(2))  # 2
                                                     print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         spec_list.append(3)
                                                         print('Categorie: ' + str(3))  # 3
                                                         print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                    else:
+                                                    except:
                                                         spec_list.append(4)
                                                         print('Categorie: ' + str(4))  # 4
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -432,11 +444,12 @@ def getKineticLaw(iModel, iFile):
                                                     print('Categorie: ' + str(6))                                           # 6
                                                     print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         spec_list.append(7)
                                                         print('Categorie: ' + str(7))                                       # 7
                                                         print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                    else:
+                                                    except:
                                                         spec_list.append(8)
                                                         print('Categorie: ' + str(8))                                       # 8
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -468,9 +481,10 @@ def getKineticLaw(iModel, iFile):
                                                 if exp == 2:
                                                     kinlaw = exp
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         kinlaw = 3
-                                                    else:
+                                                    except:
                                                         kinlaw = 4
                                             elif kinlaw == 2:
                                                 kinlaw = 3
@@ -478,9 +492,10 @@ def getKineticLaw(iModel, iFile):
                                                 if exp == 2:
                                                     kinlaw = 6
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         kinlaw = 7
-                                                    else:
+                                                    except:
                                                         kinlaw = 8
                                             elif kinlaw == 6:
                                                 kinlaw = 7
@@ -494,11 +509,12 @@ def getKineticLaw(iModel, iFile):
                                                 print('Categorie: ' + str(2))  # 2
                                                 print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     spec_list.append(3)
                                                     print('Categorie: ' + str(3))  # 3
                                                     print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                                else:
+                                                except:
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
@@ -515,11 +531,12 @@ def getKineticLaw(iModel, iFile):
                                             print('Categorie: ' + str(6))  # 6
                                             print('Species ' + all_spec[iSpecId] + ' is quadratic!')
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 spec_list.append(7)
                                                 print('Categorie: ' + str(7))  # 7
                                                 print('Species ' + all_spec[iSpecId] + ' has a natural exponent!')
-                                            else:
+                                            except:
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')

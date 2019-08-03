@@ -38,11 +38,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                             print('Categorie: ' + str(2))  # 2
                             print('Species ' + iSpecId + ' is quadratic!')
                         else:
-                            if int(exp) == exp:
+                            try:
+                                int(exp)
                                 spec_list.append(3)
                                 print('Categorie: ' + str(3))  # 3
                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                            else:
+                            except:
                                 spec_list.append(4)
                                 print('Categorie: ' + str(4))  # 4
                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -84,12 +85,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 print('Categorie: ' + str(2))  # 2
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     spec_list.append(3)
                                                     print('Categorie: ' + str(3))  # 3
-                                                    print(
-                                                        'Species ' + iSpecId + ' has a natural exponent!')
-                                                else:
+                                                    print('Species ' + iSpecId + ' has a natural exponent!')
+                                                except:
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -113,11 +114,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             print('Categorie: ' + str(6))  # 6
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 spec_list.append(7)
                                                 print('Categorie: ' + str(7))  # 7
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            else:
+                                            except:
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -150,9 +152,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 if exp == 2:
                                                     kinlaw = exp
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         kinlaw = 3
-                                                    else:
+                                                    except:
                                                         kinlaw = 4
                                             elif kinlaw == 2:
                                                 kinlaw = 3
@@ -160,9 +163,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 if exp == 2:
                                                     kinlaw = 6
                                                 else:
-                                                    if int(exp) == exp:
+                                                    try:
+                                                        int(exp)
                                                         kinlaw = 7
-                                                    else:
+                                                    except:
                                                         kinlaw = 8
                                             elif kinlaw == 6:
                                                 kinlaw = 7
@@ -176,11 +180,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 print('Categorie: ' + str(2))  # 2
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     spec_list.append(3)
                                                     print('Categorie: ' + str(3))  # 3
                                                     print('Species ' + iSpecId + ' has a natural exponent!')
-                                                else:
+                                                except:
                                                     spec_list.append(4)
                                                     print('Categorie: ' + str(4))  # 4
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -203,11 +208,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 print('Categorie: ' + str(6))  # 6
                                                 print('Species ' + iSpecId + ' is quadratic!')
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     spec_list.append(7)
                                                     print('Categorie: ' + str(7))  # 7
                                                     print('Species ' + iSpecId + ' has a natural exponent!')
-                                                else:
+                                                except:
                                                     spec_list.append(8)
                                                     print('Categorie: ' + str(8))  # 8
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
@@ -225,9 +231,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         if exp == 2:
                                             kinlaw = exp
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 kinlaw = 3
-                                            else:
+                                            except:
                                                 kinlaw = 4
                                     except:
                                         # the exponent is most likely a parameter with some numerical value
@@ -237,15 +244,21 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             all_parameters.append(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getId() + ' ')
                                         for iPar in range(0, len(all_parameters)):
                                             if exp == all_parameters[iPar]:
-                                                exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) + ' '
+                                                if int(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) == sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue():
+                                                    exp = str(int(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue())) + ' '
+                                                    break
+                                                else:
+                                                    exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(iPar).getValue()) + ' '
+                                                    break
                                         if exp == str(1) + ' ':
                                             kinlaw = 1
                                         elif exp == str(2) + ' ':
                                             kinlaw = 2
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 kinlaw = 3
-                                            else:
+                                            except:
                                                 kinlaw = 4
                                 elif kinlaw == 2:
                                     kinlaw = 3
@@ -253,9 +266,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                     if exp == 2:
                                         kinlaw = 6
                                     else:
-                                        if int(exp) == exp:
+                                        try:
+                                            int(exp)
                                             kinlaw = 7
-                                        else:
+                                        except:
                                             kinlaw = 8
                                 elif kinlaw == 6:
                                     kinlaw = 7
@@ -286,9 +300,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             if exp == 2:
                                                 kinlaw = exp
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     kinlaw = 3
-                                                else:
+                                                except:
                                                     kinlaw = 4
                                         elif kinlaw == 2:
                                             kinlaw = 3
@@ -296,9 +311,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             if exp == 2:
                                                 kinlaw = 6
                                             else:
-                                                if int(exp) == exp:
+                                                try:
+                                                    int(exp)
                                                     kinlaw = 7
-                                                else:
+                                                except:
                                                     kinlaw = 8
                                         elif kinlaw == 6:
                                             kinlaw = 7
@@ -312,11 +328,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             print('Categorie: ' + str(2))  # 2
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 spec_list.append(3)
                                                 print('Categorie: ' + str(3))  # 3
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            else:
+                                            except:
                                                 spec_list.append(4)
                                                 print('Categorie: ' + str(4))  # 4
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -340,11 +357,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                             print('Categorie: ' + str(6))  # 6
                                             print('Species ' + iSpecId + ' is quadratic!')
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 spec_list.append(7)
                                                 print('Categorie: ' + str(7))  # 7
                                                 print('Species ' + iSpecId + ' has a natural exponent!')
-                                            else:
+                                            except:
                                                 spec_list.append(8)
                                                 print('Categorie: ' + str(8))  # 8
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
@@ -376,9 +394,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         if exp == 2:
                                             kinlaw = exp
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 kinlaw = 3
-                                            else:
+                                            except:
                                                 kinlaw = 4
                                     elif kinlaw == 2:
                                         kinlaw = 3
@@ -386,9 +405,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         if exp == 2:
                                             kinlaw = 6
                                         else:
-                                            if int(exp) == exp:
+                                            try:
+                                                int(exp)
                                                 kinlaw = 7
-                                            else:
+                                            except:
                                                 kinlaw = 8
                                     elif kinlaw == 6:
                                         kinlaw = 7
@@ -402,11 +422,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         print('Categorie: ' + str(2))  # 2
                                         print('Species ' + iSpecId + ' is quadratic!')
                                     else:
-                                        if int(exp) == exp:
+                                        try:
+                                            int(exp)
                                             spec_list.append(3)
                                             print('Categorie: ' + str(3))  # 3
                                             print('Species ' + iSpecId + ' has a natural exponent!')
-                                        else:
+                                        except:
                                             spec_list.append(4)
                                             print('Categorie: ' + str(4))  # 4
                                             print('Species ' + iSpecId + ' has a rational exponent!')
@@ -423,11 +444,12 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                     print('Categorie: ' + str(6))  # 6
                                     print('Species ' + iSpecId + ' is quadratic!')
                                 else:
-                                    if int(exp) == exp:
+                                    try:
+                                        int(exp)
                                         spec_list.append(7)
                                         print('Categorie: ' + str(7))  # 7
                                         print('Species ' + iSpecId + ' has a natural exponent!')
-                                    else:
+                                    except:
                                         spec_list.append(8)
                                         print('Categorie: ' + str(8))  # 8
                                         print('Species ' + iSpecId + ' has a rational exponent!')
