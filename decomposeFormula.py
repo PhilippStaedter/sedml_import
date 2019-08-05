@@ -58,7 +58,7 @@ def decomposition(formula):
                             # get to return value
                             iElement = iter_object
 
-                elif formula[matching_index + 2] == '*':
+                elif formula[matching_index + 2] == '*' or formula[matching_index + 2] == '+' or formula[matching_index + 2] == '-':
                     list_of_compartments.append(formula[iElement : matching_index + 1])
                     formula = formula[matching_index + 4 :]
                     iter_object = len(formula)
