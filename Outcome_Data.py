@@ -41,10 +41,16 @@ for iModel in range(0, len(model_names)):
     solAlg_files = sorted(os.listdir(total_models_path))
     for iFile in range(0, len(solAlg_files)):
 
+        #if solAlg_files[iFile] == '{levchenko2000_fig2-user}':
+         #   if solAlg_files[iFile - 1] == '{levchenko2000_fig2-user}':
+
         # read in specific model
         for iMdl in range(0, len(all_tsv_files[iFile]['id'])):
             if all_tsv_files[iFile]['id'][iMdl] == model_names[iModel]:
-                t_intern.append(all_tsv_files[iFile]['t_intern_ms'][iMdl])
+                if model_names[iModel] == '{levchenko2000_fig2-user}' and model_names[iModel + 1] != '{levchenko2000_fig2-user}':
+                    t_intern.append(all_tsv_files[iFile]['t_intern_ms'][iMdl + 1])
+                else:
+                    t_intern.append(all_tsv_files[iFile]['t_intern_ms'][iMdl])
 
     # get smallest simulation time
     lowlist = sorted(t_intern)
@@ -70,7 +76,7 @@ for iModel in range(0, len(model_names)):
 final_df = all_models[0]
 for iDataFrame in range(1, len(all_models)):
     final_df = pd.concat([final_df, all_models[iDataFrame]], axis=1)
-final_df = final_df.iloc[:32]
+final_df = final_df.iloc[:40]                                                                                           # delte all rows after the 39th
 
 # reindex
 par_list = []

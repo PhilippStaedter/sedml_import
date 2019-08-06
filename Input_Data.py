@@ -23,7 +23,7 @@ new_list = []
 for iFile in range(0, len(stat_par_rec_file['id'])):
     new_id = stat_par_rec_file['id'][iFile].split('_{')[0]
     if new_id == '{kolodkin2010_figure2b}':
-        new_id = '{kolodkin2010_figure2b}_' + str(iFile)
+        new_id = '{kolodkin2010_figure2b}_' + str(iFile - 7)                                                            # need '-7' because in stat_rec_par file no averaging has been done
     new_list.append(new_id)
 stat_par_rec_file['id'] = new_list
 
@@ -50,27 +50,43 @@ while iModel < len(stat_par_rec_file['id']):
 model_names = stat_par_rec_file['id']
 
 ######### create data frame for all models #############
+all_columns = ['model', 'num_x', 'num_r', 'num_p', 'p_n', 'p_l', 'p_q', 'p_p', 'p_e', 'p_L', 'p_Q', 'p_P', 'p_E', 'p_o', 'combinations', 'value']
+'''
 all_columns = ['model', 'num_x', 'num_r', 'num_p', 'p_n', 'p_l', 'p_q', 'p_p', 'p_e', 'p_L', 'p_Q', 'p_P', 'p_E', 'p_o',
-               'c_1_1_08_06', 'c_1_1_10_14', 'c_1_1_12_10', 'c_1_1_16_08', 'c_1_6_08_06', 'c_1_6_10_14', 'c_1_6_12_10', 'c_1_6_16_08',
-               'c_1_7_08_06', 'c_1_7_10_14', 'c_1_7_12_10', 'c_1_7_16_08', 'c_1_8_08_06', 'c_1_8_10_14', 'c_1_8_12_10', 'c_1_8_16_08',
-               'c_1_9_08_06', 'c_1_9_10_14', 'c_1_9_12_10', 'c_1_9_16_08', 'c_2_1_08_06', 'c_2_1_10_14', 'c_2_1_12_10', 'c_2_1_16_08',
-               'c_2_6_08_06', 'c_2_6_10_14', 'c_2_6_12_10', 'c_2_6_16_08', 'c_2_7_08_06', 'c_2_7_10_14', 'c_2_7_12_10', 'c_2_7_16_08',
-               'c_2_8_08_06', 'c_2_8_10_14', 'c_2_8_12_10', 'c_2_8_16_08', 'c_2_9_08_06', 'c_2_9_10_14', 'c_2_9_12_10', 'c_2_9_16_08']
-df = pd.DataFrame(columns=all_columns, data=[])
-df['model'] = model_names
+               '1_1_08_06', '1_1_10_14', '1_1_12_10', '1_1_16_08', '1_6_08_06', '1_6_10_14', '1_6_12_10', '1_6_16_08',
+               '1_7_08_06', '1_7_10_14', '1_7_12_10', '1_7_16_08', '1_8_08_06', '1_8_10_14', '1_8_12_10', '1_8_16_08',
+               '1_9_08_06', '1_9_10_14', '1_9_12_10', '1_9_16_08', '2_1_08_06', '2_1_10_14', '2_1_12_10', '2_1_16_08',
+               '2_6_08_06', '2_6_10_14', '2_6_12_10', '2_6_16_08', '2_7_08_06', '2_7_10_14', '2_7_12_10', '2_7_16_08',
+               '2_8_08_06', '2_8_10_14', '2_8_12_10', '2_8_16_08', '2_9_08_06', '2_9_10_14', '2_9_12_10', '2_9_16_08']
+'''
+new_df = pd.DataFrame(columns=all_columns, data=[])
+#df = pd.DataFrame(columns=all_columns, data=[])
+#df['model'] = model_names
 
 ################ get INPUT data ################
+# open output data file
+output_data_file = pd.read_csv(output_data_path, sep='\t')
+
+# set counter
+counter = 0
+
 list_directory_sedml = sorted(os.listdir(sedml_base_path))
 for iSEDML in list_directory_sedml:
 
-    #iSEDML = 'chassagnole2002_fig4-user'
+    #iSEDML = 'levchenko2000_fig2-user'
 
     mod_SEDML = '{' + iSEDML + '}'
     print(mod_SEDML)
     if mod_SEDML in list(model_names) or mod_SEDML == '{kolodkin2010_figure2b}':
 
+        # new data frame
+        df = pd.DataFrame(columns=all_columns, data=[])
+
+        # Append additional row in .tsv file
+        df = df.append({}, ignore_index=True)
+
         list_directory_sbml = sorted(os.listdir(sedml_base_path + '/' + iSEDML + '/sbml_models'))
-        if mod_SEDML != '{kolodkin2010_figure2b}':
+        if mod_SEDML != '{kolodkin2010_figure2b}' and mod_SEDML != '{levchenko2000_fig2-user}':
             iSBML = list_directory_sbml[0]
 
             #### get type of kinetic
@@ -82,6 +98,7 @@ for iSEDML in list_directory_sedml:
                     num_x = stat_par_rec_file['states'][iModel]
                     num_r = stat_par_rec_file['reactions'][iModel]
                     num_p = stat_par_rec_file['parameters'][iModel]
+
             p_n = all_kinetics[0]
             p_l = all_kinetics[1]
             p_q = all_kinetics[2]
@@ -95,26 +112,55 @@ for iSEDML in list_directory_sedml:
             all_data = [num_x, num_r, num_p, p_n, p_l, p_q, p_p, p_e, p_L, p_Q, p_P, p_E, p_o]
 
             # save all_data in data frame
-            for iModel in range(0, len(model_names)):
-                if df['model'][iModel] == mod_SEDML:
-                    df['num_x'][iModel] = num_x
-                    df['num_r'][iModel] = num_r
-                    df['num_p'][iModel] = num_p
-                    df['p_n'][iModel] = p_n
-                    df['p_l'][iModel] = p_l
-                    df['p_q'][iModel] = p_q
-                    df['p_p'][iModel] = p_p
-                    df['p_e'][iModel] = p_e
-                    df['p_L'][iModel] = p_L
-                    df['p_Q'][iModel] = p_Q
-                    df['p_P'][iModel] = p_P
-                    df['p_E'][iModel] = p_E
-                    df['p_o'][iModel] = p_o
+            df['model'][counter] = mod_SEDML
+            df['num_x'][counter] = num_x
+            df['num_r'][counter] = num_r
+            df['num_p'][counter] = num_p
+            df['p_n'][counter] = p_n
+            df['p_l'][counter] = p_l
+            df['p_q'][counter] = p_q
+            df['p_p'][counter] = p_p
+            df['p_e'][counter] = p_e
+            df['p_L'][counter] = p_L
+            df['p_Q'][counter] = p_Q
+            df['p_P'][counter] = p_P
+            df['p_E'][counter] = p_E
+            df['p_o'][counter] = p_o
 
-        else:
-            kolodkin_list = ['{kolodkin2010_figure2b}_96', '{kolodkin2010_figure2b}_97', '{kolodkin2010_figure2b}_98',
-                             '{kolodkin2010_figure2b}_99', '{kolodkin2010_figure2b}_100', '{kolodkin2010_figure2b}_101']
+            # duplicate the newly created row 40 times for all different combinations
+            df = pd.concat([df] * len(output_data_file['combinations']), ignore_index=True)
+            for iComb in range(0, len(output_data_file['combinations'])):
+                df.loc[counter].combinations = output_data_file['combinations'][iComb]
+
+                # assign right value to right place
+                for iModel_output in range(1, len(output_data_file.columns)):  # column 'combinations' is unnecessary
+                    for iModel_input in range(0, len(df['model'])):
+                        if output_data_file.columns[iModel_output] == df['model'][iModel_input]:
+                            if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                                df.loc[counter].value = 1
+                                break
+                            else:
+                                df.loc[counter].value = 0
+                                break
+                        break
+                counter = counter + 1
+
+            # reset counter
+            counter = 0
+
+            # append df to new_df
+            new_df = new_df.append(df, ignore_index=True)
+
+        elif mod_SEDML == '{kolodkin2010_figure2b}':
+            kolodkin_list = ['{kolodkin2010_figure2b}_89', '{kolodkin2010_figure2b}_90', '{kolodkin2010_figure2b}_91',
+                             '{kolodkin2010_figure2b}_92', '{kolodkin2010_figure2b}_93', '{kolodkin2010_figure2b}_94']
             for iKolodkin in range(0, len(list_directory_sbml)):
+
+                # new data frame
+                df = pd.DataFrame(columns=all_columns, data=[])
+
+                # Append additional row in .tsv file
+                df = df.append({}, ignore_index=True)
 
                 iSBML = list_directory_sbml[iKolodkin]
 
@@ -140,6 +186,23 @@ for iSEDML in list_directory_sedml:
                 all_data = [num_x, num_r, num_p, p_n, p_l, p_q, p_p, p_e, p_L, p_Q, p_P, p_E, p_o]
 
                 # save all_data in data frame
+                df['model'][counter] = kolodkin_list[iKolodkin]
+                df['num_x'][counter] = num_x
+                df['num_r'][counter] = num_r
+                df['num_p'][counter] = num_p
+                df['p_n'][counter] = p_n
+                df['p_l'][counter] = p_l
+                df['p_q'][counter] = p_q
+                df['p_p'][counter] = p_p
+                df['p_e'][counter] = p_e
+                df['p_L'][counter] = p_L
+                df['p_Q'][counter] = p_Q
+                df['p_P'][counter] = p_P
+                df['p_E'][counter] = p_E
+                df['p_o'][counter] = p_o
+
+                '''
+                # save all_data in data frame
                 for iModel in range(0, len(model_names)):
                     if df['model'][iModel] == kolodkin_list[iKolodkin]:
                         df['num_x'][iModel] = num_x
@@ -155,8 +218,141 @@ for iSEDML in list_directory_sedml:
                         df['p_P'][iModel] = p_P
                         df['p_E'][iModel] = p_E
                         df['p_o'][iModel] = p_o
+                '''
+
+                # duplicate the newly created row 40 times for all different combinations
+                df = pd.concat([df] * len(output_data_file['combinations']), ignore_index=True)
+                for iComb in range(0, len(output_data_file['combinations'])):
+                    df.loc[counter].combinations = output_data_file['combinations'][iComb]
+
+                    # assign right value to right place
+                    for iModel_output in range(1, len(output_data_file.columns)):                                       # column 'combinations' is unnecessary
+                        for iModel_input in range(0, len(df['model'])):
+                            if output_data_file.columns[iModel_output] == df['model'][iModel_input]:
+                                if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                                    df.loc[counter].value = 1
+                                    break
+                                else:
+                                    df.loc[counter].value = 0
+                                    break
+                            break
+                    counter = counter + 1
+
+                # reset counter
+                counter = 0
+
+                # append df to new_df
+                new_df = new_df.append(df, ignore_index=True)
+
+        elif mod_SEDML == '{levchenko2000_fig2-user}':
+            levchenko_list = ['{levchenko2000_fig2-user}', '{levchenko2000_fig2-user}']
+
+            for iLevchenko in range(0, len(list_directory_sbml) - 5):
+
+                # new data frame
+                df = pd.DataFrame(columns=all_columns, data=[])
+
+                # Append additional row in .tsv file
+                df = df.append({}, ignore_index=True)
+
+                iSBML = list_directory_sbml[iLevchenko + 5]
+
+                #### get type of kinetic
+                all_kinetics = getKineticLaw(iSEDML, iSBML)
+
+                ### save data
+                for iModel in range(0, len(model_names)):
+                    if stat_par_rec_file['id'][iModel] == levchenko_list[iLevchenko]:
+                        if iLevchenko == 0:
+                            num_x = stat_par_rec_file['states'][iModel]
+                            num_r = stat_par_rec_file['reactions'][iModel]
+                            num_p = stat_par_rec_file['parameters'][iModel]
+                            break
+                        else:
+                            num_x = stat_par_rec_file['states'][iModel]
+                            num_r = stat_par_rec_file['reactions'][iModel]
+                            num_p = stat_par_rec_file['parameters'][iModel]
+
+                p_n = all_kinetics[0]
+                p_l = all_kinetics[1]
+                p_q = all_kinetics[2]
+                p_p = all_kinetics[3]
+                p_e = all_kinetics[4]
+                p_L = all_kinetics[5]  # <==> Michaelis Menten ?
+                p_Q = all_kinetics[6]  # <==
+                p_P = all_kinetics[7]  # ==
+                p_E = all_kinetics[8]  # ==> Hill ?
+                p_o = all_kinetics[9]
+                all_data = [num_x, num_r, num_p, p_n, p_l, p_q, p_p, p_e, p_L, p_Q, p_P, p_E, p_o]
+
+                # save all_data in data frame
+                df['model'][counter] = levchenko_list[iLevchenko]
+                df['num_x'][counter] = num_x
+                df['num_r'][counter] = num_r
+                df['num_p'][counter] = num_p
+                df['p_n'][counter] = p_n
+                df['p_l'][counter] = p_l
+                df['p_q'][counter] = p_q
+                df['p_p'][counter] = p_p
+                df['p_e'][counter] = p_e
+                df['p_L'][counter] = p_L
+                df['p_Q'][counter] = p_Q
+                df['p_P'][counter] = p_P
+                df['p_E'][counter] = p_E
+                df['p_o'][counter] = p_o
+
+                '''
+                # save all_data in data frame
+                for iModel in range(0, len(model_names)):
+                    if df['model'][iModel] == kolodkin_list[iKolodkin]:
+                        df['num_x'][iModel] = num_x
+                        df['num_r'][iModel] = num_r
+                        df['num_p'][iModel] = num_p
+                        df['p_n'][iModel] = p_n
+                        df['p_l'][iModel] = p_l
+                        df['p_q'][iModel] = p_q
+                        df['p_p'][iModel] = p_p
+                        df['p_e'][iModel] = p_e
+                        df['p_L'][iModel] = p_L
+                        df['p_Q'][iModel] = p_Q
+                        df['p_P'][iModel] = p_P
+                        df['p_E'][iModel] = p_E
+                        df['p_o'][iModel] = p_o
+                '''
+
+                # duplicate the newly created row 40 times for all different combinations
+                df = pd.concat([df] * len(output_data_file['combinations']), ignore_index=True)
+                for iComb in range(0, len(output_data_file['combinations'])):
+                    df.loc[counter].combinations = output_data_file['combinations'][iComb]
+
+                    # assign right value to right place
+                    for iModel_output in range(1, len(output_data_file.columns)):                                       # column 'combinations' is unnecessary
+                        for iModel_input in range(0, len(df['model'])):
+                            if output_data_file.columns[iModel_output] == df['model'][iModel_input] and output_data_file.columns[iModel_output + 1] == '{levchenko2000_fig2-user}.1':
+                                if iLevchenko == 0:
+                                    if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                                        df.loc[counter].value = 1
+                                        break
+                                    else:
+                                        df.loc[counter].value = 0
+                                        break
+                                elif iLevchenko == 1:
+                                    if output_data_file[output_data_file.columns[iModel_output + 1]][iComb] > 0:
+                                        df.loc[counter].value = 1
+                                        break
+                                    else:
+                                        df.loc[counter].value = 0
+                                        break
+                    counter = counter + 1
+
+                # reset counter
+                counter = 0
+
+                # append df to new_df
+                new_df = new_df.append(df, ignore_index=True)
 
 
+'''
 ############# get OUTPUT data ############
 # open output data file
 output_data_file = pd.read_csv(output_data_path, sep='\t')
@@ -165,15 +361,19 @@ output_data_file = pd.read_csv(output_data_path, sep='\t')
 counter = 0
 
 # assign right data to right place
-for iModel_output in range(0, len(output_data_file.column)):
+for iModel_output in range(1, len(output_data_file.columns)):                                                           # column 'combinations' is unnecessary
     for iModel_input in range(0, len(df['model'])):
-        if output_data_file.column[iModel_output] == df['model'][iModel_input]:
-            df.loc[counter].c_1_1_08_06 = output_data_file.column[iModel_output][0]
-
-
+        if output_data_file.columns[iModel_output] == df['model'][iModel_input]:
+            for iComb in range(0, len(output_data_file[output_data_file.columns[0]])):
+                if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                    df.loc[counter][output_data_file[output_data_file.columns[0]][iComb]] = 1
+                else:
+                    df.loc[counter][output_data_file[output_data_file.columns[0]][iComb]] = 0
+            counter = counter + 1
+'''
 
 
 ############ save data frames as .tsv file ###############
-# final_df.to_csv(path_or_buf=tsv_save_path + '/Input_Data.tsv', sep='\t', index=False)
+new_df.to_csv(path_or_buf=tsv_save_path + '/Input_Output_Data.tsv', sep='\t', index=False)
 
 
