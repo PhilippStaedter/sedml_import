@@ -12,7 +12,7 @@ import libsbml
 
 # important paths
 output_data_path = '../bachelor_thesis/SolverAlgorithm/Test_Data.tsv'
-benchmark_collectin_path = '../benchmark-models/hackathon_contributions_new_data_format'
+benchmark_collection_path = '../benchmark-models/hackathon_contributions_new_data_format'
 tsv_save_path = '../bachelor_thesis/SolverAlgorithm'
 
 # open output data file
@@ -27,7 +27,7 @@ new_df = pd.DataFrame(columns=all_columns, data=[])
 # set counter
 counter = 0
 
-list_directory_benchmark = sorted(os.listdir(benchmark_collectin_path))
+list_directory_benchmark = sorted(os.listdir(benchmark_collection_path))
 list_directory_benchmark = list_directory_benchmark[0:26]
 list_directory_benchmark.remove('ReadMe.MD')
 for iModel in list_directory_benchmark:
@@ -38,7 +38,7 @@ for iModel in list_directory_benchmark:
     print(mod_Benchmark)
 
     # list_directory_xml = sorted(os.listdir(benchmark_collectin_path + '/' + iModel))
-    list_directory_xml = [filename for filename in sorted(os.listdir(benchmark_collectin_path + '/' + iModel)) if filename.startswith('model_')]
+    list_directory_xml = [filename for filename in sorted(os.listdir(benchmark_collection_path + '/' + iModel)) if filename.startswith('model_')]
     for iXML in list_directory_xml:
 
         # new data frame
@@ -48,7 +48,7 @@ for iModel in list_directory_benchmark:
         df = df.append({}, ignore_index=True)
 
         # XML file
-        xml_file = libsbml.readSBML(benchmark_collectin_path + '/' + iModel + '/' + iXML)
+        xml_file = libsbml.readSBML(benchmark_collection_path + '/' + iModel + '/' + iXML)
 
         #### get type of kinetic
         all_kinetics = getKineticLaw(iModel, iXML)

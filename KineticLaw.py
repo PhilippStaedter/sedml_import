@@ -5,6 +5,7 @@ from decomposeFormula import *
 from opposingBracket import *
 from Depth1 import *
 from Depth1_KinLaw import *
+import os
 
 #iModel = 'Froehlich2018'
 #iFile = 'Froehlich2018'
@@ -16,7 +17,11 @@ def getKineticLaw(iModel, iFile):
     iFile,ext = iFile.split('.')
 
     # important path
-    sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.' + ext  #'.xml'  #'.sbml'
+    if os.path.exists('./sedml_models/' + iModel):
+        sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.' + ext  #'.xml'  #'.sbml'
+    else:
+        benchmark_collectin_path = '../benchmark-models/hackathon_contributions_new_data_format'
+        sbml_path = benchmark_collectin_path + '/' + iModel + '/' + iFile + '.' + ext
 
     # open SBML file
     sbml_file = libsbml.readSBML(sbml_path)

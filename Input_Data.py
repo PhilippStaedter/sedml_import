@@ -1,4 +1,4 @@
-# script to get the input vector for the predictor model
+# script to get the input and output vector for the predictor model
 
 import sklearn
 import os
