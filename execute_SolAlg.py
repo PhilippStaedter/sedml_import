@@ -10,15 +10,18 @@
 ######################################################################################
 
 from SimAllSettings import *
+from tqdm import trange
 
 # settings
-atol = [1e-6, 1e-8, 1e-10, 1e-12]                   # add 2 - 4 different interesting tolerance combinations from study 'Tolerances'
-rtol = [1e-6, 1e-8, 1e-10, 1e-12]
-linSol = [1, 7, 8]                                  # add 2 - 3 different interesting linear solvers from study 'Linear Solvers'
+atol = [1e-12, 1e-10, 1e-8, 1e-16]                   # add 2 - 4 different interesting tolerance combinations from study 'Tolerances'
+rtol = [1e-10, 1e-14, 1e-6, 1e-8]
+linSol = [1, 6, 7, 8, 9]                                  # add 2 - 4 different interesting linear solvers from study 'Linear Solvers'
 solAlg = [1, 2]
 
 
-for iSolAlg in range(0, len(solAlg)):
-    for iLinSol in range(0, len(linSol)):
-        for iToleranceGroup in range(0, len(atol)):
+for iSolAlg in trange(0, len(solAlg)):
+    for iLinSol in trange(0, len(linSol)):
+        for iToleranceGroup in trange(0, len(atol)):
             simulate(atol[iToleranceGroup], rtol[iToleranceGroup], linSol[iLinSol], solAlg[iSolAlg])
+            useless_variable = os.system('clear')
+            pass
