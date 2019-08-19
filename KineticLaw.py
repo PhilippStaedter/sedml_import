@@ -6,12 +6,17 @@ from opposingBracket import *
 from Depth1 import *
 from Depth1_KinLaw import *
 import os
+from Substitution import *
+import sympy as sym
 
 #iModel = 'Froehlich2018'
 #iFile = 'Froehlich2018'
 
 
 def getKineticLaw(iModel, iFile):
+
+    # error_file
+    error_file = pd.DataFrame(columns=['model', 'error'], data=[])
 
     # split for extension
     iFile,ext = iFile.split('.')
@@ -46,80 +51,47 @@ def getKineticLaw(iModel, iFile):
         spec_id = sbml_file.getModel().getSpecies(iSpec).getId()
         all_spec.append(' ' + spec_id + ' ')
 
-    '''
-    # get all compartments
-    all_comp = []
-    for iComp in range(0, num_comp):
-        all_comp.append(sbml_file.getModel().getCompartment(iComp).getId())
-
-    # get all parameters
-    all_par = []
-    for iPar in range(0, num_par):
-        all_par.append(sbml_file.getModel().getParameter(iPar).getId())
-
-    # sort all compartments, species and parameters after their length
-    all_sorted = sorted(all_comp + all_spec + all_par, key=len, reverse=True)
-    
-    # get all MetaIds
-    all_metaid = []
-    for iSorted in range(0, len(all_sorted)):
-        if all_sorted[iSorted] in all_spec:
-            for iSpec in range(0, num_spec):
-                if all_spec[iSpec] == all_sorted[iSorted]:
-                    all_metaid.append(sbml_file.getModel().getSpecies(iSpec).getMetaId())
-        elif all_sorted[iSorted] in all_par:
-            for iPar in range(0, num_par):
-                if all_par[iPar] == all_sorted[iSorted]:
-                    all_metaid.append(sbml_file.getModel().getParameter(iPar).getMetaId())
-        elif all_sorted[iSorted] in all_comp:
-            for iComp in range(0, num_comp):
-                if all_comp[iComp] == all_sorted[iSorted]:
-                    all_metaid.append(sbml_file.getModel().getCompartment(iComp).getMetaId())
-    
-    # change Ids again!!! for uniqueness
-    for iMeta in range(0, len(all_metaid)):
-        if len(all_metaid[iMeta].split('_')[1]) == 1:
-            all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_A_' + all_metaid[iMeta].split('_')[1]
-        elif len(all_metaid[iMeta].split('_')[1]) == 2:
-            all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_B_' + all_metaid[iMeta].split('_')[1]
-        elif len(all_metaid[iMeta].split('_')[1]) == 3:
-            all_metaid[iMeta] = all_metaid[iMeta].split('_')[0] + '_C_' + all_metaid[iMeta].split('_')[1]
-    
-    
-    # get only the species MetaIds()
-    all_spec = []
-    for iMeta in range(0, num_spec):
-        all_spec.append(sbml_file.getModel().getSpecies(iMeta).getMetaId())
-    
-    # change species Ids as previously shown
-    for iSpecMeta in range(0, len(all_spec)):
-        if len(all_spec[iSpecMeta].split('_')[1]) == 1:
-            all_spec[iSpecMeta] = all_spec[iSpecMeta].split('_')[0] + '_A_' + all_spec[iSpecMeta].split('_')[1]
-        elif len(all_spec[iSpecMeta].split('_')[1]) == 2:
-            all_spec[iSpecMeta] = all_spec[iSpecMeta].split('_')[0] + '_B_' + all_spec[iSpecMeta].split('_')[1]
-        elif len(all_spec[iSpecMeta].split('_')[1]) == 3:
-            all_spec[iSpecMeta] = all_spec[iSpecMeta].split('_')[0] + '_C_' + all_spec[iSpecMeta].split('_')[1]
-    '''
 
     ###### get Kinetic Law
     all_formulas_kinetics = [[] for i in range(0,num_reac)]
     for iReact in range(0, num_reac):
 
+        #iReact = 40
+
         # get MathMl formula as string
         formula = libsbml.formulaToString(sbml_file.getModel().getReaction(iReact).getKineticLaw().getMath())
 
+        # replace 'pow(X,k)' by 'X**k' or 'X^k'
+        formula = replacePower(formula)
+
+        # bring formula in better shape using sympy
+        error_file = error_file.append({}, ignore_index=True)
+        try:
+            #formula = sym.simplify(formula)
+            error_file['model'][iReact] = '{' + iModel + '}_{' + iFile + '}_' + str(iReact)
+            error_file['error'][iReact] = 'Ok'
+            formula = sym.expand(formula)
+            formula = str(formula)
+            formula = formula.replace('*', ' * ')
+            formula = formula.replace('/', ' / ')
+        except Exception as e:
+            error_info = str(e)
+            error_file['model'][iReact] = '{' + iModel + '}_{' + iFile + '}_' + str(iReact)
+            error_file['error'][iReact] = error_info
+            all_formulas_kinetics[iReact] = [0,0,0,0,0,0,0,0,0,0,True]
+            continue
+
+        # add more white spaces
         formula = formula.replace('(', '( ')
         formula = formula.replace(')', ' )')
         formula = formula.replace(',', ' ,')
         formula = formula.rjust(len(formula) + 1)
         formula = formula.ljust(len(formula) + 1)
+        if ' *  * ' in formula:
+            formula = formula.replace(' *  * ', '**')
 
-        '''
-        # replace all species and parameters by their unique metaid-id
-        for iSorted in range(0, len(all_sorted)):
-            if all_sorted[iSorted] in formula:
-                formula = formula.replace(all_sorted[iSorted], all_metaid[iSorted])
-        '''
+        # re-replace 'X**k' by 'pow(X,k)'
+        formula = replaceDoubleStar(formula)
 
         # decompose math formula into categories
         list_of_categories = decomposition(formula)
@@ -153,13 +125,15 @@ def getKineticLaw(iModel, iFile):
                                 if num_comma == 1:
                                     _, b = list_of_categories[iCat].split(', ')
                                     exp, _ = b.split(')', 1)
+                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                 else:
+                                    kinlaw = []
                                     for iComma in range(0, num_comma):
                                         list_of_splits = list_of_categories[iCat].split(', ', iComma + 1)
                                         if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                            break
-                                kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                            kinlaw.append(depthKineticLaw(1, exp, sbml_file, iReact))
+                                    kinlaw = sorted(kinlaw, reverse=True)[0]
                                 spec_list.append(kinlaw)
                                 '''
                                 if exp == str(2) + ' ':
@@ -211,13 +185,15 @@ def getKineticLaw(iModel, iFile):
                                                     if num_comma == 1:
                                                         _, b = nominator.split(', ')
                                                         exp, _ = b.split(')', 1)
+                                                        kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                     else:
+                                                        kinlaw = []
                                                         for iComma in range(0, num_comma):
                                                             list_of_splits = nominator.split(', ', iComma + 1)
                                                             if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                                 exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                                break
-                                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                                                kinlaw.append(depthKineticLaw(1, exp, sbml_file, iReact))
+                                                        kinlaw = sorted(kinlaw, reverse=True)[0]
                                                     spec_list.append(kinlaw)
 
                                                     '''
@@ -252,13 +228,15 @@ def getKineticLaw(iModel, iFile):
                                                 if num_comma == 1:
                                                     _, b = denominator.split(', ')
                                                     exp, _ = b.split(')', 1)
+                                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                 else:
+                                                    kinlaw = []
                                                     for iComma in range(0, num_comma):
                                                         list_of_splits = denominator.split(', ', iComma + 1)
                                                         if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')',1)
-                                                            break
-                                                kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                                            kinlaw.append(depthKineticLaw(5, exp, sbml_file, iReact))
+                                                    kinlaw = sorted(kinlaw, reverse=True)[0]
                                                 spec_list.append(kinlaw)
                                                 '''
                                                 if exp == str(2) + ' ':
@@ -301,16 +279,21 @@ def getKineticLaw(iModel, iFile):
                                                     if num_comma == 1:
                                                         _, b = nominator.split(', ')
                                                         exp, _ = b.split(')', 1)
+                                                        nominator = nominator[5: len(nominator) - 4]
+                                                        list_of_categories4 = decomposition(nominator)
+                                                        kinlaw_1 = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
+                                                        kinlaw = depthKineticLaw(kinlaw_1, exp, sbml_file, iReact)
                                                     else:
+                                                        kinlaw = []
                                                         for iComma in range(0, num_comma):
                                                             list_of_splits = nominator.split(', ', iComma + 1)
                                                             if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                                 exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                                break
-                                                    nominator = nominator[5: len(nominator) - 4]
-                                                    list_of_categories4 = decomposition(nominator)
-                                                    kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
-                                                    kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+                                                                nominator = nominator[5: len(nominator) - 4]
+                                                                list_of_categories4 = decomposition(nominator)
+                                                                kinlaw_1 = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
+                                                                kinlaw.append(depthKineticLaw(kinlaw_1, exp, sbml_file, iReact))
+                                                            kinlaw = sorted(kinlaw, reverse=True)[0]
                                                     spec_list.append(kinlaw)
                                                     print('Species ' + all_spec[iSpecId] + ' had to go in depth!')
                                                 else:
@@ -318,13 +301,15 @@ def getKineticLaw(iModel, iFile):
                                                     if num_comma == 1:
                                                         _, b = nominator.split(', ')
                                                         exp, _ = b.split(')', 1)
+                                                        kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                     else:
+                                                        kinlaw = []
                                                         for iComma in range(0, num_comma):
                                                             list_of_splits = nominator.split(', ', iComma + 1)
                                                             if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                                 exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                                break
-                                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                                                kinlaw.append(depthKineticLaw(1, exp, sbml_file, iReact))
+                                                        kinlaw = sorted(kinlaw, reverse=True)[0]
                                                     spec_list.append(kinlaw)
                                                     '''
                                                     if exp == str(2) + ' ':
@@ -358,13 +343,15 @@ def getKineticLaw(iModel, iFile):
                                                     if num_comma == 1:
                                                         _, b = denominator.split(', ')
                                                         exp, _ = b.split(')', 1)
+                                                        kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                     else:
+                                                        kinlaw = []
                                                         for iComma in range(0, num_comma):
                                                             list_of_splits = denominator.split(', ', iComma + 1)
                                                             if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                                 exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                                break
-                                                    kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                                                kinlaw.append(depthKineticLaw(5, exp, sbml_file, iReact))
+                                                        kinlaw = sorted(kinlaw, reverse=True)[0]
                                                     spec_list.append(kinlaw)
                                                     '''
                                                     if exp == str(2) + ' ':
@@ -390,17 +377,23 @@ def getKineticLaw(iModel, iFile):
                                         if num_comma == 1:
                                             _, b = list_of_categories[iCat].split(', ')
                                             exp, _ = b.split(')', 1)
+                                            comma_index = list_of_categories[iCat].find(',')
+                                            nominator = list_of_categories[iCat][5: comma_index]
+                                            list_of_categories3 = decomposition(nominator)
+                                            kinlaw_1 = depth1(nominator, list_of_categories3, all_spec[iSpecId], sbml_file, iReact)
+                                            kinlaw = depthKineticLaw(kinlaw_1, exp, sbml_file, iReact)
                                         else:
+                                            kinlaw = []
                                             for iComma in range(0, num_comma):
                                                 list_of_splits = list_of_categories[iCat].split(', ', iComma + 1)
                                                 if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                    break
-                                        comma_index = list_of_categories[iCat].find(',')
-                                        nominator = list_of_categories[iCat][5: comma_index]
-                                        list_of_categories3 = decomposition(nominator)
-                                        kinlaw = depth1(nominator, list_of_categories3, all_spec[iSpecId], sbml_file, iReact)
-                                        kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+                                                    comma_index = list_of_categories[iCat].find(',')
+                                                    nominator = list_of_categories[iCat][5: comma_index]
+                                                    list_of_categories3 = decomposition(nominator)
+                                                    kinlaw_1 = depth1(nominator, list_of_categories3, all_spec[iSpecId], sbml_file, iReact)
+                                                    kinlaw.append(depthKineticLaw(kinlaw_1, exp, sbml_file, iReact))
+                                            kinlaw = sorted(kinlaw, reverse=True)[0]
                                         spec_list.append(kinlaw)
                                         print('Species ' + all_spec[iSpecId] + ' had to go in depth!')
 
@@ -424,16 +417,21 @@ def getKineticLaw(iModel, iFile):
                                                 if num_comma == 1:
                                                     _, b = nominator.split(', ')
                                                     exp, _ = b.split(')', 1)
+                                                    nominator = nominator[5: len(nominator) - 4]
+                                                    list_of_categories4 = decomposition(nominator)
+                                                    kinlaw_1 = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
+                                                    kinlaw = depthKineticLaw(kinlaw_1, exp, sbml_file, iReact)
                                                 else:
+                                                    kinlaw = []
                                                     for iComma in range(0, num_comma):
                                                         list_of_splits = nominator.split(', ', iComma + 1)
                                                         if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                            break
-                                                nominator = nominator[5: len(nominator) - 4]
-                                                list_of_categories4 = decomposition(nominator)
-                                                kinlaw = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
-                                                kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+                                                            nominator = nominator[5: len(nominator) - 4]
+                                                            list_of_categories4 = decomposition(nominator)
+                                                            kinlaw_1 = depth1(nominator, list_of_categories4, all_spec[iSpecId], sbml_file, iReact)
+                                                            kinlaw.append(depthKineticLaw(kinlaw_1, exp, sbml_file, iReact))
+                                                    kinlaw = sorted(kinlaw, reverse=True)[0]
                                                 spec_list.append(kinlaw)
                                                 print('Species ' + all_spec[iSpec] + ' had to go in depth!')
                                             else:
@@ -441,13 +439,15 @@ def getKineticLaw(iModel, iFile):
                                                 if num_comma == 1:
                                                     _, b = nominator.split(', ')
                                                     exp, _ = b.split(')', 1)
+                                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                 else:
+                                                    kinlaw = []
                                                     for iComma in range(0, num_comma):
                                                         list_of_splits = nominator.split(', ', iComma + 1)
                                                         if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                            break
-                                                kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                                            kinlaw.append(depthKineticLaw(1, exp, sbml_file, iReact))
+                                                    kinlaw = sorted(kinlaw, reverse=True)[0]
                                                 spec_list.append(kinlaw)
                                                 '''            
                                                 if exp == str(2) + ' ':
@@ -481,13 +481,15 @@ def getKineticLaw(iModel, iFile):
                                                 if num_comma == 1:
                                                     _, b = denominator.split(', ')
                                                     exp, _ = b.split(')', 1)
+                                                    kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                                 else:
+                                                    kinlaw = []
                                                     for iComma in range(0, num_comma):
                                                         list_of_splits = denominator.split(', ', iComma + 1)
                                                         if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                             exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                            break
-                                                kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                                            kinlaw.append(depthKineticLaw(5, exp, sbml_file, iReact))
+                                                    kinlaw = sorted(kinlaw, reverse=True)[0]
                                                 spec_list.append(kinlaw)
                                                 '''
                                                 if exp == str(2) + ' ':
@@ -528,17 +530,22 @@ def getKineticLaw(iModel, iFile):
                                             if num_comma == 1:
                                                 _, b = nominator.split(', ')
                                                 exp, _ = b.split(')', 1)
+                                                nominator = nominator[5: len(nominator) - 4]
+                                                list_of_categories5 = decomposition(nominator)
+                                                kinlaw_1 = depth1(nominator, list_of_categories5, all_spec[iSpecId], sbml_file, iReact)
+                                                kinlaw = depthKineticLaw(kinlaw_1, exp, sbml_file, iReact)
                                             else:
+                                                kinlaw = []
                                                 for iComma in range(0, num_comma):
                                                     list_of_splits = nominator.split(', ', iComma + 1)
                                                     if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][
                                                         iComma]:
                                                         exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                        break
-                                            nominator = nominator[5: len(nominator) - 4]
-                                            list_of_categories5 = decomposition(nominator)
-                                            kinlaw = depth1(nominator, list_of_categories5, all_spec[iSpecId], sbml_file, iReact)
-                                            kinlaw = depthKineticLaw(kinlaw, exp, sbml_file, iReact)
+                                                        nominator = nominator[5: len(nominator) - 4]
+                                                        list_of_categories5 = decomposition(nominator)
+                                                        kinlaw_1 = depth1(nominator, list_of_categories5, all_spec[iSpecId], sbml_file, iReact)
+                                                        kinlaw.append(depthKineticLaw(kinlaw_1, exp, sbml_file, iReact))
+                                                kinlaw = sorted(kinlaw, reverse=True)[0]
                                             spec_list.append(kinlaw)
                                             print('Species ' + all_spec[iSpec] + ' had to go in depth!')
                                         else:
@@ -546,13 +553,15 @@ def getKineticLaw(iModel, iFile):
                                             if num_comma == 1:
                                                 _, b = nominator.split(', ')
                                                 exp, _ = b.split(')', 1)
+                                                kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                             else:
+                                                kinlaw = []
                                                 for iComma in range(0, num_comma):
                                                     list_of_splits = nominator.split(', ', iComma + 1)
                                                     if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                         exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                        break
-                                            kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
+                                                        kinlaw.append(depthKineticLaw(1, exp, sbml_file, iReact))
+                                                kinlaw = sorted(kinlaw, reverse=True)[0]
                                             spec_list.append(kinlaw)
                                             '''
                                             if exp == str(2) + ' ':
@@ -580,13 +589,15 @@ def getKineticLaw(iModel, iFile):
                                         if num_comma == 1:
                                             _, b = denominator.split(', ')
                                             exp, _ = b.split(')', 1)
+                                            kinlaw = depthKineticLaw(1, exp, sbml_file, iReact)
                                         else:
+                                            kinlaw = []
                                             for iComma in range(0, num_comma):
                                                 list_of_splits = denominator.split(', ', iComma + 1)
                                                 if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
                                                     exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
-                                                    break
-                                        kinlaw = depthKineticLaw(5, exp, sbml_file, iReact)
+                                                    kinlaw.append(depthKineticLaw(5, exp, sbml_file, iReact))
+                                            kinlaw = sorted(kinlaw, reverse=True)[0]
                                         spec_list.append(kinlaw)
                                         '''            
                                         if exp == str(2) + ' ':
@@ -623,9 +634,11 @@ def getKineticLaw(iModel, iFile):
                 all_formulas_kinetics[iReact].append(1)
             else:
                 all_formulas_kinetics[iReact].append(0)
+        # sym.expand() gave no error --> False
+        all_formulas_kinetics[iReact].append(False)
 
 
-    # give total kinetic number from 0 - 9
+    # give total kinetic number from 0 - 9 + 'NaN'
     total_kinetics = [sum(x) for x in zip(*all_formulas_kinetics)]
     for iKinetic in range(0, len(total_kinetics)):
         if total_kinetics[iKinetic] > 0:
@@ -638,4 +651,4 @@ def getKineticLaw(iModel, iFile):
 
     only_for_debugging = 'just_debugging'
 
-    return total_kinetics
+    return total_kinetics, error_file

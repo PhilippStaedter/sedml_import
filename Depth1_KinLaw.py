@@ -21,7 +21,7 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
     # 1 && 5
     elif kinlaw == 1 + counter:  # only 1-4 because if A only in denominator no cases
         try:
-            if exp == str(2 + counter) + ' ':
+            if exp == str(2) + ' ':
                 kinlaw = 2 + counter
             else:
                 float(exp)
@@ -49,9 +49,9 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
                         exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(
                             iPar).getValue()) + ' '
                         break
-            if exp == str(1 + counter) + ' ':
+            if exp == str(1) + ' ':
                 kinlaw = 1 + counter
-            elif exp == str(2 + counter) + ' ':
+            elif exp == str(2) + ' ':
                 kinlaw = 2 + counter
             else:
                 try:
@@ -62,7 +62,7 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
     # 2 && 6
     elif kinlaw == 2 + counter:
         try:
-            if exp == str(2 + counter) + ' ':
+            if exp == str(2) + ' ':
                 kinlaw = 3 + counter
             else:
                 float(exp)
@@ -93,9 +93,9 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
                         exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(
                             iPar).getValue()) + ' '
                         break
-            if exp == str(1 + counter) + ' ':
+            if exp == str(1) + ' ':
                 kinlaw = 2 + counter
-            elif exp == str(2 + counter) + ' ':
+            elif exp == str(2) + ' ':
                 kinlaw = 3 + counter
             else:
                 try:
@@ -109,7 +109,7 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
     # 3 && 7
     elif kinlaw == 3 + counter:
         try:
-            if exp == str(2 + counter) + ' ':
+            if exp == str(2) + ' ':
                 kinlaw = 3 + counter
             else:
                 float(exp)
@@ -137,9 +137,9 @@ def depthKineticLaw(kinlaw, exp, sbml_file, iReact):
                         exp = str(sbml_file.getModel().getReaction(iReact).getKineticLaw().getParameter(
                             iPar).getValue()) + ' '
                         break
-            if exp == str(1 + counter) + ' ':
+            if exp == str(1) + ' ':
                 kinlaw = 3 + counter
-            elif exp == str(2 + counter) + ' ':
+            elif exp == str(2) + ' ':
                 kinlaw = 3 + counter
             else:
                 try:
