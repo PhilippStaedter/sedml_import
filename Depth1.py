@@ -159,8 +159,13 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
                                         '''
                             elif iSpecId in nominator and iSpecId in denominator:
-                                spec_list.append(9)  # 9
-                                print('What to do with species ' + iSpecId + ' from Depth1 ?')
+                                new_formula = nominator + '* 1 /' + denominator
+                                list_of_categories20 = decomposition(new_formula)
+                                kinlaw_1 = depth1(new_formula, list_of_categories20, iSpecId, sbml_file, iReact)
+                                spec_list.append(kinlaw_1)
+                                print('Species ' + iSpecId + ' had to go in depth again!')
+                                #spec_list.append(9)  # 9
+                                #print('What to do with species ' + iSpecId + ' from Depth1 ?')
                         elif list_of_categories[iCat][1:5] == 'pow(' and '/' in list_of_categories[iCat][5: getIndex(list_of_categories[iCat],4)]:
                             matching_index = getIndex(list_of_categories[iCat], 4)
                             if matching_index + 2 < len(list_of_categories[iCat]) and list_of_categories[iCat][matching_index + 2] == '/':
@@ -269,8 +274,13 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                     print('Species ' + iSpecId + ' has a rational exponent!')
                                             '''
                                 elif iSpecId in nominator and iSpecId in denominator:
-                                    spec_list.append(9)
-                                    print('What to do with species ' + iSpecId + ' from depth1 ?')
+                                    new_formula = nominator + '* 1 /' + denominator
+                                    list_of_categories21 = decomposition(new_formula)
+                                    kinlaw_1 = depth1(new_formula, list_of_categories21, iSpecId, sbml_file, iReact)
+                                    spec_list.append(kinlaw_1)
+                                    print('Species ' + iSpecId + ' had to go in depth again!')
+                                    #spec_list.append(9)
+                                    #print('What to do with species ' + iSpecId + ' from depth1 ?')
                             else:
                                 num_comma = list_of_categories[iCat].count(', ')
                                 if num_comma == 1:
@@ -399,8 +409,13 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                                 print('Species ' + iSpecId + ' has a rational exponent!')
                                         '''
                             elif iSpecId in nominator and iSpecId in denominator:
-                                spec_list.append(9)
-                                print('What to do with species ' + iSpecId + ' from depth1 ?')
+                                new_formula = nominator + '* 1 /' + denominator
+                                list_of_categories22 = decomposition(new_formula)
+                                kinlaw_1 = depth1(new_formula, list_of_categories22, iSpecId, sbml_file, iReact)
+                                spec_list.append(kinlaw_1)
+                                print('Species ' + iSpecId + ' had to go in depth again!')
+                                #spec_list.append(9)
+                                #print('What to do with species ' + iSpecId + ' from depth1 ?')
                     else:
                         slash_index = list_of_categories[iCat].find('/')
                         nominator = list_of_categories[iCat][0: slash_index]
@@ -500,8 +515,13 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
                                         print('Species ' + iSpecId + ' has a rational exponent!')
                                 '''
                         elif iSpecId in nominator and iSpecId in denominator:
-                            spec_list.append(9)
-                            print('What to do with species ' + iSpecId + ' from depth1 ?')
+                            new_formula = nominator + '* 1 /' + denominator
+                            list_of_categories23 = decomposition(new_formula)
+                            kinlaw_1 = depth1(new_formula, list_of_categories23, iSpecId, sbml_file, iReact)
+                            spec_list.append(kinlaw_1)
+                            print('Species ' + iSpecId + ' had to go in depth again!')
+                            #spec_list.append(9)
+                            #print('What to do with species ' + iSpecId + ' from depth1 ?')
 
         kinetic_list.append(spec_list)
 
@@ -512,10 +532,10 @@ def depth1(formula, list_of_categories, iSpecId, sbml_file, iReact):
 
     if np.count_nonzero(conc_kinetic_list) == 0:
         kinlaw = 0
-    elif np.count_nonzero(conc_kinetic_list) == 1:
-        non_zero_index = [i for i, e in enumerate(conc_kinetic_list) if e != 0][0]
-        kinlaw = conc_kinetic_list[non_zero_index]
     else:
-        kinlaw = 9
+        kinlaw = []
+        non_zero_index = [i for i, e in enumerate(conc_kinetic_list) if e != 0]
+        for iNonZero in range(0, np.count_nonzero(conc_kinetic_list)):
+            kinlaw.append(conc_kinetic_list[non_zero_index[iNonZero]])
 
     return kinlaw

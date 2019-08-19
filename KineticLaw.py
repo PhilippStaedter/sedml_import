@@ -169,6 +169,10 @@ def getKineticLaw(iModel, iFile):
                                             kinlaw = depth1(nominator, list_of_categories2, all_spec[iSpecId], sbml_file, iReact)
                                             spec_list.append(kinlaw)
                                             print('Species ' + all_spec[iSpec] + ' had to go in depth!')
+
+                                        ######
+                                        #elif '/' in denominator
+
                                         else:
                                             if not 'pow(' in nominator:
                                                 spec_list.append(1)
@@ -255,8 +259,13 @@ def getKineticLaw(iModel, iFile):
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                                 '''
                                     elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
-                                        spec_list.append(9)                                                                 # 9
-                                        print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
+                                        new_formula = nominator + '* 1 /' + denominator
+                                        list_of_categories10 = decomposition(new_formula)
+                                        kinlaw_1 = depth1(new_formula, list_of_categories10, all_spec[iSpecId], sbml_file, iReact)
+                                        spec_list.append(kinlaw_1)
+                                        print('Species ' + all_spec[iSpec] + ' had to go in depth!')
+                                        #spec_list.append(9)                                                                 # 9
+                                        #print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
 
 
                                 elif list_of_categories[iCat][1:5] == 'pow(' and '/' in list_of_categories[iCat][5: getIndex(list_of_categories[iCat], 4)]:
@@ -370,8 +379,13 @@ def getKineticLaw(iModel, iFile):
                                                             print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                                     '''
                                         elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
-                                            spec_list.append(9)
-                                            print('What to do with species ' + all_spec[iSpecId] + ' from depth1 ?')
+                                            new_formula = nominator + '* 1 /' + denominator
+                                            list_of_categories11 = decomposition(new_formula)
+                                            kinlaw_1 = depth1(new_formula, list_of_categories11, all_spec[iSpecId], sbml_file, iReact)
+                                            spec_list.append(kinlaw_1)
+                                            print('Species ' + all_spec[iSpec] + ' had to go in depth!')
+                                            #spec_list.append(9)
+                                            #print('What to do with species ' + all_spec[iSpecId] + ' from depth1 ?')
                                     else:
                                         num_comma = list_of_categories[iCat].count(', ')
                                         if num_comma == 1:
@@ -508,8 +522,13 @@ def getKineticLaw(iModel, iFile):
                                                         print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                                 '''
                                     elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
-                                        spec_list.append(9)
-                                        print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
+                                        new_formula = nominator + '* 1 /' + denominator
+                                        list_of_categories12 = decomposition(new_formula)
+                                        kinlaw_1 = depth1(new_formula, list_of_categories12, all_spec[iSpecId], sbml_file, iReact)
+                                        spec_list.append(kinlaw_1)
+                                        print('Species ' + all_spec[iSpec] + ' had to go in depth!')
+                                        #spec_list.append(9)
+                                        #print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
                             else:
                                 slash_index = list_of_categories[iCat].find('/')
                                 nominator = list_of_categories[iCat][0 : slash_index]
@@ -616,8 +635,13 @@ def getKineticLaw(iModel, iFile):
                                                 print('Species ' + all_spec[iSpecId] + ' has a rational exponent!')
                                         '''
                                 elif all_spec[iSpecId] in nominator and all_spec[iSpecId] in denominator:
-                                    spec_list.append(9)
-                                    print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
+                                    new_formula = nominator + '* 1 /' + denominator
+                                    list_of_categories13 = decomposition(new_formula)
+                                    kinlaw_1 = depth1(new_formula, list_of_categories13, all_spec[iSpecId], sbml_file, iReact)
+                                    spec_list.append(kinlaw_1)
+                                    print('Species ' + all_spec[iSpec] + ' had to go in depth!')
+                                    #spec_list.append(9)
+                                    #print('What to do with species ' + all_spec[iSpecId] + ' from ' + iModel + '_' + iFile + ' ?')
 
                 kinetic_list.append(spec_list)
 
