@@ -9,7 +9,7 @@ import pandas as pd
 import pypesto.visualize
 
 
-iModel = 'kouril2017_fig2b'
+iModel = 'kouril2017_fig4b'
 n_starts = 5
 
 
@@ -44,25 +44,27 @@ result = pypesto.minimize(problem=problem, optimizer=optimizer, n_starts=n_start
 # visualize
 ref = pypesto.visualize.create_references(x=petab_problem.x_nominal, fval=obj(petab_problem.x_nominal))
 pypesto.visualize.waterfall(result, reference=ref, scale_y='lin')
-fig = plt.gcf()
-fig.set_size_inches(18.5, 10.5)
+fig1 = plt.gcf()
+fig1.set_size_inches(18.5, 10.5)
 plt.savefig(model_base_path + '/waterfall_estimation_' + str(n_starts) + '_merrors.pdf')
+plt.clf()
 pypesto.visualize.parameters(result, reference=ref)
-fig = plt.gcf()
-fig.set_size_inches(18.5, 10.5)
+fig2 = plt.gcf()
+fig2.set_size_inches(18.5, 10.5)
 plt.savefig(model_base_path + '/waterfall_parameter_' + str(n_starts) + '_merrors.pdf')
 print(result.optimize_result.get_for_key('fval'))
 
 # simulated data
 rdatas = obj(result.optimize_result.get_for_key('x')[0], return_dict=True)['rdatas']
 df = importer.rdatas_to_measurement_df(rdatas)
+plt.clf()
 plt.xlabel("Experiment")
 plt.ylabel("Simulation")
 plt.scatter(petab_problem.measurement_df['measurement'], df['measurement'])
 #plt.show()
 
 # save all plots and data frame in same folder
-fig = plt.gcf()
-fig.set_size_inches(18.5, 10.5)
+fig3 = plt.gcf()
+fig3.set_size_inches(18.5, 10.5)
 plt.savefig(model_base_path + '/measurement_' + str(n_starts) + '_merrors.pdf')
 df.to_csv(model_base_path + '/simulatedData_' + iModel + '_' + str(n_starts) + '_merrors.tsv', sep='\t', index=False)
