@@ -5,6 +5,7 @@ import pandas as pd
 import os
 import numpy as np
 from opposingBracket import *
+import sys
 
 
 def replacePower(formula):
@@ -46,7 +47,10 @@ def replaceDoubleStar(formula):
                 for iBracket in range(0, formula.count('(')):
                     start_bracket_index = formula.find('(', new_find_index)
                     end_bracket_index = getIndex(formula, start_bracket_index)
-                    if index_start_doublestar < start_bracket_index:
+                    index_start_doublestar = formula.find('**')
+                    if index_start_doublestar == -1:
+                        break
+                    if index_start_doublestar < start_bracket_index or start_bracket_index < 0:
                         index_start_doublestar = formula.find('**')
                         if index_start_doublestar == -1:
                             break
@@ -69,7 +73,7 @@ def replaceDoubleStar(formula):
                         new_find_index = start_bracket_index + 4
                         break
 
-                    # check if the bracket ends ate the end of the formula
+                    # check if the bracket ends at the end of the formula
                     if end_bracket_index + 2 < len(formula):
                         if formula[end_bracket_index + 1] == '*' and formula[end_bracket_index + 2] == '*':
                             all_whitespaces_after = [m.start() for m in re.finditer(' ', formula[end_bracket_index + 3:])]
@@ -85,12 +89,23 @@ def replaceDoubleStar(formula):
                             new_find_index = start_bracket_index + 4
                             break
                         elif '**' in formula[start_bracket_index : end_bracket_index + 1]:                                      # e.g. ( A + ( B + C )**2 + D ) / F
-                            formula2 = formula[start_bracket_index : end_bracket_index + 1]
+                            formula2 = formula[start_bracket_index + 1 : end_bracket_index]
                             formula3 = replaceDoubleStar(formula2)
                             formula = formula.replace(formula2, formula3)
                             new_find_index = start_bracket_index + 1
                         else:
                             new_find_index = start_bracket_index + 1
+                    else:
+                        if '**' in formula[start_bracket_index + 1 : end_bracket_index]:
+                            new_formula = formula[start_bracket_index + 1 : end_bracket_index]
+                            new_formula = replaceDoubleStar(new_formula)
+                            print('DoubleStar had to go in depth!')
+                            formula = formula.replace(formula[start_bracket_index + 1 : end_bracket_index], new_formula)
+                            new_find_index = start_bracket_index + 1
+                            break
+                        else:
+                            print('This case must not happen!')
+                            sys.exit()
 
             else:
                 index_start_doublestar = formula.find('**')

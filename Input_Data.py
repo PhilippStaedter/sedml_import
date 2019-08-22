@@ -75,10 +75,10 @@ error_counter = 0
 total_error_file = pd.DataFrame(columns=['model', 'error'], data=[])
 
 list_directory_sedml = sorted(os.listdir(sedml_base_path))
-list_directory_sedml = list_directory_sedml[:89]
+list_directory_sedml = list_directory_sedml[:2]
 for iSEDML in list_directory_sedml:
 
-    iSEDML = 'fraser2002_fig1a_1b_2a_2b'
+    #iSEDML = 'Ueda2001'
 
     mod_SEDML = '{' + iSEDML + '}'
     print(mod_SEDML)
@@ -104,7 +104,6 @@ for iSEDML in list_directory_sedml:
                     num_r = stat_par_rec_file['reactions'][iModel]
                     num_p = stat_par_rec_file['parameters'][iModel]
 
-            '''
             p_n = all_kinetics[0]
             p_l = all_kinetics[1]
             p_q = all_kinetics[2]
@@ -144,8 +143,8 @@ for iSEDML in list_directory_sedml:
                 for iModel_output in range(1, len(output_data_file.columns)):  # column 'combinations' is unnecessary
                     for iModel_input in range(0, len(df['model'])):
                         if output_data_file.columns[iModel_output] == df['model'][iModel_input]:
-                            df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
-                            break
+                            #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
+                            #break
                             
                             if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
                                 df.loc[counter].value = 1
@@ -156,7 +155,7 @@ for iSEDML in list_directory_sedml:
                             
                         break
                 counter = counter + 1
-            '''
+
             # reset counter
             counter = 0
 
@@ -187,7 +186,6 @@ for iSEDML in list_directory_sedml:
                         num_r = stat_par_rec_file['reactions'][iModel]
                         num_p = stat_par_rec_file['parameters'][iModel]
 
-                '''
                 p_n = all_kinetics[0]
                 p_l = all_kinetics[1]
                 p_q = all_kinetics[2]
@@ -218,6 +216,7 @@ for iSEDML in list_directory_sedml:
                 df['p_E'][counter] = p_E
                 df['p_o'][counter] = p_o
 
+                '''
                 # save all_data in data frame
                 for iModel in range(0, len(model_names)):
                     if df['model'][iModel] == kolodkin_list[iKolodkin]:
@@ -236,7 +235,7 @@ for iSEDML in list_directory_sedml:
                         df['p_E'][iModel] = p_E
                         df['p_o'][iModel] = p_o
                 '''
-                '''
+
                 # duplicate the newly created row 40 times for all different combinations
                 df = pd.concat([df] * len(output_data_file['combinations']), ignore_index=True)
                 for iComb in range(0, len(output_data_file['combinations'])):
@@ -246,19 +245,19 @@ for iSEDML in list_directory_sedml:
                     for iModel_output in range(1, len(output_data_file.columns)):                                       # column 'combinations' is unnecessary
                         for iModel_input in range(0, len(df['model'])):
                             if output_data_file.columns[iModel_output] == df['model'][iModel_input]:
-                                df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
-                                break
-                                
+                                #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
+                                #break
+
                                 if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
                                     df.loc[counter].value = 1
                                     break
                                 else:
                                     df.loc[counter].value = 0
                                     break
-                                
+
                             break
                     counter = counter + 1
-                '''
+
                 # reset counter
                 counter = 0
 
@@ -294,7 +293,7 @@ for iSEDML in list_directory_sedml:
                             num_x = stat_par_rec_file['states'][iModel]
                             num_r = stat_par_rec_file['reactions'][iModel]
                             num_p = stat_par_rec_file['parameters'][iModel]
-                '''
+
                 p_n = all_kinetics[0]
                 p_l = all_kinetics[1]
                 p_q = all_kinetics[2]
@@ -325,6 +324,7 @@ for iSEDML in list_directory_sedml:
                 df['p_E'][counter] = p_E
                 df['p_o'][counter] = p_o
 
+                '''
                 # save all_data in data frame
                 for iModel in range(0, len(model_names)):
                     if df['model'][iModel] == kolodkin_list[iKolodkin]:
@@ -343,7 +343,7 @@ for iSEDML in list_directory_sedml:
                         df['p_E'][iModel] = p_E
                         df['p_o'][iModel] = p_o
                 '''
-                '''
+
                 # duplicate the newly created row 40 times for all different combinations
                 df = pd.concat([df] * len(output_data_file['combinations']), ignore_index=True)
                 for iComb in range(0, len(output_data_file['combinations'])):
@@ -354,29 +354,29 @@ for iSEDML in list_directory_sedml:
                         for iModel_input in range(0, len(df['model'])):
                             if output_data_file.columns[iModel_output] == df['model'][iModel_input] and output_data_file.columns[iModel_output + 1] == '{levchenko2000_fig2-user}.1':
                                 if iLevchenko == 0:
-                                    df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
-                                    break
-                                    
+                                    #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
+                                    #break
+
                                     if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
                                         df.loc[counter].value = 1
                                         break
                                     else:
                                         df.loc[counter].value = 0
                                         break
-                                    
+
                                 elif iLevchenko == 1:
-                                    df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output + 1]][iComb]
-                                    break
-                                    
+                                    #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output + 1]][iComb]
+                                    #break
+
                                     if output_data_file[output_data_file.columns[iModel_output + 1]][iComb] > 0:
                                         df.loc[counter].value = 1
                                         break
                                     else:
                                         df.loc[counter].value = 0
                                         break
-                                    
+
                     counter = counter + 1
-                '''
+
                 # reset counter
                 counter = 0
 
@@ -407,7 +407,7 @@ for iModel_output in range(1, len(output_data_file.columns)):                   
 
 
 ############ save data frames as .tsv file ###############
-#new_df.to_csv(path_or_buf=tsv_save_path + '/Input_Output_Data_continuous.tsv', sep='\t', index=False)
+new_df.to_csv(path_or_buf=tsv_save_path + '/Input_Output_Data_0_1_updated.tsv', sep='\t', index=False)
 total_error_file.to_csv(tsv_save_path + '/Error_file.tsv', sep='\t', index=False)
 
 
