@@ -75,10 +75,10 @@ error_counter = 0
 total_error_file = pd.DataFrame(columns=['model', 'error'], data=[])
 
 list_directory_sedml = sorted(os.listdir(sedml_base_path))
-list_directory_sedml = list_directory_sedml[:2]
+#list_directory_sedml = list_directory_sedml[92:]
 for iSEDML in list_directory_sedml:
 
-    #iSEDML = 'Ueda2001'
+    #iSEDML = 'teusink1998_fig3candd-user'
 
     mod_SEDML = '{' + iSEDML + '}'
     print(mod_SEDML)

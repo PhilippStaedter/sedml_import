@@ -25,7 +25,7 @@ def replacePower(formula):
             _,Basis = a.split('pow(')
             Exponent = b
 
-            formula = formula.replace(formula[index_start_pow : index_end_power + 1], '(' + Basis + ')' + '**' + Exponent)
+            formula = formula.replace(formula[index_start_pow : index_end_power + 1], '(' + Basis + ')' + '**' + Exponent, 1)
 
 
     return formula
@@ -34,6 +34,10 @@ def replacePower(formula):
 def replaceDoubleStar(formula):
 
     if '**' in formula:
+
+        # exception:  formula starts with -
+        if formula[1] == '-':
+            formula = ' ' + formula[2:]
 
         # max_num_doublestar = len([m.start() for m in re.finditer('**', formula)])
         new_find_index = 0
@@ -69,7 +73,7 @@ def replaceDoubleStar(formula):
                         Basis = formula[last_whitespace_before + 1: index_start_doublestar]
                         Exponent = formula[index_start_doublestar + 2: index_start_doublestar + 2 + first_whitespace_after]
 
-                        formula = formula.replace(formula[last_whitespace_before + 1: index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')')
+                        formula = formula.replace(formula[last_whitespace_before + 1: index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
                         new_find_index = start_bracket_index + 4
                         break
 
@@ -85,13 +89,13 @@ def replaceDoubleStar(formula):
                             Basis = formula[start_bracket_index + 1 : end_bracket_index - 1]
                             Exponent = formula[end_bracket_index + 3 : end_bracket_index + 3 + first_whitespace_after]
 
-                            formula = formula.replace(formula[start_bracket_index : end_bracket_index + 3 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')')
+                            formula = formula.replace(formula[start_bracket_index : end_bracket_index + 3 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
                             new_find_index = start_bracket_index + 4
                             break
                         elif '**' in formula[start_bracket_index : end_bracket_index + 1]:                                      # e.g. ( A + ( B + C )**2 + D ) / F
                             formula2 = formula[start_bracket_index + 1 : end_bracket_index]
                             formula3 = replaceDoubleStar(formula2)
-                            formula = formula.replace(formula2, formula3)
+                            formula = formula.replace(formula2, formula3, 1)
                             new_find_index = start_bracket_index + 1
                         else:
                             new_find_index = start_bracket_index + 1
@@ -100,7 +104,7 @@ def replaceDoubleStar(formula):
                             new_formula = formula[start_bracket_index + 1 : end_bracket_index]
                             new_formula = replaceDoubleStar(new_formula)
                             print('DoubleStar had to go in depth!')
-                            formula = formula.replace(formula[start_bracket_index + 1 : end_bracket_index], new_formula)
+                            formula = formula.replace(formula[start_bracket_index + 1 : end_bracket_index], new_formula, 1)
                             new_find_index = start_bracket_index + 1
                             break
                         else:
@@ -125,6 +129,6 @@ def replaceDoubleStar(formula):
                 Basis = formula[last_whitespace_before + 1 : index_start_doublestar]
                 Exponent = formula[index_start_doublestar + 2 : index_start_doublestar + 2 + first_whitespace_after]
 
-                formula = formula.replace(formula[last_whitespace_before + 1 : index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent +')')
+                formula = formula.replace(formula[last_whitespace_before + 1 : index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
 
     return formula
