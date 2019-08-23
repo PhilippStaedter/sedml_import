@@ -1,5 +1,6 @@
 ####### divide denominator into categories for better Investigation
 
+#from Depth1 import depth1
 from decomposeFormula import *
 from Depth1_KinLaw import *
 import sys
@@ -134,6 +135,32 @@ def decomposeDenominator(denominator, all_spec, iSpecId, sbml_file, iReact, iCat
                             else:
                                 spec_list.append(9)
                                 print('The denominator has species ' + iSpecId + ' in its own denominator')
+                        else:
+                            num_comma = new_denominator[iCat2].count(', ')
+                            if num_comma == 1:
+                                _, b = new_denominator[iCat2].split(', ')
+                                exp, _ = b.split(')', 1)
+                                comma_index = new_denominator[iCat2].find(',')
+                                denominator3 = new_denominator[iCat2][5: comma_index]
+                                kinlaw_1 = decomposeDenominator(denominator3, all_spec, iSpecId, sbml_file, iReact, iCat2, spec_list)
+                                kinlaw = depthKineticLaw(kinlaw_1[0], exp, sbml_file, iReact)
+                            else:
+                                kinlaw = []
+                                all_kinlaw = []
+                                for iComma in range(0, num_comma):
+                                    list_of_splits = new_denominator[iCat2].split(', ', iComma + 1)
+                                    if all_spec[iSpecId] in list_of_splits[0: len(list_of_splits) - 1][iComma]:
+                                        exp, _ = list_of_splits[len(list_of_splits) - 1].split(')', 1)
+                                        comma_index = new_denominator[iCat2].find(',')
+                                        denominator3 = new_denominator[iCat2][5: comma_index]
+                                        kinlaw_1 = decomposeDenominator(denominator3, all_spec, iSpecId, sbml_file, iReact, iCat2, spec_list)
+                                        all_kinlaw.append(depthKineticLaw(kinlaw_1[0], exp, sbml_file, iReact))
+                                for item in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                                    if item in all_kinlaw:
+                                        kinlaw.append(item)
+                                # kinlaw = sorted(kinlaw, reverse=True)[0]
+                            spec_list.append(kinlaw)
+                            print('Species ' + iSpecId + ' had to repeat the denominator!')
                     else:
                         slash_index = new_denominator[iCat2].find('/')
                         nominator2 = new_denominator[iCat2][0: slash_index]

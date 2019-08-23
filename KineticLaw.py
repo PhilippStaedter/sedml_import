@@ -58,7 +58,7 @@ def getKineticLaw(iModel, iFile):
     all_formulas_kinetics = [[] for i in range(0,num_reac)]
     for iReact in range(0, num_reac):
 
-        #iReact = 40
+        #iReact = 25
 
         # get MathMl formula as string
         formula = libsbml.formulaToString(sbml_file.getModel().getReaction(iReact).getKineticLaw().getMath())
