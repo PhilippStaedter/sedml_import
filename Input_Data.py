@@ -146,7 +146,7 @@ for iSEDML in list_directory_sedml:
                             #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
                             #break
                             
-                            if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                            if output_data_file[output_data_file.columns[iModel_output]][iComb] == 1:
                                 df.loc[counter].value = 1
                                 break
                             else:
@@ -248,7 +248,7 @@ for iSEDML in list_directory_sedml:
                                 #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
                                 #break
 
-                                if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                                if output_data_file[output_data_file.columns[iModel_output]][iComb] == 1:
                                     df.loc[counter].value = 1
                                     break
                                 else:
@@ -357,7 +357,7 @@ for iSEDML in list_directory_sedml:
                                     #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output]][iComb]
                                     #break
 
-                                    if output_data_file[output_data_file.columns[iModel_output]][iComb] > 0:
+                                    if output_data_file[output_data_file.columns[iModel_output]][iComb] == 1:
                                         df.loc[counter].value = 1
                                         break
                                     else:
@@ -368,7 +368,7 @@ for iSEDML in list_directory_sedml:
                                     #df.loc[counter].value = output_data_file[output_data_file.columns[iModel_output + 1]][iComb]
                                     #break
 
-                                    if output_data_file[output_data_file.columns[iModel_output + 1]][iComb] > 0:
+                                    if output_data_file[output_data_file.columns[iModel_output + 1]][iComb] == 1:
                                         df.loc[counter].value = 1
                                         break
                                     else:
@@ -407,7 +407,7 @@ for iModel_output in range(1, len(output_data_file.columns)):                   
 
 
 ############ save data frames as .tsv file ###############
-new_df.to_csv(path_or_buf=tsv_save_path + '/Input_Output_Data_0_1_updated.tsv', sep='\t', index=False)
-total_error_file.to_csv(tsv_save_path + '/Error_file.tsv', sep='\t', index=False)
+new_df.to_csv(path_or_buf=tsv_save_path + '/Input_Output_Data_best_updated.tsv', sep='\t', index=False)
+total_error_file.to_csv(tsv_save_path + '/Error_file_best.tsv', sep='\t', index=False)
 
 

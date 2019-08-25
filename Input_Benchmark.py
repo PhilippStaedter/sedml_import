@@ -20,15 +20,19 @@ output_data_file = pd.read_csv(output_data_path, sep='\t')
 
 
 ######### create data frame for all models #############
-all_columns = ['model', 'num_x', 'num_r', 'num_p', 'p_n', 'p_l', 'p_q', 'p_p', 'p_e', 'p_L', 'p_Q', 'p_P', 'p_E', 'p_o', 'combinations']
+all_columns = ['model', 'error_rate', 'num_x', 'num_r', 'num_p', 'p_n', 'p_l', 'p_q', 'p_p', 'p_e', 'p_L', 'p_Q', 'p_P', 'p_E', 'p_o', 'combinations']
 new_df = pd.DataFrame(columns=all_columns, data=[])
 
 ################ get INPUT data ################
 # set counter
 counter = 0
+error_counter = 0
+
+# error file
+total_error_file = pd.DataFrame(columns=['model', 'error'], data=[])
 
 list_directory_benchmark = sorted(os.listdir(benchmark_collection_path))
-list_directory_benchmark = list_directory_benchmark[0:26]
+list_directory_benchmark = list_directory_benchmark[0:31]
 list_directory_benchmark.remove('ReadMe.MD')
 for iModel in list_directory_benchmark:
 
@@ -51,7 +55,7 @@ for iModel in list_directory_benchmark:
         xml_file = libsbml.readSBML(benchmark_collection_path + '/' + iModel + '/' + iXML)
 
         #### get type of kinetic
-        all_kinetics = getKineticLaw(iModel, iXML)
+        all_kinetics, error_file = getKineticLaw(iModel, iXML)
 
         #### get num_x, num_p, num_r
         num_x = xml_file.getModel().getNumSpecies()
@@ -68,10 +72,12 @@ for iModel in list_directory_benchmark:
         p_P = all_kinetics[7]  # ==
         p_E = all_kinetics[8]  # ==> Hill ?
         p_o = all_kinetics[9]
-        all_data = [num_x, num_r, num_p, p_n, p_l, p_q, p_p, p_e, p_L, p_Q, p_P, p_E, p_o]
+        error_rate = all_kinetics[10]
+        all_data = [error_rate, num_x, num_r, num_p, p_n, p_l, p_q, p_p, p_e, p_L, p_Q, p_P, p_E, p_o]
 
         #### save all_data in data frame
         df['model'][counter] = mod_Benchmark
+        df['error_rate'][counter] = error_rate
         df['num_x'][counter] = num_x
         df['num_r'][counter] = num_r
         df['num_p'][counter] = num_p
@@ -97,7 +103,9 @@ for iModel in list_directory_benchmark:
 
         # append df to new_df
         new_df = new_df.append(df, ignore_index=True)
+        total_error_file = total_error_file.append(error_file, ignore_index=True)
 
 
 ############ save data frames as .tsv file ###############
-new_df.to_csv(path_or_buf=tsv_save_path + '/Benchmark_Input_Data.tsv', sep='\t', index=False)
+new_df.to_csv(path_or_buf=tsv_save_path + '/Benchmark_Input_Data_updated.tsv', sep='\t', index=False)
+total_error_file.to_csv(tsv_save_path + '/Benchmark_Error_file.tsv', sep='\t', index=False)
