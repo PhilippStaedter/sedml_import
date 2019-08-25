@@ -71,9 +71,14 @@ def replaceDoubleStar(formula):
                             first_whitespace_after = all_whitespaces_after[0]
 
                         Basis = formula[last_whitespace_before + 1: index_start_doublestar]
-                        Exponent = formula[index_start_doublestar + 2: index_start_doublestar + 2 + first_whitespace_after]
+                        if formula[index_start_doublestar + 2] == '(':
+                            end_exponent_bracket = getIndex(formula, index_start_doublestar + 2)
+                            Exponent = formula[index_start_doublestar + 4: end_exponent_bracket - 1]
+                            formula = formula.replace(formula[last_whitespace_before + 1: end_exponent_bracket + 1], 'pow(' + Basis + ', ' + Exponent + ')', 1)
+                        else:
+                            Exponent = formula[index_start_doublestar + 2: index_start_doublestar + 2 + first_whitespace_after]
+                            formula = formula.replace(formula[last_whitespace_before + 1: index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
 
-                        formula = formula.replace(formula[last_whitespace_before + 1: index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
                         new_find_index = start_bracket_index + 4
                         break
 
@@ -87,9 +92,14 @@ def replaceDoubleStar(formula):
                                 first_whitespace_after = all_whitespaces_after[0]
 
                             Basis = formula[start_bracket_index + 1 : end_bracket_index - 1]
-                            Exponent = formula[end_bracket_index + 3 : end_bracket_index + 3 + first_whitespace_after]
+                            if formula[index_start_doublestar + 2] == '(':
+                                end_exponent_bracket = getIndex(formula, index_start_doublestar + 2)
+                                Exponent = formula[index_start_doublestar + 4: end_exponent_bracket - 1]
+                                formula = formula.replace(formula[last_whitespace_before + 1: end_exponent_bracket + 1], 'pow(' + Basis + ', ' + Exponent + ')', 1)
+                            else:
+                                Exponent = formula[end_bracket_index + 3 : end_bracket_index + 3 + first_whitespace_after]
+                                formula = formula.replace(formula[start_bracket_index : end_bracket_index + 3 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
 
-                            formula = formula.replace(formula[start_bracket_index : end_bracket_index + 3 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
                             new_find_index = start_bracket_index + 4
                             break
                         elif '**' in formula[start_bracket_index : end_bracket_index + 1]:                                      # e.g. ( A + ( B + C )**2 + D ) / F
@@ -127,8 +137,12 @@ def replaceDoubleStar(formula):
                     first_whitespace_after = all_whitespaces_after[0]
 
                 Basis = formula[last_whitespace_before + 1 : index_start_doublestar]
-                Exponent = formula[index_start_doublestar + 2 : index_start_doublestar + 2 + first_whitespace_after]
-
-                formula = formula.replace(formula[last_whitespace_before + 1 : index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
+                if formula[index_start_doublestar + 2] == '(':
+                    end_exponent_bracket = getIndex(formula, index_start_doublestar + 2)
+                    Exponent = formula[index_start_doublestar + 4: end_exponent_bracket - 1]
+                    formula = formula.replace(formula[last_whitespace_before + 1: end_exponent_bracket + 1], 'pow(' + Basis + ', ' + Exponent + ')', 1)
+                else:
+                    Exponent = formula[index_start_doublestar + 2 : index_start_doublestar + 2 + first_whitespace_after]
+                    formula = formula.replace(formula[last_whitespace_before + 1 : index_start_doublestar + 2 + first_whitespace_after], 'pow(' + Basis + ', ' + Exponent + ')', 1)
 
     return formula

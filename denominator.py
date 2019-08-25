@@ -143,7 +143,7 @@ def decomposeDenominator(denominator, all_spec, iSpecId, sbml_file, iReact, iCat
                                 comma_index = new_denominator[iCat2].find(',')
                                 denominator3 = new_denominator[iCat2][5: comma_index]
                                 kinlaw_1 = decomposeDenominator(denominator3, all_spec, iSpecId, sbml_file, iReact, iCat2, spec_list)
-                                kinlaw = depthKineticLaw(kinlaw_1[0], exp, sbml_file, iReact)
+                                kinlaw = depthKineticLaw(kinlaw_1[len(kinlaw_1) - 1], exp, sbml_file, iReact)
                             else:
                                 kinlaw = []
                                 all_kinlaw = []
@@ -154,12 +154,14 @@ def decomposeDenominator(denominator, all_spec, iSpecId, sbml_file, iReact, iCat
                                         comma_index = new_denominator[iCat2].find(',')
                                         denominator3 = new_denominator[iCat2][5: comma_index]
                                         kinlaw_1 = decomposeDenominator(denominator3, all_spec, iSpecId, sbml_file, iReact, iCat2, spec_list)
+                                        del spec_list[-1]
                                         all_kinlaw.append(depthKineticLaw(kinlaw_1[0], exp, sbml_file, iReact))
                                 for item in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
                                     if item in all_kinlaw:
                                         kinlaw.append(item)
                                 # kinlaw = sorted(kinlaw, reverse=True)[0]
                             spec_list.append(kinlaw)
+                            del spec_list[-2]
                             print('Species ' + iSpecId + ' had to repeat the denominator!')
                     else:
                         slash_index = new_denominator[iCat2].find('/')

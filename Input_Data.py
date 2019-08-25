@@ -78,7 +78,7 @@ list_directory_sedml = sorted(os.listdir(sedml_base_path))
 #list_directory_sedml = list_directory_sedml[92:]
 for iSEDML in list_directory_sedml:
 
-    #iSEDML = 'teusink1998_fig3candd-user'
+    #iSEDML = 'Pritchard2002'
 
     mod_SEDML = '{' + iSEDML + '}'
     print(mod_SEDML)
@@ -174,7 +174,7 @@ for iSEDML in list_directory_sedml:
                 # Append additional row in .tsv file
                 df = df.append({}, ignore_index=True)
 
-                iSBML = list_directory_sbml[iKolodkin]
+                iSBML = list_directory_sbml[4]  # iKolodkin
 
                 #### get type of kinetic
                 all_kinetics, error_file = getKineticLaw(iSEDML, iSBML)
