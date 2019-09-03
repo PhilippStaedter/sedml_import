@@ -13,8 +13,8 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     y_data_point = []
     for iCount in range(27, len(tsv_file[x_catagory])):                                     # switch between 0 and 27
         # if type(tsv_file['error_message'][iCount]) != type(x_catagory):
-        x_data_point.append(tsv_file[x_catagory][iCount])
-        y_data_point.append(tsv_file[y_catagory][iCount])
+        x_data_point.append(np.log10(tsv_file[x_catagory][iCount]))
+        y_data_point.append(np.log10(tsv_file[y_catagory][iCount]))
 
     Num_data_points = len(x_data_point)
     x_data_point = np.asarray(x_data_point)
@@ -34,8 +34,8 @@ def linearRegression(tsv_file, x_catagory, y_catagory):
     y_data_point_bio = []
     for iCount in range(0, 27):  # switch between 0 and 27
         # if type(tsv_file['error_message'][iCount]) != type(x_catagory):
-        x_data_point_bio.append(tsv_file[x_catagory][iCount])
-        y_data_point_bio.append(tsv_file[y_catagory][iCount])
+        x_data_point_bio.append(np.log10(tsv_file[x_catagory][iCount]))
+        y_data_point_bio.append(np.log10(tsv_file[y_catagory][iCount]))
 
     Num_data_points_bio = len(x_data_point_bio)
     x_data_point_bio = np.asarray(x_data_point_bio)

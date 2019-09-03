@@ -5,8 +5,13 @@ import pandas as pd
 from LinearRegression import *
 
 # open .tsv file from Tolerance study
-path = '../sbml2amici/stat_reac_par.tsv'
+path = '../sbml2amici/NEW_stat_reac_par_447SBML.tsv'
 tsv_file = pd.read_csv(path, sep='\t')
+
+# no BioModels yet + delete nans at the end
+tsv_file = tsv_file[:423]
+tsv_file = tsv_file.reset_index()
+del tsv_file['index']
 
 ########### only for comparison ####################
 num_x_bio= []
@@ -35,19 +40,17 @@ not_bio = plt.scatter(num_x, num_p, alpha=0.8, c='blue', edgecolors='none', s=30
 bio = plt.scatter(num_x_bio, num_p_bio, alpha=0.8, c='red', edgecolors='none', s=30)
 
 # for section 1 figure
-plt.xlim(-5, 250)                                                                   # switch between section and whole figure
-plt.ylim(-10, 450)
+#plt.xlim(-5, 250)                                                                   # switch between section and whole figure
+#plt.ylim(-10, 450)
 
 # for section 2 figure
-plt.xlim(-5, 80)
-plt.ylim(-10, 200)
+#plt.xlim(-5, 80)
+#plt.ylim(-10, 200)
 
 # for section 3 figure
-plt.xlim(-5, 20)
-plt.ylim(-10, 40)
+#plt.xlim(-5, 20)
+#plt.ylim(-10, 40)
 
-# plt.xscale("log")
-# plt.yscale("log")
 plt.xlabel('Number of state variables')
 plt.ylabel('Number of parameters')
 # ax.set_xscale('log')
@@ -64,14 +67,21 @@ except:
 
 for iCount in range(0, rangeNumber[0]):
     x.append(iCount)
-reg1 = plt.plot(x, a + x*b, color='blue')
+x = x[1:]
+
+############# plot regression ###########
+new_x = [np.log10(y) for y in x]
+reg1 = plt.plot(x, 10**(a + new_x*b), color='blue')
 
 ############## only for comparison ######
-reg2 = plt.plot(x, d + x*e, color='red')
+reg2 = plt.plot(x, 10**(d + new_x*e), color='red')
 
 #########################################
+plt.xscale('log')
+plt.yscale('log')
+
 # title
-plt.title('Num_x vs. Num_p')
+plt.title('Model Density for state variables and parameters')
 
 # removing top and right borders
 # ax.spines['top'].set_visible(False)
@@ -94,7 +104,7 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 # save figure
-plt.savefig('../sbml2amici/Figures/zzz_Figures_new/Num_x_vs_Num_p_section_3_with_BioModels_regression.pdf')
+#plt.savefig('../bachelor_thesis/New_Figures/Figures_study_1/numx_vs_nump_447SBML_ylog.pdf')
 
 # show figure
 plt.show()
