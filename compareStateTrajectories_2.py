@@ -1,7 +1,7 @@
 # script 2 to compare state trajectories from JWS with trajectories of the simulation
 # => compares state trajectories
 
-# Attention:    boundary conditions are not being simualted by JWS!
+# Attention:    boundary conditions are not being simulated by JWS!
 
 from execute_loadModels import *
 from JWS_changeValues import *
@@ -19,11 +19,11 @@ import urllib.request
 import requests
 import json
 import itertools
-
+import time
 
 # set errors
-abs_error = 1e-4  # tighter conditions give back 'False' most of the time
-rel_error = 1e-4
+abs_error = 1e1  # tighter conditions give back 'False' most of the time
+rel_error = 1e1
 
 # int2str
 abs_str = '{:.0e}'.format(float(abs_error))
@@ -40,15 +40,11 @@ if not os.path.exists('./json_files_' + abs_number + '_' + rel_number):
 # set counter
 counter = 0
 
-# get name of jws reference
-url = "https://jjj.bio.vu.nl/rest/models/?format=json"
-view_source = requests.get(url)
-json_string = view_source.text
-json_dictionary = json.loads(json_string)
-
 # get all models
 list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
-# del list_directory_amici[0:31]                                                                                          # delete until model with error to avoid repeating all
+
+# measure time needed for all mdoels
+start_time = time.time()
 
 # iterate over all models again
 for iMod in range(0, len(list_directory_amici)):
@@ -94,7 +90,7 @@ for iMod in range(0, len(list_directory_amici)):
                 del tsv_file['time']
 
 
-                ########## comparison
+                # comparison
                 amount_col = len(column_names)
                 first_col = column_names[0]
                 amount_row = len(df_state_trajectory[first_col])
@@ -111,7 +107,6 @@ for iMod in range(0, len(list_directory_amici)):
                             df_single_error[iCol][iRow] = True
                         else:
                             df_single_error[iCol][iRow] = False
-                # df_error.style.applymap(colour)
 
                 # trajectory error
                 for iCol in column_names:
@@ -133,10 +128,14 @@ for iMod in range(0, len(list_directory_amici)):
                 if df_whole_error['trajectories_match'][0] == True:
                     counter = counter + 1
 
-                ############ save outcome
+                print(iMod)
+
+                # save outcome
                 df_single_error.to_csv(path_or_buf=new_json_save_path + '/single_error.csv', sep='\t', index=False)
                 df_trajectory_error.to_csv(path_or_buf=new_json_save_path + '/trajectory_error.csv', sep='\t', index=False)
                 df_whole_error.to_csv(path_or_buf=new_json_save_path + '/whole_error.csv', sep='\t', index=False)
 
 # print number of all models with correct state trajectories
-print(counter)
+print('Amount of models with correct state trajectories: ' + str(counter))
+
+print('time needed: ' + str(time.time() - start_time))
