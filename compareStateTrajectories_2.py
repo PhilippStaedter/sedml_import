@@ -30,6 +30,8 @@ RelError_2 = range(-20,5)
 for iAbsError in range(0, len(AbsError_1)):
     for iRelError in range(0, len(RelError_2)):
 
+        if iAbsError != iRelError: continue
+
         # set errors
         abs_error = float('1e' + str(AbsError_1[iAbsError]))                                 # tighter conditions give back 'False' most of the time
         rel_error = float('1e' + str(RelError_2[iRelError]))
@@ -37,6 +39,8 @@ for iAbsError in range(0, len(AbsError_1)):
         # int2str
         abs_str = '{:.0e}'.format(float(abs_error))
         rel_str = '{:.0e}'.format(float(rel_error))
+        
+        print(f"TOLERANCES: abs={abs_str} rel={rel_str}")
 
         # create folder for all .csv files of the results
         if not os.path.exists('./json_files_' + abs_str + '_' + rel_str):
@@ -46,19 +50,20 @@ for iAbsError in range(0, len(AbsError_1)):
         counter = 0
 
         # get all models
-        list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
+        # list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
+        list_directory_amici = sorted(os.listdir('./sedml_models/'))
 
         # measure time needed for all mdoels
         start_time = time.time()
 
         # iterate over all models again
         for iMod in range(0, len(list_directory_amici)):
-
             iModel = list_directory_amici[iMod]
             # iModel = 'bachmann2011'
             list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
 
             for iFile in list_files:
+                print(f"    {iModel} :: {iFile}")
 
                 # iFile without .sbml extension
                 iFile, extension = iFile.split('.', 1)
@@ -131,9 +136,8 @@ for iAbsError in range(0, len(AbsError_1)):
 
                         # adjust counter
                         if df_whole_error['trajectories_match'][0] == True:
+                            print('matching state trajectory!')
                             counter = counter + 1
-
-                        print(iMod)
 
                         # save outcome
                         df_single_error.to_csv(path_or_buf=new_json_save_path + '/single_error.csv', sep='\t', index=False)
