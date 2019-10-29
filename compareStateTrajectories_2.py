@@ -111,31 +111,31 @@ for iAbsError in range(0, len(AbsError_1)):
                         # single error
                         for iCol in column_names:
                             for iRow in range(0, amount_row):
-                                rel_tol = abs((df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow]) / df_state_trajectory[iCol][iRow])
-                                abs_tol = abs(df_state_trajectory[iCol][iRow] - tsv_file[iCol][iRow])
+                                rel_tol = abs((df_state_trajectory.at[iRow, iCol] - tsv_file.at[iRow,iCol]) / df_state_trajectory.at[iRow, iCol])
+                                abs_tol = abs(df_state_trajectory.at[iRow, iCol] - tsv_file.at[iRow,iCol])
                                 if rel_tol <= rel_error or abs_tol <= abs_error:
-                                    df_single_error[iCol][iRow] = True
+                                    df_single_error.at[iRow, iCol] = 1
                                 else:
-                                    df_single_error[iCol][iRow] = False
+                                    df_single_error.at[iRow, iCol] = 0
 
                         # trajectory error
                         for iCol in column_names:
                             if sum(df_single_error[iCol]) == amount_row:
-                                df_trajectory_error[iCol][0] = True
+                                df_trajectory_error.at[0, iCol] = 1
                             else:
-                                df_trajectory_error[iCol][0] = False
+                                df_trajectory_error.at[0, iCol] = 0
 
                         # whole error
                         error_list = []
                         for iCol in column_names:
-                            error_list.append(df_trajectory_error[iCol][0])
+                            error_list.append(df_trajectory_error.at[0, iCol])
                         if sum(error_list) == amount_col:
-                            df_whole_error['trajectories_match'][0] = True
+                            df_whole_error.at[0, 'trajectories_match'] = 1
                         else:
-                            df_whole_error['trajectories_match'][0] = False
+                            df_whole_error.at[0, 'trajectories_match'] = 0
 
                         # adjust counter
-                        if df_whole_error['trajectories_match'][0] == True:
+                        if df_whole_error['trajectories_match'][0] == 1:
                             print('matching state trajectory!')
                             counter = counter + 1
 
