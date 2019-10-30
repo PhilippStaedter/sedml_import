@@ -23,14 +23,19 @@ import time
 
 
 # upper and lower boundaries for the absolute and relative errors
-AbsError_1 = range(-20,5)
-RelError_2 = range(-20,5)
+AbsError_1 = range(-20,10)
+RelError_2 = range(-20,10)
+
+# create folder for all results
+if not os.path.exists('./json_files_all_results_Adams'):
+    os.makedirs('./json_files_all_results_Adams')
 
 # iterate over all error combinations
 for iAbsError in range(0, len(AbsError_1)):
     for iRelError in range(0, len(RelError_2)):
 
-        if iAbsError != iRelError: continue
+        if iAbsError != iRelError:
+            continue
 
         # set errors
         abs_error = float('1e' + str(AbsError_1[iAbsError]))                                 # tighter conditions give back 'False' most of the time
@@ -43,8 +48,8 @@ for iAbsError in range(0, len(AbsError_1)):
         print(f"TOLERANCES: abs={abs_str} rel={rel_str}")
 
         # create folder for all .csv files of the results
-        if not os.path.exists('./json_files_' + abs_str + '_' + rel_str):
-            os.makedirs('./json_files_' + abs_str + '_' + rel_str)
+        if not os.path.exists('./json_files_all_results_Adams/json_files_' + abs_str + '_' + rel_str):
+            os.makedirs('./json_files_all_results_Adams/json_files_' + abs_str + '_' + rel_str)
 
         # set counter
         counter = 0
@@ -69,8 +74,8 @@ for iAbsError in range(0, len(AbsError_1)):
                 iFile, extension = iFile.split('.', 1)
 
                 # important paths
-                old_json_save_path = './json_files/' + iModel + '/' + iFile
-                new_json_save_path = './json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile
+                old_json_save_path = './json_files_Adams/' + iModel + '/' + iFile
+                new_json_save_path = './json_files_all_results_Adams/json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile
                 sedml_path = './sedml_models/' + iModel + '/' + iModel + '.sedml'
                 sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
                 BioModels_path = './BioModelsDatabase_models'
@@ -85,8 +90,8 @@ for iAbsError in range(0, len(AbsError_1)):
                     else:
 
                         # create folder
-                        if not os.path.exists('./json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile):
-                            os.makedirs('./json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile)
+                        if not os.path.exists('./json_files_all_results_Adams/json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile):
+                            os.makedirs('./json_files_all_results_Adams/json_files_' + abs_str + '_' + rel_str + '/' + iModel + '/' + iFile)
 
                         # open jws_simulation .csv file
                         tsv_file = pd.read_csv(old_json_save_path + '/' + iFile + '_JWS_simulation.csv', sep='\t')
@@ -135,7 +140,7 @@ for iAbsError in range(0, len(AbsError_1)):
                             df_whole_error.at[0, 'trajectories_match'] = 0
 
                         # adjust counter
-                        if df_whole_error['trajectories_match'][0] == 1:
+                        if df_whole_error.at[0, 'trajectories_match'] == 1:
                             print('matching state trajectory!')
                             counter = counter + 1
 

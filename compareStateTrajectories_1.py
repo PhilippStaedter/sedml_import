@@ -1,7 +1,7 @@
 # script 1 to compare state trajectories from JWS with trajectories of the simulation
 # => creates two important .tsv files
 
-# Attention:    boundary conditions are not being simualted by JWS!
+# Attention:    boundary conditions are not being simulated by JWS!
 
 from execute_loadModels import *
 from JWS_changeValues import *
@@ -20,10 +20,15 @@ import requests
 import json
 import itertools
 
+# set settings for simulation
+atol = 1e-8
+rtol = 1e-6
+linSol = 9
+solAlg = 1
 
 # create folder for all .csv files of the trajectories
-if not os.path.exists('./json_files'):
-    os.makedirs('./json_files')
+if not os.path.exists('./json_files_Adams'):
+    os.makedirs('./json_files_Adams')
 
 # get name of jws reference
 url = "https://jjj.bio.vu.nl/rest/models/?format=json"
@@ -33,7 +38,7 @@ json_dictionary = json.loads(json_string)
 
 # get all models
 list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
-# del list_directory_amici[0:193]                                                                                          # delete until model with error to avoid repeating all
+del list_directory_amici[0:193]                                                                                          # delete until model with error to avoid repeating all
 
 for iMod in range(0, len(list_directory_amici)):
 
@@ -49,7 +54,7 @@ for iMod in range(0, len(list_directory_amici)):
         iFile, extension = iFile.split('.', 1)
 
         # important paths
-        json_save_path = './json_files/' + iModel + '/' + iFile
+        json_save_path = './json_files_Adams/' + iModel + '/' + iFile
         sedml_path = './sedml_models/' + iModel + '/' + iModel +'.sedml'
         sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
         BioModels_path = './BioModelsDatabase_models'
@@ -82,14 +87,14 @@ for iMod in range(0, len(list_directory_amici)):
                         if correct_model_name == parse_name_jws:
                             model_reference = json_dictionary[iCount]['slug']
                             break
-            # check if all_settings works
+            # check if 'all_settings' works
             try:
                 # Get whole model
                 model = all_settings(iModel,iFile)
 
                 # create folder
-                if not os.path.exists('./json_files/' + iModel + '/' + iFile):
-                    os.makedirs('./json_files/' + iModel + '/' + iFile)
+                if not os.path.exists('./json_files_Adams/' + iModel + '/' + iFile):
+                    os.makedirs('./json_files_Adams/' + iModel + '/' + iFile)
             except:
                 print('Model ' + iModel + ' extension is missing!')                                                                                 # error 2
                 continue
@@ -135,6 +140,16 @@ for iMod in range(0, len(list_directory_amici)):
             ########## model simulation
             # Create solver instance
             solver = model.getSolver()
+
+            # set all settings
+            solver.setAbsoluteTolerance(atol)
+            solver.setRelativeTolerance(rtol)
+            solver.setLinearSolver(linSol)
+            solver.setLinearMultistepMethod(solAlg)
+
+            # set stability flag for Adams-Moulton
+            if solAlg == 1:
+                solver.setStabilityLimitFlag(False)
 
             # Simulate model
             sim_data = amici.runAmiciSimulation(model, solver)
