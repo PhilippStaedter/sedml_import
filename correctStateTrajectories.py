@@ -5,11 +5,11 @@ import shutil
 import pandas as pd
 from setTime_BioModels import *
 
-# important paths
-json_path = './json_files_4_4'
+# important paths --- for abs_error = rel_error = 1e-1
+json_path = './json_files_all_results_BDF/json_files_1e-01_1e-01'
 sedml_path = './sedml_models'
 old_path = '../sbml2amici/amici_models'
-new_path = '../sbml2amici/correct_amici_models'
+new_path = '../sbml2amici/correct_amici_models_paper'
 
 if not os.path.exists(new_path):
     # correct amici models
