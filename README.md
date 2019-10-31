@@ -2,7 +2,7 @@
 
 It follows the order in which all scripts are executed.
 
-## 1 Create the whole model collection 
+## 1 Create model collection 
 ### 1.1 Download all sedml and sbml models from the JWS Online Database
 	script_download_all_sedml_models.py
 
@@ -31,7 +31,7 @@ It follows the order in which all scripts are executed.
 	num_x_num_p.py
 
 
-## 2 Do the solver settings study based on the model collection
+## 2 Solver settings study
 ### 2.1 Tolerance study
 	execute_Tolerances.py
 	plotHistogram.py
