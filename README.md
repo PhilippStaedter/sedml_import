@@ -1,5 +1,6 @@
-# ReadMe
-About the order in which all scripts are executed.
+# Assessment and Prediction of ODE Solver Performance for Biological Processes
+
+It follows the order in which all scripts are executed.
 
 ## 1 Create the whole model collection 
 ### 1.1 Download all sedml and sbml models from the JWS Online Database
