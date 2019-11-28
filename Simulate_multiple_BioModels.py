@@ -97,7 +97,7 @@ for iModel in range(0, len(All_Models_with_proteins)):
 plt.savefig('../ODE_protein/Figures/First_median.pdf')
 
 # show plot
-plt.show()
+plt.show() 
 
     # internal time
     #print(sim_data['cpu_time'])
