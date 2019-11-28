@@ -9,12 +9,12 @@ import time
 from setTime_BioModels import *
 
 
-All_Models_with_proteins = ['Lai2014', 'Levchenko2000a', 'Proctor2010a', 'Proctor2013a', 'Qi2013a', 'Ung2008']#, 'ODea2007', 'Pritchard2002',
-'''
-'Ueda2001', 'Eungdamrong2007', 'Froehlich2018', 'Holzhutter2004', 'Hui2014', 'Liu2011',
-'Ouzounoglou2014', 'Pathak2013', 'Pathak2013a', 'Singh2006', 'Sivakumar2011c',
-'Bungay2003', 'Bungay2006', 'Bungay2006a', 'Sasagawa2005', 'Sengupta2015', 'Yang2007',
+All_Models_with_proteins = [#'Lai2014', 'Levchenko2000a', 'Proctor2010a', 'Proctor2013a', 'Qi2013a', 'Ung2008']#,
+                            #'ODea2007', 'Pritchard2002', 'Ueda2001', 'Eungdamrong2007', 'Froehlich2018', 'Holzhutter2004']
+                            #'Hui2014', 'Liu2011', 'Ouzounoglou2014', 'Pathak2013', 'Pathak2013a', 'Singh2006']#,
+                            'Sivakumar2011c', 'Bungay2003', 'Bungay2006', 'Bungay2006a', 'Sasagawa2005', 'Sengupta2015', 'Yang2007']#,
 
+'''
 ('Aguilera - not yet imported'), ('Baker2013 - not yet imported'), ('Chance1943 - not yet imported'),
 ('Clarke2000 - not yet imported'), ('Ehrenstein - not yet imported'), ('Klipp2002 - not yet imported'),
 ('Lebeda2008a - not yet imported'), ('Barr2017 - not yet imported'), ('DellaPezze2014 - not yet imported'),
@@ -28,7 +28,7 @@ All_Models_with_proteins = ['Lai2014', 'Levchenko2000a', 'Proctor2010a', 'Procto
 ax1 = plt.axes()
 
 # different colours
-colour = ['orange', 'cyan', 'violet', 'tan', 'blue', 'lavender']
+colour = ['orange', 'cyan', 'violet', 'tan', 'blue', 'lavender', 'black']
 
 # minimize all x-values and y-values
 x_bound = []
@@ -39,10 +39,10 @@ for iModel in range(0, len(All_Models_with_proteins)):
     y_bound.append(sim_trajectory_bound)
 sim_start_time = 0
 sim_num_time_points = 50
-min_x_bound = sorted(x_bound)[0]
-min_y_bound = sorted(y_bound)[0]
-median_x_bound = np.median(x_bound)
-median_y_bound = np.median(y_bound)
+#min_x_bound = sorted(x_bound)[0]
+#min_y_bound = sorted(y_bound)[0]
+#median_x_bound = np.median(x_bound)
+#median_y_bound = np.median(y_bound)
 max_x_bound = sorted(x_bound, reverse=True)[0]
 max_y_bound = sorted(y_bound, reverse=True)[0]
 
@@ -63,7 +63,7 @@ for iModel in range(0, len(All_Models_with_proteins)):
     model = model_module.getModel()
 
     # set timepoints for which we want to simulate the model
-    model.setTimepoints(np.linspace(sim_start_time, median_x_bound, sim_num_time_points))
+    model.setTimepoints(np.linspace(sim_start_time, 1, sim_num_time_points))
 
     # Create solver instance
     solver = model.getSolver()
@@ -81,26 +81,30 @@ for iModel in range(0, len(All_Models_with_proteins)):
     # plot sim_data - alternative to 'amici.plotting'
     state_indices = range(sim_data['x'].shape[1])
     for ix in state_indices:
-        ax1.plot(sim_data['t'], sim_data['x'][:, ix - 1], color=colour[iModel])
-    ax1.plot(sim_data['t'], sim_data['x'][:, len(state_indices) - 1], color=colour[iModel], label=All_Models_with_proteins[iModel])
-    ax1.set_xlim(sim_start_time, median_x_bound)
-    ax1.set_ylim(sim_start_time, median_y_bound)
-    ax1.set_xlabel('$t$ (s)')
+        # ax1.plot(sim_data['t'], sim_data['x'][:, ix - 1], color=colour[iModel])
+        # /np.max(sim_data['t'])
+        ax1.plot(sim_data['t']/np.max(sim_data['t']), sim_data['x'][:, ix - 1]/np.max(sim_data['x'][:, ix - 1]), color=colour[iModel], alpha=0.5)
+    ax1.plot(sim_data['t']/np.max(sim_data['t']), sim_data['x'][:, len(state_indices) - 1]/np.max(sim_data['x'][:, len(state_indices) - 1]), color=colour[iModel], alpha=0.5, label=All_Models_with_proteins[iModel])
+    #ax1.set_xlim(sim_start_time, median_x_bound)
+    ax1.set_xlim(0, 1)
+    ax1.set_ylim(0, 1)
+    ax1.set_xlabel('$t$')
     ax1.set_ylabel('$x_i(t)$ (mmol/ml)')
-    ax1.legend()
+    ax1.legend(bbox_to_anchor=(1, 0.5))
     ax1.set_title('State trajectories')
     #aplt.plotStateTrajectories(sim_data, state_indices=None, ax=ax1)
     #aplt.plotObservableTrajectories(sim_data)
 
 
+# better layout
+plt.tight_layout()
+
+# change plotting size
+fig = plt.gcf()
+fig.set_size_inches(14.5, 9)
+
 # save figure
-plt.savefig('../ODE_protein/Figures/First_median.pdf')
+plt.savefig('../ODE_protein/Figures/Fourth_scaled_both.pdf')
 
 # show plot
-plt.show() 
-
-    # internal time
-    #print(sim_data['cpu_time'])
-    #print(end_time - start_time)
-
-    #a=4
+plt.show()
