@@ -77,24 +77,31 @@ print('equal_zero_x: ' + str(sorted(equal_zero_x)[0]))
 print('equal_zero_y: ' + str(sorted(equal_zero_y)[0]))
 
 # plot a scatter plot + diagonal line
+fontsize = 22
+labelsize = 18
+titlesize = 30
+
 ax = plt.axes()
 z = range(0,40000)
-plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c='red', label='Adams default setting is better than the prediction', zorder=10, clip_on=False)
-plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c='green', label='Prediction is better than Adams default setting', zorder=10, clip_on=False)
-plt3 = ax.scatter(equal_x, equal_y, c='blue', label='Both are equally good', zorder=10, clip_on=False)
-plt4 = ax.scatter(adams_zero_x, adams_zero_y, c='green', marker='s', label='Adams default failed to integrate the model', zorder=10, clip_on=False)
-plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, c='red', marker='s', label='Prediction setting failed to integrate the model', zorder=10, clip_on=False)
-plt6 = ax.scatter(equal_zero_x, equal_zero_y, c='blue', marker='s', label='Both failed to integrate the model', zorder=10, clip_on=False)
+plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c='red', label='Adams-Moulton is faster than BDF: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c='blue', label='BDF is faster than Adams-Moulton: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt3 = ax.scatter(equal_x, equal_y, c='grey', label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt4 = ax.scatter(adams_zero_x, adams_zero_y, marker='D', s=120, facecolors='none', edgecolors='blue', label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, s=120, facecolors='none', edgecolors='red', marker='D', label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt6 = ax.scatter(equal_zero_x, equal_zero_y, s=120, facecolors='none', edgecolors='grey', marker='D', label='Both failed to integrate the model: ' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
 ax.plot(z)
 ax.set_xlim([0.5, 40000])
 ax.set_ylim([0.5, 40000])
 ax.set_xscale('log')
 ax.set_yscale('log')
-ax.set_xlabel('Adams default simulation time [ms]', fontsize=12, fontweight='bold')
-ax.set_ylabel('BDFs simulation time [ms]', fontsize=12, fontweight='bold')
-ax.set_title('Adams-Mouton vs. BDF settings', fontsize=24, fontweight='bold', pad=30)
-ax.legend(loc=2)
+ax.set_xlabel('Adams default simulation time [ms]', fontsize=titlesize, fontweight='bold')
+ax.set_ylabel('BDFs simulation time [ms]', fontsize=titlesize, fontweight='bold')
+ax.set_title('Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=30)
+ax.legend(loc=2, fontsize=labelsize - 6)
+plt.tick_params(labelsize=labelsize)
+plt.gca().set_aspect('equal', adjustable='box')
 
+'''
 leg = Legend(ax, [plt1, plt2, plt3, plt4, plt5, plt6], [str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %',
                                                         str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %',
                                                         str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %',
@@ -102,6 +109,7 @@ leg = Legend(ax, [plt1, plt2, plt3, plt4, plt5, plt6], [str(round(len(adams_bdf_
                                                         str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %',
                                                         str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %'], loc='lower right', frameon=True)
 ax.add_artist(leg)
+'''
 
 # better layout
 plt.tight_layout()
@@ -111,7 +119,7 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 # save figure
-plt.savefig('../bachelor_thesis/New_Figures/Figures_study_5/Adams_vs_BDF_2_166SBML.pdf')
+#plt.savefig('../bachelor_thesis/New_Figures/Figures_study_5/Adams_vs_BDF_2_166SBML.pdf')
 
 # show figure
 plt.show()
