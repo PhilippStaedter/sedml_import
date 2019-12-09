@@ -1,5 +1,6 @@
-# script to plot scatter plots for all 140 different combinations
+# script to plot scatter plots for all 140 different combinations - study 3
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from averageTime import *
@@ -83,7 +84,7 @@ def Scatter(solAlg, nonLinSol):
     row_factor = 0.45
     column_factor = 0.2
     rotation_factor = 70
-    alpha = 0.3
+    alpha = 0.5
 
     for iCounter in range(0, int(len(correct_files)/5)):
 
@@ -139,13 +140,13 @@ def Scatter(solAlg, nonLinSol):
             ax1.text(0.3, 1.05, 'AbsTol = ' + r'$10^{-14}$ + RelTol = ' + r'$10^{-14}$', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
             #ax1.get_yaxis().set_visible(False)
             ax1.tick_params(labelleft=False)
-            ax1.text(0.3, -0.4, 'Number of state variables', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
+            ax1.text(0.3, -0.3, 'Number of state variables', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
 
         elif iCounter == 6:
             ax1 = plt.axes([left, bottom - (iCounter-3) * column_factor, width, height])
             ax1.text(0.3, 1.05, 'AbsTol = ' + r'$10^{-16}$ + RelTol = ' + r'$10^{-16}$', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
             #ax1.get_xaxis().set_visible(False)
-            #ax1.tick_params(labelbottom=False)
+            #ax1.tick_params(labelbottom=False)ax1.set_ylim([0.1, 50000])
             ax1.text(0.3, -0.4, 'Number of state variables', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
             ax1.text(-0.17, 0.99, 'Simulation Time [ms]', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes, rotation=rotation_factor)
 
@@ -177,15 +178,16 @@ def Scatter(solAlg, nonLinSol):
         ax1.set_ylim([0.1, 50000])
         ax1.set_xscale('log')
         ax1.set_yscale('log')
-        ax1.scatter(first_x, first_data, alpha=alpha, c='orange', edgecolors='none', s=30, label=str(linSol4legend_1) + ': ' + str(round(len(first_data)*100/file_length,2)) + ' %')
-        ax1.scatter(second_x, second_data, alpha=alpha, c='cyan', edgecolors='none', s=30, label=str(linSol4legend_2) + ': ' + str(round(len(second_data)*100/file_length,2)) + ' %')
-        ax1.scatter(third_x, third_data, alpha=alpha, c='violet', edgecolors='none', s=30, label=str(linSol4legend_3) + ': ' + str(round(len(third_data)*100/file_length,2)) + ' %')
-        ax1.scatter(fourth_x, fourth_data, alpha=alpha, c='tan', edgecolors='none', s=30, label=str(linSol4legend_4) + ': ' + str(round(len(fourth_data)*100/file_length,2)) + ' %')
-        ax1.scatter(fifth_x, fifth_data, alpha=alpha, c='lavender', edgecolors='none', s=30, label=str(linSol5legend_5) + ': ' + str(round(len(fifth_data)*100/file_length,2)) + ' %')
+        ax1.scatter(first_x, first_data, alpha=alpha, c='orange', edgecolors='none', s=30, label=str(linSol4legend_1))# + ': ' + str(round(len(first_data)*100/file_length,2)) + ' %')
+        ax1.scatter(second_x, second_data, alpha=alpha, c='cyan', edgecolors='none', s=30, label=str(linSol4legend_2))# + ': ' + str(round(len(second_data)*100/file_length,2)) + ' %')
+        ax1.scatter(third_x, third_data, alpha=alpha, c='violet', edgecolors='none', s=30, label=str(linSol4legend_3))# + ': ' + str(round(len(third_data)*100/file_length,2)) + ' %')
+        ax1.scatter(fourth_x, fourth_data, alpha=alpha, c='tan', edgecolors='none', s=30, label=str(linSol4legend_4))# + ': ' + str(round(len(fourth_data)*100/file_length,2)) + ' %')
+        ax1.scatter(fifth_x, fifth_data, alpha=alpha, c='lavender', edgecolors='none', s=30, label=str(linSol5legend_5))# + ': ' + str(round(len(fifth_data)*100/file_length,2)) + ' %')
         plt.tick_params(labelsize=labelsize)
 
-        # plot two legends
-        leg1 = ax1.legend(loc=4)
+        # plot a legend
+        if iCounter == 0:
+            leg1 = ax1.legend(loc=4)
         '''
         leg2 = ax1.legend([str(round(len(all_intern_columns[iCounter]['state_variables'])*100/166,2)) + ' %',
                            str(round(len(all_intern_columns[iCounter + 1]['state_variables'])*100/166,2)) + ' %',
@@ -193,6 +195,34 @@ def Scatter(solAlg, nonLinSol):
                            str(round(len(all_intern_columns[iCounter + 3]['state_variables'])*100/166,2)) + ' %'], loc=4)
         ax1.add_artist(leg1)
         '''
+
+    # plot a scatter plot in the right bottom corner
+    alpha = 1
+    rotation_factor = -30
+    for iCounter in range(0, int(len(correct_files) / 5)):
+        ax2 = plt.axes([left + row_factor, bottom - 3 * column_factor, width, height])
+        first_x = 0.8 + iCounter
+        second_x = 0.9 + iCounter
+        third_x = 1 + iCounter
+        fourth_x = 1.1 + iCounter
+        fifth_x = 1.2 + iCounter
+        first_data = all_intern_columns[iCounter][column_names[iCounter]]
+        second_data = all_intern_columns[iCounter + 7][column_names[iCounter + 7]]
+        third_data = all_intern_columns[iCounter + 14][column_names[iCounter + 14]]
+        fourth_data = all_intern_columns[iCounter + 21][column_names[iCounter + 21]]
+        fifth_data = all_intern_columns[iCounter + 28][column_names[iCounter + 28]]
+        ax2.scatter(first_x, round(len(first_data)/file_length,2), alpha=alpha, c='orange', edgecolors='none', s=30,)
+        ax2.scatter(second_x, round(len(second_data)/file_length,2), alpha=alpha, c='cyan', edgecolors='none', s=30)
+        ax2.scatter(third_x, round(len(third_data)/file_length,2), alpha=alpha, c='violet', edgecolors='none', s=30)
+        ax2.scatter(fourth_x, round(len(fourth_data)/file_length,2), alpha=alpha, c='tan', edgecolors='none', s=30)
+        ax2.scatter(fifth_x, round(len(fifth_data)/file_length,2), alpha=alpha, c='lavender', edgecolors='none', s=30)
+        plt.tick_params(labelsize=labelsize)
+    ax2.set_ylim([0.5, 1])
+    ax2.set_xticklabels(['', r'$10^{-6}$' + ',' + r'$10^{-8}$', r'$10^{-8}$' + ',' + r'$10^{-6}$',
+                         r'$10^{-8}$' + ',' + r'$10^{-16}$', r'$10^{-10}$' + ',' + r'$10^{-12}$',
+                         r'$10^{-12}$' + ',' + r'$10^{-10}$', r'$10^{-14}$' + ',' + r'$10^{-14}$',
+                         r'$10^{-16}$' + ',' + r'$10^{-8}$'], rotation=rotation_factor)
+    ax2.text(0.3, -0.65, 'Overall Success Rate', fontsize=fontsize, fontweight='bold', transform=ax2.transAxes)
 
     # set global labels
     plt.text(0.1, 5.5, 'Simulation time distribution of models for different linear solver combinations', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)  # -60 , 350
@@ -205,11 +235,11 @@ def Scatter(solAlg, nonLinSol):
     fig.set_size_inches(18.5, 10.5)
 
     # save figure
-    plt.savefig('../paper_SolverSettings/Figures/Study_3/1_1_Scatter.pdf')
+    #plt.savefig('../paper_SolverSettings/Figures/Study_3/' + solAlg + '_' + nonLinSol + '_Scatter.pdf')
 
     # show figure
     plt.show()
 
 
 # call function
-Scatter('1', '1')
+Scatter('2', '1')

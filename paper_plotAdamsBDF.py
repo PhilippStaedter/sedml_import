@@ -6,12 +6,21 @@ from matplotlib.legend import Legend
 from averageTime import *
 
 # important paths
-Adams_base_path = '../bachelor_thesis/SolverAlgorithm/Adams'
-BDF_base_path = '../bachelor_thesis/SolverAlgorithm/BDF'
+base_path = '../paper_SolverSettings/WholeStudy'
+Adams_base_path = base_path
+BDF_base_path = base_path
+#Adams_base_path = '../bachelor_thesis/SolverAlgorithm/Adams'
+#BDF_base_path = '../bachelor_thesis/SolverAlgorithm/BDF'
 
 # open .tsv files
-list_directory_adams = sorted(os.listdir(Adams_base_path))
-list_directory_bdf = sorted(os.listdir(BDF_base_path))
+list_directory_general = sorted(os.listdir(base_path))
+list_directory_adams = []
+list_directory_bdf = []
+for iFile in range(0, int(len(list_directory_general)/2)):
+    list_directory_adams.append(list_directory_general[iFile])
+    list_directory_bdf.append(list_directory_general[iFile + int(len(list_directory_general)/2)])
+#list_directory_adams = sorted(os.listdir(Adams_base_path))
+#list_directory_bdf = sorted(os.listdir(BDF_base_path))
 
 # create list of doubles for scatter plot
 adams_bdf_x = []          # red
@@ -83,12 +92,12 @@ titlesize = 30
 
 ax = plt.axes()
 z = range(0,40000)
-plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c='red', label='Adams-Moulton is faster than BDF: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
-plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c='blue', label='BDF is faster than Adams-Moulton: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
-plt3 = ax.scatter(equal_x, equal_y, c='grey', label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
-plt4 = ax.scatter(adams_zero_x, adams_zero_y, marker='D', s=120, facecolors='none', edgecolors='blue', label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
-plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, s=120, facecolors='none', edgecolors='red', marker='D', label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
-plt6 = ax.scatter(equal_zero_x, equal_zero_y, s=120, facecolors='none', edgecolors='grey', marker='D', label='Both failed to integrate the model: ' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*5, 2)) + ' %', zorder=10, clip_on=False)
+plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c='red', label='Adams-Moulton is faster than BDF: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
+plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c='blue', label='BDF is faster than Adams-Moulton: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
+plt3 = ax.scatter(equal_x, equal_y, c='grey', label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
+plt4 = ax.scatter(adams_zero_x, adams_zero_y, marker='D', s=120, facecolors='none', edgecolors='blue', label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
+plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, s=120, facecolors='none', edgecolors='red', marker='D', label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
+plt6 = ax.scatter(equal_zero_x, equal_zero_y, s=120, facecolors='none', edgecolors='grey', marker='D', label='Both failed to integrate the model: ' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False)
 ax.plot(z)
 ax.set_xlim([0.5, 40000])
 ax.set_ylim([0.5, 40000])

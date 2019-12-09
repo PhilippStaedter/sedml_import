@@ -8,15 +8,21 @@ from averageTime import *
 from matplotlib import ticker
 
 
-Multistep_Method = 'Adams'
+Multistep_Method = 'BDF'
 
+
+# decision function
+if Multistep_Method == 'Adams':
+    prefix = '1_'
+elif Multistep_Method == 'BDF':
+    prefix = '2_'
 
 # important paths
 #tolerance_path = '../bachelor_thesis/Tolerance'
 tolerance_path = '../paper_SolverSettings/Tolerances_1e4/' + Multistep_Method                                                           #
 
 # main .tsv file to norm all other files
-main_tsv = pd.read_csv(tolerance_path + '/1_06_06.tsv', sep='\t')                                                       #
+main_tsv = pd.read_csv(tolerance_path + '/' + prefix + '06_06.tsv', sep='\t')                                                       #
 
 # get new .tsv file
 main_tsv = averaging(main_tsv)
@@ -35,10 +41,10 @@ tolerance_files_old = sorted(os.listdir(tolerance_path))
 #del tolerance_files[0]
 tolerance_files = []
 for iTolFile in range(0, len(tolerance_files_old)):
-    if len(tolerance_files_old[iTolFile].split('1_')) > 2:
+    if len(tolerance_files_old[iTolFile].split(prefix)) > 2:
         tolerance_files.append(tolerance_files_old[iTolFile].split('_')[1] + '_' + tolerance_files_old[iTolFile].split('_')[2])
     else:
-        tolerance_files.append(tolerance_files_old[iTolFile].split('1_')[1])                                                #
+        tolerance_files.append(tolerance_files_old[iTolFile].split(prefix)[1])                                                #
 
 ######## 1.PART: create Box Plot
 all_averaged_files = []
@@ -55,7 +61,7 @@ for iTolerance in range(0, len(tolerance_files)):
 
     else:
         # open next .tsv file
-        next_tsv = pd.read_csv(tolerance_path + '/1_' + tolerance_files[iTolerance], sep='\t')                          #
+        next_tsv = pd.read_csv(tolerance_path + '/' + prefix + tolerance_files[iTolerance], sep='\t')                          #
 
         # get new .tsv file
         next_tsv = averaging(next_tsv)
@@ -216,7 +222,7 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 # save figure
-plt.savefig('../paper_SolverSettings/Figures/Study_2/Tolerances_BoxPlot_BarPlot_' + Multistep_Method + '.pdf')
+#plt.savefig('../paper_SolverSettings/Figures/Study_2/Tolerances_BoxPlot_BarPlot_' + Multistep_Method + '.pdf')
 
 # show figure
 plt.show()

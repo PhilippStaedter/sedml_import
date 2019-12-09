@@ -97,8 +97,8 @@ def Multistep():
     # length of the last file
     file_length = len(next_tsv['id'])
 
-    # get correct data for all five linear solvers in one of the seven figures
-    # plot a customized scatter plot
+    # get correct data for the bar plot
+    # plot a customized bar plot
     fontsize = 22 - 12 + 4
     labelsize = 10 + 4
     titlesize = 30 - 8
@@ -121,8 +121,7 @@ def Multistep():
     ax2 = figure.add_axes([left, bottom - height - column_factor, width, height])
     index = np.arange(35)
 
-
-    # just for a legend
+    # just one for the legend
     adams_data_2 = all_intern_columns_1[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
     bdf_data_2 = all_intern_columns_2[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
     nonLinSol12 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(adams_data_2) / file_length, 2), bar_width, alpha=alpha, color='orange', label='Adams')
@@ -163,6 +162,7 @@ def Multistep():
                       'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K']
     upper_1 = plt.setp(ax1, xticklabels=lower_labels)
     upper_2 = plt.setp(ax2, xticklabels=lower_labels)
+    # ax1.set_xticks()
     ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
     ax2.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
     plt.setp(ax1.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
@@ -189,7 +189,7 @@ def Multistep():
     fig.set_size_inches(18.5, 10.5)
 
     # save figure
-    plt.savefig('../paper_SolverSettings/Figures/Study_5/SolAlg.pdf')
+    #plt.savefig('../paper_SolverSettings/Figures/Study_5/Success_Rate_SolAlg.pdf')
 
     # show figure
     plt.show()
