@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from averageTime import *
 from matplotlib import ticker
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter, AutoMinorLocator)
 
 
 Multistep_Method = 'BDF'
@@ -29,8 +30,8 @@ main_tsv = averaging(main_tsv)
 
 # set two axes objects
 figure = plt.figure()
-ax1 = figure.add_axes([0.1, 0.55, 0.8, 0.4])                 # ax = plt.axes()
-ax2 = figure.add_axes([0.1, 0.05, 0.8, 0.3])
+ax1 = figure.add_axes([0.1, 0.5, 0.8, 0.4])                 # ax = plt.axes()
+ax2 = figure.add_axes([0.1, 0.15, 0.8, 0.3])
 
 # get list for all data
 xTickLabel = []
@@ -87,15 +88,11 @@ for iTolerance in range(0, len(tolerance_files)):
         # add list to total_data
         total_data.append(normed_list)
 
-    #### get aF
-    #else:
-     #   abs_tol, rest = tolerance_files[iTolerance - 1].split('_')
-     #   rel_tol = rest.split('.')[0]
-     #   tol = '_' + str(rel_tol)
-     #xTickLabel.append(tol)
-
 
 # create box_plot
+linestyle = (0,(2,5,2,5))
+linewidth = 1
+
 fontsize = 22
 labelsize = 18
 titlesize = 30 + 4
@@ -105,7 +102,12 @@ ax1.set_yscale('log')
 bp = ax1.boxplot(total_data, sym='+', patch_artist=True)
 
 ####### set more options
-plt.ylim([0.9,100])
+ax1.spines['top'].set_linestyle(linestyle)
+ax1.spines['top'].set_linewidth(linewidth)
+ax1.spines['right'].set_linestyle(linestyle)
+ax1.spines['right'].set_linewidth(linewidth)
+
+ax1.set_ylim([0.1,250])
 # change colour for each set
 colors = ['orange', 'orange', 'orange', 'orange', 'orange', 'orange',
           'white',
@@ -121,50 +123,22 @@ colors = ['orange', 'orange', 'orange', 'orange', 'orange', 'orange',
 #for bplot in bp:
 for patch, color in zip(bp['boxes'], colors):
     patch.set_facecolor(color)
-    #for box in bp['boxes']:
-        #box.set( color='darkkhaki', linewidth=2)
-        #box.set( facecolor = 'blue')
 for whisker in bp['whiskers']:
     whisker.set(color='#7570b3', linewidth=2)
 for cap in bp['caps']:
     cap.set(color='#7570b3', linewidth=2)
 for median in bp['medians']:
-    median.set(color='red', linewidth=2)
+    median.set(color='black', linewidth=2)
 for flier in bp['fliers']:
     flier.set(marker='+', color='#e7298a', alpha=0.5)
 
+
+ax1.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')
+ax1.set_ylabel('Relative simulation time', fontsize=labelsize)
+ax1.set_xticklabels([])
+
 # add grit
 ax1.yaxis.grid(True, linestyle='-', which='major', color='lightgrey', alpha=0.5)
-
-#labels
-ax1.minorticks_on()
-Abs_xTickLabels = ['', '', r'$10^{-6}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '', '' '',
-                   r'$10^{-8}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
-                   r'$10^{-10}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
-                   r'$10^{-12}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
-                   r'$10^{-14}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
-                   r'$10^{-16}$']
-Rel_xTckLabels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
-                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
-                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
-                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
-                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
-                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$']
-Rel_xTickNames = plt.setp(ax1, xticklabels=Rel_xTckLabels)
-ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(Abs_xTickLabels))
-plt.setp(ax1.xaxis.get_minorticklabels(), rotation=45, fontsize=labelsize, fontweight='bold')
-ax1.tick_params(axis='x', which='major', pad=40)
-ax1.set_axisbelow(True)
-ax1.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')
-ax1.set_xlabel('Success rates of all tolerance combinations', fontsize=titlesize, fontweight='bold')
-ax1.set_ylabel(' default simulation conditions) of a model', fontsize=labelsize, fontweight='bold')
-plt.setp(Rel_xTickNames, rotation=rotation, fontsize=fontsize, fontweight='bold')
-plt.tick_params(labelsize=labelsize)
-
-# add rel and abs in a text box
-plt.text(-2.5, 0.65, 'Abs_Tol: ', fontsize=labelsize, fontweight='bold')
-plt.text(-2.5, 0.43, 'Rel_Tol: ', fontsize=labelsize, fontweight='bold')
-plt.text(-2.9, 70, 'Relative simulation time (compared to ', fontsize=labelsize + 3, fontweight='bold', rotation=90)
 
 
 ######### 2.PART: add bar plot with failure rate
@@ -173,11 +147,15 @@ labelsize = 18 - 5
 titlesize = 30
 
 all_percentages = []
-for iTolerance in range(0, len(all_averaged_files)):
-    #next_tsv = pd.read_csv(tolerance_path + '/' + tolerance_files_old[iTolerance], sep='\t')
+counter = 0
+for iTolerance in range(0, len(all_averaged_files) + 5):
+    if iTolerance in [6, 13, 20, 27, 34]:
+        all_percentages.append(0)
+        counter += 1
+        continue
 
     # get new .tsv file
-    next_tsv = all_averaged_files[iTolerance]
+    next_tsv = all_averaged_files[iTolerance - counter]
     #next_tsv = averaging(next_tsv)
 
     # store non-zero and zero values
@@ -191,28 +169,76 @@ for iTolerance in range(0, len(all_averaged_files)):
             non_zero_value_counter += 1
 
     # store percentage
-    all_percentages.append(round(non_zero_value_counter / (non_zero_value_counter + zero_value_counter), 4))
+    all_percentages.append(round(non_zero_value_counter / (non_zero_value_counter + zero_value_counter) * 100, 4))
 
 # create bar plot
-plot_barplot = ax2.bar(x=list(range(0,36)), height=all_percentages, width=0.5)
+plot_barplot = ax2.bar(x=list(range(0,41)), height=all_percentages, width=0.5, color=['orange', 'orange', 'orange', 'orange', 'orange', 'orange',
+                                                                                      'white',
+                                                                                      'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan',
+                                                                                      'white',
+                                                                                      'violet', 'violet', 'violet', 'violet', 'violet', 'violet',
+                                                                                      'white',
+                                                                                      'tan', 'tan', 'tan', 'tan', 'tan', 'tan',
+                                                                                      'white',
+                                                                                      'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow',
+                                                                                      'white',
+                                                                                      'lavender', 'lavender', 'lavender', 'lavender', 'lavender', 'lavender'])
 
 # more options
+ax2.spines['top'].set_linestyle(linestyle)
+ax2.spines['top'].set_linewidth(linewidth)
+ax2.spines['right'].set_linestyle(linestyle)
+ax2.spines['right'].set_linewidth(linewidth)
+
 #ax2.set_xscale('log')
-ax2.set_ylim([0,1])
+ax2.set_xlim([-1,41])
+ax2.set_ylim([0,100])
 ax2.tick_params(labelsize=labelsize)
-#plt.text(x=1, y=50, s='sucess: ' + str(round(len(normed_list) / (len(normed_list) + zero_values_counter) * 100, 2)) + ' %', fontsize=labelsize - 4, fontweight='bold')
-#plt.legend('Hi')#'success rate: ' + str(zero_values_counter / (len(normed_list) + zero_values_counter)) + ' %')
+ax2.set_ylabel('Success rates [%]', fontsize=labelsize + 5)
+
+#labels
+ax2.minorticks_on()
+Abs_xTickLabels = ['', '', r'$10^{-6}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '', '' '',
+                   r'$10^{-8}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
+                   r'$10^{-10}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
+                   r'$10^{-12}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
+                   r'$10^{-14}$', '', '', '', '', '', '', '', '', '', '', '', '' '', '', '', '', '', '' '', '', '', '', '', '', '', '', '', '', '',
+                   r'$10^{-16}$']
+Rel_xTckLabels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                  r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$']
+Rel_xTickNames = plt.setp(ax2, xticklabels=Rel_xTckLabels)
+ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(Abs_xTickLabels))
+plt.setp(ax2.xaxis.get_minorticklabels(), rotation=45, fontsize=labelsize, fontweight='bold')
+ax2.tick_params(axis='x', which='major', pad=40)
+ax2.set_axisbelow(True)
+plt.setp(Rel_xTickNames, rotation=rotation, fontsize=fontsize, fontweight='bold')
+plt.tick_params(labelsize=labelsize)
+
+############# something like this
+# Make a plot with major ticks that are multiples of 20 and minor ticks that
+# are multiples of 5.  Label major ticks with '%d' formatting but don't label
+# minor ticks.
+ax2.xaxis.set_major_locator(MultipleLocator(20))
+ax2.xaxis.set_major_formatter(FormatStrFormatter('Rel_Tol'))
+
+# For the minor ticks, use no labels; default NullFormatter.
+ax2.xaxis.set_minor_locator(MultipleLocator(5))
+ax2.xaxis.set_major_formatter(FormatStrFormatter('\nAbs_Tol'))
+
+# in combination with this
+ax2.set_xticklabels(('A1', 'A2', '\n\nGeneral Info', 'B1', 'B2', '\n\nTechnical', 'C1', 'C2', '\n\nPsycological'),ha='center')
+ax2.tick_params(axis='x', which='minor',length=0)
 
 
-# set global labels
-#plt.text(-5.65, -0.7, 'Relative simulation time (compared to default simulation conditions) of a model', fontsize=titlesize - 5, fontweight='bold', transform=ax1.transAxes)
-#plt.text(-6.4, 5, 'Amount of models', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes, rotation=90)
-#plt.text(-5.75, 7.2, 'Simulation time distribution of models for different tolerance combinations - ' + Multistep_Method, fontsize=titlesize - 5, fontweight='bold', transform=ax1.transAxes)  # -60 , 350
+# add rel and abs in a text box
+ax2.text(-2.5, -2.5, 'Abs_Tol: ', fontsize=labelsize, fontweight='bold')
+ax2.text(-2.5, -3.5, 'Rel_Tol: ', fontsize=labelsize, fontweight='bold')
 
 
-# add legend
-# plt.text(0.01, 0.9, bp['medians'][0] + ': ' + 'median', color='black', weight='roman', size='x-small', fontsize=24, transform=ax1.transaxes)
-# plt.legend((bp['medians'], bp['fliers']), ('median', 'outliers'), loc=2, frameon=False)
 
 ## better layout
 plt.tight_layout()
