@@ -131,17 +131,17 @@ def NonLinSOl():
 
     # get correct data for both non-linear solvers for the histogram
     # plot a customized histogram plot
-    fontsize = 22 - 12 + 4
+    fontsize = 22
     labelsize = 10 + 4
-    titlesize = 30 - 8
+    titlesize = 30
 
     rotation = 90
     left = 0.12
-    bottom = 0.6
+    bottom = 0.55
     width = 0.8
-    height = 0.25
+    height = 0.35
     row_factor = 0.45
-    column_factor = 0.15
+    column_factor = 0.05
     rotation_factor = 70
     alpha = 1
 
@@ -150,6 +150,7 @@ def NonLinSOl():
     # initialise two histogram plots
     figure = plt.figure()
     ax1 = figure.add_axes([left, bottom, width, height])
+    plt.tick_params(labelsize=labelsize)
     ax2 = figure.add_axes([left, bottom - height - column_factor, width, height])
 
     # get all data between 0 and 1
@@ -166,22 +167,30 @@ def NonLinSOl():
         newton_data_2.append(round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
 
     # plot two (times two) histograms
-    adams1 = ax1.hist(functional_data_1, bins=50, range=(0.7, 1), color='orange', label='Functional', alpha=0.5)
-    bdf1 = ax1.hist(newton_data_1, bins=50, range=(0.7, 1), color='blue', label='Newton-type', alpha=0.5)
-    adams2 = ax2.hist(functional_data_2, bins=50, range=(0.7, 1), color='orange', alpha=0.5)
-    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0.7, 1), color='blue', alpha=0.5)                                               # density=True,
+    adams1 = ax1.hist(functional_data_1, bins=50, range=(0.7, 1), color='orange', alpha=0.5, density=False)
+    bdf1 = ax1.hist(newton_data_1, bins=50, range=(0.7, 1), color='blue', alpha=0.5, density=False)
+    adams2 = ax2.hist(functional_data_2, bins=50, range=(0.7, 1), color='orange', label='Functional', alpha=0.5, density=False)
+    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0.7, 1), color='blue', label='Newton-type', alpha=0.5, density=False)                                               # density=True,
+
+    # plot density function
+
 
     # further settings
-    ax1.set_xlabel('Success rate')
-    ax2.set_xlabel('Success rate')
-    ax1.set_ylabel('Absolute amount of models')
-    ax2.set_ylabel('Absolute amount of models')
+    ax1.set_ylim([0, 20])
+    ax2.set_ylim([0, 20])
+    ax2.set_xticklabels(['', '70%', '75%', '80%', '85%', '90%', '95%', '100%'])
+    plt.tick_params(labelsize=labelsize)
+    #ax1.set_xlabel('Success rate')
+    ax1.tick_params(labelbottom=False)
+    ax2.set_xlabel('Success rate [%]', fontsize=fontsize)
+    ax1.set_ylabel('Amount of models', fontsize=fontsize)
+    ax2.set_ylabel('Amount of models', fontsize=fontsize)
     #ax1.set_xlim([0,1])
     #ax2.set_xlim([0,1])
-    ax1.legend()
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
 
     # set global labels
-    plt.text(0.3, 3, 'Functionsl vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
+    plt.text(0.2, 1.15, 'Functional vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
 
     # better layout
     plt.tight_layout()
@@ -191,7 +200,7 @@ def NonLinSOl():
     fig.set_size_inches(18.5, 10.5)
 
     # save figure
-    plt.savefig('../paper_SolverSettings/Figures/Study_4/Success_Rate_NonLinSol_3.pdf')
+    #plt.savefig('../paper_SolverSettings/Figures/Study_4/Success_Rate_NonLinSol_3.pdf')
 
     # show figure
     plt.show()

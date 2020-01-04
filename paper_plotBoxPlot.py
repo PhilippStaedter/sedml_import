@@ -211,13 +211,14 @@ Rel_xTckLabels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$1
                   r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
                   r'$10^{-6}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$']
 Rel_xTickNames = plt.setp(ax2, xticklabels=Rel_xTckLabels)
-ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(Abs_xTickLabels))
+ax2.xaxis.set_minor_formatter(ticker.FixedFormatter(Abs_xTickLabels))
 plt.setp(ax2.xaxis.get_minorticklabels(), rotation=45, fontsize=labelsize, fontweight='bold')
 ax2.tick_params(axis='x', which='major', pad=40)
 ax2.set_axisbelow(True)
 plt.setp(Rel_xTickNames, rotation=rotation, fontsize=fontsize, fontweight='bold')
 plt.tick_params(labelsize=labelsize)
 
+'''
 ############# something like this
 # Make a plot with major ticks that are multiples of 20 and minor ticks that
 # are multiples of 5.  Label major ticks with '%d' formatting but don't label
@@ -232,7 +233,7 @@ ax2.xaxis.set_major_formatter(FormatStrFormatter('\nAbs_Tol'))
 # in combination with this
 ax2.set_xticklabels(('A1', 'A2', '\n\nGeneral Info', 'B1', 'B2', '\n\nTechnical', 'C1', 'C2', '\n\nPsycological'),ha='center')
 ax2.tick_params(axis='x', which='minor',length=0)
-
+'''
 
 # add rel and abs in a text box
 ax2.text(-2.5, -2.5, 'Abs_Tol: ', fontsize=labelsize, fontweight='bold')
