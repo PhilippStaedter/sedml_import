@@ -105,11 +105,11 @@ def Multistep():
 
     rotation = 90
     left = 0.12
-    bottom = 0.6
+    bottom = 0.55
     width = 0.8
-    height = 0.25
+    height = 0.28
     row_factor = 0.45
-    column_factor = 0.15
+    column_factor = 0.1
     rotation_factor = 70
     alpha = 1
 
@@ -124,7 +124,7 @@ def Multistep():
     # just one for the legend
     adams_data_2 = all_intern_columns_1[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
     bdf_data_2 = all_intern_columns_2[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
-    nonLinSol12 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(adams_data_2) / file_length, 2), bar_width, alpha=alpha, color='orange', label='Adams')
+    nonLinSol12 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(adams_data_2) / file_length, 2), bar_width, alpha=alpha, color='orange', label='AM')
     nonLinSol22 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)] + bar_width, round(len(bdf_data_2) / file_length, 2), bar_width, alpha=alpha, color='blue', label='BDF')
 
     for iBarPlot in range(0, int(len(correct_files_1)/2)):
@@ -149,7 +149,7 @@ def Multistep():
     #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
     #ax2.set_xticklabels(['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
     #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
-    ax1.minorticks_on()
+    #ax1.minorticks_on()
     ax2.minorticks_on()
     lower_labels = [r'$10^{-6}$' + ',' + r'$10^{-8}$', '' '', '', '',
                        r'$10^{-8}$' + ',' + r'$10^{-6}$', '', '', '', '',
@@ -162,24 +162,41 @@ def Multistep():
                       'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K']
     upper_1 = plt.setp(ax1, xticklabels=lower_labels)
     upper_2 = plt.setp(ax2, xticklabels=lower_labels)
+    ax1.set_xticklabels([])
     # ax1.set_xticks()
-    ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
+    #ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
     ax2.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
-    plt.setp(ax1.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
+    #plt.setp(ax1.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
     plt.setp(ax2.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
-    ax1.tick_params(axis='x', which='major', pad=40)
+    #ax1.tick_params(axis='x', which='major', pad=40)
     ax2.tick_params(axis='x', which='major', pad=40)
-    ax1.set_axisbelow(True)
+    #ax1.set_axisbelow(True)
     ax2.set_axisbelow(True)
-    plt.setp(upper_1, fontsize=fontsize, fontweight='bold')
+    #plt.setp(upper_1, fontsize=fontsize, fontweight='bold')
     plt.setp(upper_2, fontsize=fontsize, fontweight='bold')
     plt.tick_params(labelsize=labelsize)
+    ax1.set_yticklabels(['70%', '75%', '80%', '85%', '90%', '95%', '100%'])
+    ax2.set_yticklabels(['70%', '75%', '80%', '85%', '90%', '95%', '100%'])
     #plt.title('Scores by person')
     #plt.xticks(index + bar_width, ('A', 'B', 'C', 'D'))
-    ax2.legend(loc=2)
+    #ax2.legend(loc=2)
+    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
+
+    # turn box dashed on top and right
+    linestyle = (0, (2, 5, 2, 5))
+    linewidth = 1
+    ax1.spines['top'].set_linestyle(linestyle)
+    ax1.spines['top'].set_linewidth(linewidth)
+    ax1.spines['right'].set_linestyle(linestyle)
+    ax1.spines['right'].set_linewidth(linewidth)
+    ax2.spines['top'].set_linestyle(linestyle)
+    ax2.spines['top'].set_linewidth(linewidth)
+    ax2.spines['right'].set_linestyle(linestyle)
+    ax2.spines['right'].set_linewidth(linewidth)
 
     # set global labels
-    plt.text(0.3, 3, 'Adams vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
+    #ax1.set_title('Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', pad=30)
+    plt.text(0.3, 2.75, 'Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
 
     # better layout
     plt.tight_layout()
