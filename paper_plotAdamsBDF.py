@@ -1,9 +1,10 @@
 # scatter plot of the prediction settings against amici default settings
 
-import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.legend import Legend
+from scipy.stats import gaussian_kde
 from averageTime import *
+import matplotlib.cm as cm
 
 # important paths
 base_path = '../paper_SolverSettings/WholeStudy'
@@ -59,14 +60,14 @@ for iTsvFile in range(0, len(list_directory_adams)):
                 equal_x.append(x_adams_data)
                 equal_y.append(y_bdf_data)
         elif x_adams_data == 0 and y_bdf_data != 0:
-            adams_zero_x.append(40000)
+            adams_zero_x.append(45000)
             adams_zero_y.append(y_bdf_data)
         elif x_adams_data != 0 and y_bdf_data == 0:
             bdf_zero_x.append(x_adams_data)
-            bdf_zero_y.append(40000)
+            bdf_zero_y.append(45000)
         elif x_adams_data == 0 and y_bdf_data == 0:
-            equal_zero_x.append(40000)
-            equal_zero_y.append(40000)
+            equal_zero_x.append(45000)
+            equal_zero_y.append(45000)
 
     # display progress
     print(iTsvFile)
@@ -86,46 +87,64 @@ print('equal_zero_x: ' + str(sorted(equal_zero_x)[0]))
 print('equal_zero_y: ' + str(sorted(equal_zero_y)[0]))
 
 # plot a scatter plot + diagonal line
-linestyle = (0,(2,5,2,5))
+linestyle = (0, (2, 5, 2, 5))
 linewidth = 1
 
-fontsize = 22
-labelsize = 18
+fontsize = 22 - 4
+labelsize = 18 - 4
 titlesize = 30
 
 alpha = 0.4
 marker_size = 60
 
-ax = plt.axes()
-z = range(0,40000)
-plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c='orange', label='AM faster than BDF: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
-plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c='blue', label='BDF faster than AM: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+# Calculate the point density
+# orange
+xy = np.vstack([adams_bdf_x, adams_bdf_y])
+zz = gaussian_kde(xy)(xy)
+# blue
+vw = np.vstack([bdf_adams_x, bdf_adams_y])
+zzz = gaussian_kde(vw)(vw)
+# orange edge
+xxyy = np.vstack([adams_zero_x, adams_zero_y])
+z_z_ = gaussian_kde(xxyy)(xxyy)
+# blue edge
+vvww = np.vstack([bdf_zero_x, bdf_zero_y])
+z_z_z_ = gaussian_kde(vvww)(vvww)
+
+ax = plt.axes([0.1, 0.1, 0.8, 0.8])
+z = range(0,45000)
+plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c=zz, cmap=cm.autumn_r, label='AM faster: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c=zzz, cmap=cm.winter_r, label='BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
 plt3 = ax.scatter(equal_x, equal_y, c='grey', zorder=10, clip_on=False, alpha=alpha) # label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
-plt4 = ax.scatter(adams_zero_x, adams_zero_y, marker='D', s=marker_size, facecolors='none', edgecolors='blue', zorder=10, clip_on=False) # label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
-plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, s=marker_size, facecolors='none', edgecolors='orange', marker='D', zorder=10, clip_on=False) # label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
+plt4 = ax.scatter(adams_zero_x, adams_zero_y, c=z_z_, cmap=cm.winter_r, marker='D', s=marker_size, facecolors='none', edgecolors='blue', zorder=10, clip_on=False) # label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
+plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, c=z_z_z_, cmap=cm.autumn_r, s=marker_size, facecolors='none', edgecolors='orange', marker='D', zorder=10, clip_on=False) # label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 plt6 = ax.scatter(equal_zero_x, equal_zero_y, s=marker_size, facecolors='none', edgecolors='grey', marker='D', zorder=10, clip_on=False) # label='Both failed to integrate the model: ' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 ax.plot(z, c='black', zorder=20)
-ax.set_xlim([0.1, 40000])
-ax.set_ylim([0.1, 40000])
+ax.set_xlim([0.2, 45000])
+ax.set_ylim([0.2, 45000])
 ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlabel('AM simulation time [ms]', fontsize=fontsize)
 ax.set_ylabel('BDF simulation time [ms]', fontsize=fontsize)
-ax.set_title('Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=40)
-lg = ax.legend(loc=2, fontsize=labelsize - 6)
+#ax.set_title('Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=40)
+lg = ax.legend(loc=2, fontsize=fontsize)
 fr = lg.get_frame()
 fr.set_lw(0.2)
+#plt.colorbar(plt1, orientation='vertical', pad = 0.2)
+#plt.colorbar(plt2, orientation='vertical', pad = 0.4)
 plt.tick_params(labelsize=labelsize)
 plt.gca().set_aspect('equal', adjustable='box')
 ax.spines['top'].set_linestyle(linestyle)
 ax.spines['top'].set_linewidth(linewidth)
 ax.spines['right'].set_linestyle(linestyle)
 ax.spines['right'].set_linewidth(linewidth)
+ax.spines['top'].set_color('red')
+ax.spines['right'].set_color('red')
 
 # write text over axis
-ax.text(50000, 500,'AM failed: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
-ax.text(5, 50000, 'BDF failed: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
-ax.text(45000, 45000, 'Both failed:' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
+ax.text(55000, 500,'AM failed: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
+ax.text(30, 55000, 'BDF failed: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
+ax.text(20000, 80000, 'Both failed:' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
 #ax.text(0.1, 70000, 'Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=30)
 
 # better layout

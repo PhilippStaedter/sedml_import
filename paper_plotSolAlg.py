@@ -99,15 +99,15 @@ def Multistep():
 
     # get correct data for the bar plot
     # plot a customized bar plot
-    fontsize = 22 - 12 + 4
+    fontsize = 22 - 12 + 2
     labelsize = 10 + 4
     titlesize = 30 - 8
 
     rotation = 90
-    left = 0.12
-    bottom = 0.55
-    width = 0.8
-    height = 0.28
+    left = 0.07
+    bottom = 0.6
+    width = 0.86
+    height = 0.3
     row_factor = 0.45
     column_factor = 0.1
     rotation_factor = 70
@@ -124,32 +124,37 @@ def Multistep():
     # just one for the legend
     adams_data_2 = all_intern_columns_1[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
     bdf_data_2 = all_intern_columns_2[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
-    nonLinSol12 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(adams_data_2) / file_length, 2), bar_width, alpha=alpha, color='orange', label='AM')
-    nonLinSol22 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)] + bar_width, round(len(bdf_data_2) / file_length, 2), bar_width, alpha=alpha, color='blue', label='BDF')
+    nonLinSol12 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)] - bar_width/2, round(len(adams_data_2) / file_length, 2), bar_width, alpha=alpha, color='orange', edgecolor='black', label='AM')
+    nonLinSol22 = ax2.bar(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)] + bar_width/2, round(len(bdf_data_2) / file_length, 2), bar_width, alpha=alpha, color='blue', edgecolor='black', label='BDF')
 
     for iBarPlot in range(0, int(len(correct_files_1)/2)):
         adams_data_1 = all_intern_columns_1[iBarPlot][column_names[iBarPlot]]
         bdf_data_1 = all_intern_columns_2[iBarPlot][column_names[iBarPlot]]
-        nonLinSol11 = ax1.bar(index[iBarPlot], round(len(adams_data_1)/file_length,2) , bar_width, alpha=alpha, color='orange')
-        nonLinSol21 = ax1.bar(index[iBarPlot] + bar_width, round(len(bdf_data_1)/file_length,2), bar_width, alpha = alpha, color = 'blue')
+        nonLinSol11 = ax1.bar(index[iBarPlot] - bar_width/2, round(len(adams_data_1)/file_length,2) , bar_width, alpha=alpha, edgecolor='black', color='orange')
+        nonLinSol21 = ax1.bar(index[iBarPlot] + bar_width/2, round(len(bdf_data_1)/file_length,2), bar_width, alpha = alpha, edgecolor='black', color = 'blue')
 
     for iBarPlot in range(int(len(correct_files_1)/2) + 1, len(correct_files_1)):
         adams_data_2 = all_intern_columns_1[iBarPlot][column_names[iBarPlot]]
         bdf_data_2 = all_intern_columns_2[iBarPlot][column_names[iBarPlot]]
-        nonLinSol12 = ax2.bar(index[iBarPlot - int(len(correct_files_1)/2)], round(len(adams_data_2)/file_length,2) , bar_width, alpha=alpha, color='orange')
-        nonLinSol22 = ax2.bar(index[iBarPlot - int(len(correct_files_1)/2)] + bar_width, round(len(bdf_data_2)/file_length,2), bar_width, alpha = alpha, color = 'blue')
+        nonLinSol12 = ax2.bar(index[iBarPlot - int(len(correct_files_1)/2)] - bar_width/2, round(len(adams_data_2)/file_length,2) , bar_width, alpha=alpha, edgecolor='black', color='orange')
+        nonLinSol22 = ax2.bar(index[iBarPlot - int(len(correct_files_1)/2)] + bar_width/2, round(len(bdf_data_2)/file_length,2), bar_width, alpha = alpha, edgecolor='black', color = 'blue')
 
-    ax1.set_title('Non-Linear Solver: Functional', fontsize=titlesize)
-    ax1.set_ylabel('Success Rate [%]', fontsize=titlesize)
-    ax2.set_title('Non-Linear Solver: Newton-type', fontsize=titlesize)
-    ax2.set_ylabel('Success Rate [%]', fontsize=titlesize)
+    ax1.set_title('Non-Linear solver: Functional', fontsize=titlesize)
+    ax1.set_ylabel('Success rate [%]', fontsize=titlesize)
+    ax2.set_title('Non-Linear solver: Newton-type', fontsize=titlesize)
+    ax2.set_ylabel('Success rate [%]', fontsize=titlesize)
+    ax1.set_xlim([-0.5, 34.5])
+    ax2.set_xlim([-0.5, 34.5])
     ax1.set_ylim([0.7, 1])
     ax2.set_ylim([0.7, 1])
+
     #ax1.set_xticklabels(['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
     #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
     #ax2.set_xticklabels(['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
     #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
     #ax1.minorticks_on()
+
+    '''
     ax2.minorticks_on()
     lower_labels = [r'$10^{-6}$' + ',' + r'$10^{-8}$', '' '', '', '',
                        r'$10^{-8}$' + ',' + r'$10^{-6}$', '', '', '', '',
@@ -168,23 +173,67 @@ def Multistep():
     ax2.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
     #plt.setp(ax1.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
     plt.setp(ax2.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
-    #ax1.tick_params(axis='x', which='major', pad=40)
+    ax1.tick_params(axis='x', which='major', pad=40)
     ax2.tick_params(axis='x', which='major', pad=40)
     #ax1.set_axisbelow(True)
     ax2.set_axisbelow(True)
     #plt.setp(upper_1, fontsize=fontsize, fontweight='bold')
     plt.setp(upper_2, fontsize=fontsize, fontweight='bold')
-    plt.tick_params(labelsize=labelsize)
-    ax1.set_yticklabels(['70%', '75%', '80%', '85%', '90%', '95%', '100%'])
-    ax2.set_yticklabels(['70%', '75%', '80%', '85%', '90%', '95%', '100%'])
-    #plt.title('Scores by person')
-    #plt.xticks(index + bar_width, ('A', 'B', 'C', 'D'))
-    #ax2.legend(loc=2)
-    ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
+    #plt.tick_params(labelsize=labelsize)
+    '''
+    ax1.set_xticklabels([])
+    ax1.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=fontsize)
+    ax2.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=fontsize)
+
+
+    # create major and minor ticklabels
+    upper_labels = ['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
+                    'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K']
+    Abs_Rel_Tol = [r'$10^{-6}$' '\n' r'$10^{-8}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-8}$' '\n' r'$10^{-6}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-8}$' '\n' r'$10^{-16}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-10}$' '\n' r'$10^{-12}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-12}$' '\n'  r'$10^{-10}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-14}$' '\n' r'$10^{-14}$', ' \n ', ' \n ', ' \n ', ' \n ',
+                   r'$10^{-16}$' '\n' r'$10^{-8}$' ' \n ', ' \n ', ' \n ', ' \n ',]
+
+    ax1.set_xticks(list(range(35)))
+    ax2.set_xticks(list(range(35)))
+    minor_list_1 = [x + 0.001 for x in list(range(35))]
+    ax2.set_xticks(minor_list_1, minor=True)
+    ax2.set_xticklabels(upper_labels, fontsize=fontsize)
+    ax2.set_xticklabels(Abs_Rel_Tol, minor=True, fontsize=fontsize)
+    ax2.tick_params(axis='x', which='major', pad=10)
+    ax2.tick_params(axis='x', which='minor', pad=30)
+    ax2.text(-0.05, -0.1, 'Lin. sol.: ', fontsize=fontsize, transform=ax2.transAxes)
+    ax2.text(-0.05, -0.18, 'Abs. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
+    ax2.text(-0.05, -0.27, 'Rel. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
+
+    # create new empty invisible axis for legend
+    #ax3 = figure.add_axes([0.15, 0.4, 0.02, 0.02])
+    #ax3.plot(range(2), c='orange', label='AM')
+    #ax3.plot(range(2), c='blue', label='BDF')
+    ax2.legend(loc='upper left', bbox_to_anchor=(0, -0.3), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=titlesize)
+    ax2.text(0.4, -0.5, 'D: Dense,  G: SPGMR,  B: SPBCG,  T: SPTFQMR,  K: KLU', fontsize=titlesize, transform=ax2.transAxes)
+
+    '''
+    # turn ax3 plot invisible
+    ax3.plot(range(2), c='white')
+    linestyle = (0, (2, 5, 2, 5))
+    linewidth = 0.1
+    ax3.spines['top'].set_linestyle(linestyle)
+    ax3.spines['top'].set_linewidth(linewidth)
+    ax3.spines['right'].set_linestyle(linestyle)
+    ax3.spines['right'].set_linewidth(linewidth)
+    ax3.spines['bottom'].set_linestyle(linestyle)
+    ax3.spines['bottom'].set_linewidth(linewidth)
+    ax3.spines['left'].set_linestyle(linestyle)
+    ax3.spines['left'].set_linewidth(linewidth)
+    '''
 
     # turn box dashed on top and right
     linestyle = (0, (2, 5, 2, 5))
-    linewidth = 1
+    linewidth = 0.1
     ax1.spines['top'].set_linestyle(linestyle)
     ax1.spines['top'].set_linewidth(linewidth)
     ax1.spines['right'].set_linestyle(linestyle)
@@ -196,7 +245,7 @@ def Multistep():
 
     # set global labels
     #ax1.set_title('Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', pad=30)
-    plt.text(0.3, 2.75, 'Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
+    #plt.text(0.3, 2.75, 'Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
 
     # better layout
     plt.tight_layout()

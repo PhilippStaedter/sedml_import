@@ -91,7 +91,7 @@ for iTolerance in range(0, len(tolerance_files)):
 
 # create box_plot
 linestyle = (0,(2,5,2,5))
-linewidth = 1
+linewidth = 0.1
 
 fontsize = 22
 labelsize = 18
@@ -133,7 +133,7 @@ for flier in bp['fliers']:
     flier.set(marker='+', color='#e7298a', alpha=0.5)
 
 
-ax1.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')
+#ax1.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')
 ax1.set_ylabel('Relative simulation time', fontsize=labelsize)
 ax1.set_xticklabels([])
 
@@ -172,17 +172,18 @@ for iTolerance in range(0, len(all_averaged_files) + 5):
     all_percentages.append(round(non_zero_value_counter / (non_zero_value_counter + zero_value_counter) * 100, 4))
 
 # create bar plot
-plot_barplot = ax2.bar(x=list(range(0,41)), height=all_percentages, width=0.5, color=['orange', 'orange', 'orange', 'orange', 'orange', 'orange',
+# colors to use:  '#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854'
+plot_barplot = ax2.bar(x=list(range(0,41)), height=all_percentages, width=0.5, color=['#d73027', '#d73027', '#d73027', '#d73027', '#d73027', '#d73027',
                                                                                       'white',
-                                                                                      'cyan', 'cyan', 'cyan', 'cyan', 'cyan', 'cyan',
+                                                                                      '#fc8d59', '#fc8d59', '#fc8d59', '#fc8d59', '#fc8d59', '#fc8d59',
                                                                                       'white',
-                                                                                      'violet', 'violet', 'violet', 'violet', 'violet', 'violet',
+                                                                                      '#fee090', '#fee090', '#fee090', '#fee090', '#fee090', '#fee090',
                                                                                       'white',
-                                                                                      'tan', 'tan', 'tan', 'tan', 'tan', 'tan',
+                                                                                      '#e0f3f8', '#e0f3f8', '#e0f3f8', '#e0f3f8', '#e0f3f8', '#e0f3f8',
                                                                                       'white',
-                                                                                      'yellow', 'yellow', 'yellow', 'yellow', 'yellow', 'yellow',
+                                                                                      '#91bfdb', '#91bfdb', '#91bfdb', '#91bfdb', '#91bfdb', '#91bfdb',
                                                                                       'white',
-                                                                                      'lavender', 'lavender', 'lavender', 'lavender', 'lavender', 'lavender'])
+                                                                                      '#4575b4', '#4575b4', '#4575b4', '#4575b4', '#4575b4', '#4575b4'])
 
 # more options
 ax2.spines['top'].set_linestyle(linestyle)

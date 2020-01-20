@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from averageTime import *
 
-def NonLinSOl():
+def NonLinSol():
 
     # important path
     base_path = '../paper_SolverSettings/WholeStudy'
@@ -131,17 +131,20 @@ def NonLinSOl():
 
     # get correct data for both non-linear solvers for the histogram
     # plot a customized histogram plot
+    linestyle = (0, (2, 5, 2, 5))
+    linewidth = 0.1
+
     fontsize = 22
     labelsize = 10 + 4
     titlesize = 30
 
     rotation = 90
-    left = 0.12
-    bottom = 0.55
-    width = 0.8
+    left = 0.07
+    bottom = 0.6
+    width = 0.86
     height = 0.35
     row_factor = 0.45
-    column_factor = 0.05
+    column_factor = 0.1
     rotation_factor = 70
     alpha = 1
 
@@ -167,10 +170,10 @@ def NonLinSOl():
         newton_data_2.append(round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
 
     # plot two (times two) histograms
-    adams1 = ax1.hist(functional_data_1, bins=50, range=(0.7, 1), color='orange', alpha=0.5, density=False)
-    bdf1 = ax1.hist(newton_data_1, bins=50, range=(0.7, 1), color='blue', alpha=0.5, density=False)
-    adams2 = ax2.hist(functional_data_2, bins=50, range=(0.7, 1), color='orange', label='Functional', alpha=0.5, density=False)
-    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0.7, 1), color='blue', label='Newton-type', alpha=0.5, density=False)                                               # density=True,
+    adams1 = ax1.hist(functional_data_1, bins=50, range=(0.7, 1), color='orange', edgecolor='black', density=False)
+    bdf1 = ax1.hist(newton_data_1, bins=50, range=(0.7, 1), color='blue', zorder=20, edgecolor='black', density=False)
+    adams2 = ax2.hist(functional_data_2, bins=50, range=(0.7, 1), color='orange', label='Functional', edgecolor='black', density=False)
+    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0.7, 1), color='blue', label='Newton-type', zorder=20, edgecolor='black', density=False)                                               # density=True,
 
     # plot density function
 
@@ -178,19 +181,32 @@ def NonLinSOl():
     # further settings
     ax1.set_ylim([0, 20])
     ax2.set_ylim([0, 20])
-    ax2.set_xticklabels(['', '70%', '75%', '80%', '85%', '90%', '95%', '100%'])
+    ax1.set_xlim([0.7, 1])
+    ax2.set_xlim([0.7, 1])
+    ax1.set_yticklabels([0, '', 5, '', 10, '', 15, '', 20])
+    ax2.set_yticklabels([0, '', 5, '', 10, '', 15, '', 20])
+    ax2.set_xticklabels(['70', '75', '80', '85', '90', '95', '100'])
     plt.tick_params(labelsize=labelsize)
-    #ax1.set_xlabel('Success rate')
     ax1.tick_params(labelbottom=False)
     ax2.set_xlabel('Success rate [%]', fontsize=fontsize)
-    ax1.set_ylabel('Amount of models', fontsize=fontsize)
-    ax2.set_ylabel('Amount of models', fontsize=fontsize)
-    #ax1.set_xlim([0,1])
-    #ax2.set_xlim([0,1])
+    ax1.set_ylabel('Number of models', fontsize=fontsize)
+    ax2.set_ylabel('Number of models', fontsize=fontsize)
+    ax1.set_title('Solver algorithm: BDF', fontsize=fontsize)
+    ax2.set_title('Solver algorithm: AM', fontsize=fontsize)
     ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
 
+    # remove box of axis at top and right
+    ax1.spines['top'].set_linestyle(linestyle)
+    ax1.spines['top'].set_linewidth(linewidth)
+    ax1.spines['right'].set_linestyle(linestyle)
+    ax1.spines['right'].set_linewidth(linewidth)
+    ax2.spines['top'].set_linestyle(linestyle)
+    ax2.spines['top'].set_linewidth(linewidth)
+    ax2.spines['right'].set_linestyle(linestyle)
+    ax2.spines['right'].set_linewidth(linewidth)
+
     # set global labels
-    plt.text(0.2, 1.15, 'Functional vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
+    #plt.text(0.2, 1.15, 'Functional vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
 
     # better layout
     plt.tight_layout()
@@ -207,4 +223,4 @@ def NonLinSOl():
 
 
 # call function
-NonLinSOl()
+NonLinSol()

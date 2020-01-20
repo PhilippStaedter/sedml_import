@@ -142,7 +142,7 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 # save figure
-#plt.savefig('../paper_SolverSettings/Tolerances_one_repetition/Tolerances_one_repetition_1e8/Tolerances_Histogram_BDF.pdf')
+#plt.savefig('../paper_SolverSettings/Figures/Study_2/13012020/Tolerances_Histogram_BDF.pdf')
 
 # show figure
 plt.show()
