@@ -81,6 +81,14 @@ ax3.set_xlabel('Number of parameters',  fontsize=fontsize)
 ax3.set_ylabel('Amount of models', fontsize=fontsize)
 ax3.tick_params(labelsize=labelsize)
 
+# make all top and right boxlines inviisible
+ax1.spines['top'].set_visible(False)
+ax1.spines['right'].set_visible(False)
+ax2.spines['top'].set_visible(False)
+ax2.spines['right'].set_visible(False)
+ax3.spines['top'].set_visible(False)
+ax3.spines['right'].set_visible(False)
+
 # better layout
 plt.tight_layout()
 

@@ -189,10 +189,9 @@ def Scatter(solAlg, nonLinSol):
         plt.tick_params(labelsize=labelsize)
         #'#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854'
 
-        ax1.spines['top'].set_linestyle(linestyle)
-        ax1.spines['top'].set_linewidth(linewidth)
-        ax1.spines['right'].set_linestyle(linestyle)
-        ax1.spines['right'].set_linewidth(linewidth)
+        # make top and right boxlines invisible
+        ax1.spines['top'].set_visible(False)
+        ax1.spines['right'].set_visible(False)
 
         # plot a legend
         if iCounter == 0:
@@ -242,11 +241,9 @@ def Scatter(solAlg, nonLinSol):
     ax2.text(0.00001, -0.15, 'Abs. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
     ax2.text(0.000025, -0.25, 'Rel. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
 
-    # remove box of axis at top and right
-    ax2.spines['top'].set_linestyle(linestyle)
-    ax2.spines['top'].set_linewidth(linewidth)
-    ax2.spines['right'].set_linestyle(linestyle)
-    ax2.spines['right'].set_linewidth(linewidth)
+    # make top and right boxlines invisible
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['right'].set_visible(False)
 
     # set global labels
     #plt.text(0.1, 5.5, 'Simulation time distribution of models for different linear solver combinations', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)  # -60 , 350

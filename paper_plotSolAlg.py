@@ -231,17 +231,11 @@ def Multistep():
     ax3.spines['left'].set_linewidth(linewidth)
     '''
 
-    # turn box dashed on top and right
-    linestyle = (0, (2, 5, 2, 5))
-    linewidth = 0.1
-    ax1.spines['top'].set_linestyle(linestyle)
-    ax1.spines['top'].set_linewidth(linewidth)
-    ax1.spines['right'].set_linestyle(linestyle)
-    ax1.spines['right'].set_linewidth(linewidth)
-    ax2.spines['top'].set_linestyle(linestyle)
-    ax2.spines['top'].set_linewidth(linewidth)
-    ax2.spines['right'].set_linestyle(linestyle)
-    ax2.spines['right'].set_linewidth(linewidth)
+    # make top and right boxlines invisible
+    ax1.spines['top'].set_visible(False)
+    ax1.spines['right'].set_visible(False)
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['right'].set_visible(False)
 
     # set global labels
     #ax1.set_title('Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', pad=30)

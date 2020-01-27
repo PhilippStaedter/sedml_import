@@ -195,15 +195,11 @@ def NonLinSol():
     ax2.set_title('Solver algorithm: AM', fontsize=fontsize)
     ax2.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
 
-    # remove box of axis at top and right
-    ax1.spines['top'].set_linestyle(linestyle)
-    ax1.spines['top'].set_linewidth(linewidth)
-    ax1.spines['right'].set_linestyle(linestyle)
-    ax1.spines['right'].set_linewidth(linewidth)
-    ax2.spines['top'].set_linestyle(linestyle)
-    ax2.spines['top'].set_linewidth(linewidth)
-    ax2.spines['right'].set_linestyle(linestyle)
-    ax2.spines['right'].set_linewidth(linewidth)
+    # make top and right boxlines invisible
+    ax1.spines['top'].set_visible(False)
+    ax1.spines['right'].set_visible(False)
+    ax2.spines['top'].set_visible(False)
+    ax2.spines['right'].set_visible(False)
 
     # set global labels
     #plt.text(0.2, 1.15, 'Functional vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
