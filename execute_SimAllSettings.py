@@ -10,13 +10,17 @@
 ######################################################################################
 
 from SimAllSettings import *
+from SimPriorSettings import *
 
 # settings
-atol = 1e-8
+atol = 1e-6
 rtol = 1e-6
 linSol = 9
+nonLinSol = 2
 solAlg = 2
+maxStep = 10000
 
 
-simulate(atol, rtol, linSol, solAlg)
+#simulate(atol, rtol, linSol, nonLinSol, solAlg, maxStep)
+prior(atol, rtol, linSol, nonLinSol, solAlg, maxStep)
 # useless = os.system('clear')

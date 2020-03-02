@@ -13,22 +13,25 @@ from setTime_BenchmarkModels import *
 def all_settings(iModel, iFile):
 
     # insert specific model properties as strings, e.g.:
-    base_path_sbml2amici = '../sbml2amici/correct_amici_models'
+    base_path_sbml2amici = '../sbml2amici/correct_amici_models_paper'
     base_path_sedml = './sedml_models'
     BioModels_path = './BioModelsDatabase_models'
     benchmark_path = '../benchmark-models/hackathon_contributions_new_data_format'
 
     # iFile without extension
-    iFile,_ = iFile.split('.',1)
+    try:
+        iFile,_ = iFile.split('.',1)
+    except:
+        'No extension'
 
     # run function
-    model = load_specific_model(iModel, iFile)                                                          # call function from 'loadModels.py'
+    model = load_specific_model(iModel, iFile)                                                          ################ call function from 'loadModels.py'
 
-    if os.path.exists(benchmark_path + '/' + iModel):   #(BioModels_path + '/' + iModel)
-        time_array = timePointsBenchmarkModels(iModel, iFile) #sim_start_time, sim_end_time, sim_num_time_points = timePointsBioModels(iModel)                 # call function from 'setTime_BioModels.py'
+    if os.path.exists(BioModels_path + '/' + iModel):                                     #(benchmark_path + '/' + iModel):
+        sim_start_time, sim_end_time, sim_num_time_points, y_bound = timePointsBioModels(iModel)   #time_array = timePointsBenchmarkModels(iModel, iFile) ################### call function from 'setTime_BioModels.py'
     else:
         # change parameter and species according to SEDML file
-        model = changeValues(model, iModel, iFile)                                                      # call function from 'changeValues.py'
+        model = changeValues(model, iModel, iFile)                                                      ################# call function from 'changeValues.py'
 
         # open sedml to get tasks + time courses
         sedml_path = './sedml_models/' + iModel + '/' + iModel + '.sedml'
@@ -71,7 +74,7 @@ def all_settings(iModel, iFile):
             # model = changeValues(iModel, iFile)
 
     # set timepoints for which we want to simulate the model
-    model.setTimepoints(time_array)      #(np.linspace(sim_start_time, sim_end_time, sim_num_time_points))
+    model.setTimepoints(np.linspace(sim_start_time, sim_end_time, sim_num_time_points))                     #model.setTimepoints(time_array)
 
 
     return model
