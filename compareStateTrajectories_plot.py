@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 adams_models = []
 bdf_models = []
-for Multistep in ['Adams','BDF']:
+for Multistep in ['Adams']: #,'BDF']:
     print(Multistep)
     counters = []
     tol_exps = []
-    for tol_exp in range(-1, 0):                # range(-20,10)
+    for tol_exp in range(-20, 10):                # range(-20,10)
         tol = 10**tol_exp
         counter = 0
         total_counter = 0
@@ -36,8 +36,8 @@ for Multistep in ['Adams','BDF']:
 
 plt.plot(tol_exps, counters, '-x')
 plt.gca().set_title('Comparison of all State Trajectories to JWS for BDF')
-plt.gca().set_xlabel("Tolerance")
+plt.gca().set_xlabel("Error Tolerance for comparing State Trajectories")
 plt.gca().set_ylabel("Matching models")
 plt.gcf().tight_layout()
-plt.savefig("json_files_all_results_BDF/compareStateTrajectories_summary.pdf")
+#plt.savefig("json_files_all_results_BDF/compareStateTrajectories_summary.pdf")
 plt.show()
