@@ -68,11 +68,8 @@ def prior(atol, rtol, linSol, iter, solAlg, maxStep):
                         tsv_table = tsv_table.rename(index={iSpecies:all_species_names[iSpecies]})
 
                     # add columns and rename to 'units' and timepoints
-                    for iTimepoint in range(0, len(all_timepoints + 1)):
-                        if iTimepoint == 0:
-                            tsv_table['unit'] = pd.Series(index=tsv_table.index)
-                        else:
-                            tsv_table['t_' + f'{iTimepoint - 1}' + ' = ' + str(all_timepoints[iTimepoint])] = pd.Series(index=tsv_table.index)
+                    for iTimepoint in range(0, len(all_timepoints)):
+                        tsv_table['t_' + f'{iTimepoint - 1}' + ' = ' + str(all_timepoints[iTimepoint - 1])] = pd.Series(index=tsv_table.index)
 
 
                     # Create solver instance
@@ -99,6 +96,22 @@ def prior(atol, rtol, linSol, iter, solAlg, maxStep):
                         sys.exit(0)
 
                     # fill data into the data frame
+                    # trajectories
+                    trajectories = sim_data['x']
+                    try:
+                        tsv_table[:][:] = np.transpose(trajectories)
+                    except Exception as e:
+                        print(e)
+                        sys.exit(0)
+
+                    # units
+                    all_units = []
+                    for iSpecies in range(0, num_species):
+                        if model.getUnitDefinition(iSpecies) != 'None':
+                            all_units.append(model.getUnitDefinition(iSpecies).getId())
+                        else:
+                            all_units.append('NaN')
+                    tsv_table.insert(0, 'unit', all_units)
 
 
                 except Exception as e:

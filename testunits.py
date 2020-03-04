@@ -24,12 +24,13 @@ for iSEDML in all_models:
         except:
             error = error + 1
             print(error)
+            print(iSEDML + '_' + iSBML)
             break
         if len(units) > 1:
             list.append(len(units))
             list2.append(1)
-        #print('SBML Name: ' + iSBML)
-        #print('Unit Length: ' + str(len(units)))
+            print('SBML Name: ' + iSBML)
+            print('Unit Length: ' + str(len(units)))
 
 print('Total number of units for models with unite#  > 1: ' + str(sum(list)))
 print('Total number of sbmls with units > 1: ' + str(sum(list2)))
