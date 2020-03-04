@@ -21,8 +21,8 @@ import json
 import itertools
 
 # set settings for simulation
-atol = 1e-8
-rtol = 1e-6
+atol = 1e-8     #1e-3  #1e-6
+rtol = 1e-6     #1e-3  #1e-6
 linSol = 9
 solAlg = 1
 
@@ -99,6 +99,7 @@ for iMod in range(0, len(list_directory_amici)):
                 print('Model ' + iModel + ' extension is missing!')                                                                                 # error 2
                 continue
 
+            '''
             ######### jws simulation
             # Get time data with num_time_points == 100
             t_data = model.getTimepoints()
@@ -135,7 +136,7 @@ for iMod in range(0, len(list_directory_amici)):
             column_names = list(tsv_file.columns)
             column_names.remove('time')
             del tsv_file['time']
-
+            '''
 
             ########## model simulation
             # Create solver instance

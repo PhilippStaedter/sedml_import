@@ -16,7 +16,6 @@ import statistics
 import pandas as pd
 import os
 import urllib.request
-import requests
 import json
 import itertools
 import time
