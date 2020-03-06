@@ -8,14 +8,14 @@ import numpy as np
 import logging
 import shutil
 import pandas as pd
-import petab
+#import petab
 from transferObservables import *
 
 # create .tsv file
 tsv_table = pd.DataFrame(columns=['id', 'states', 'reactions', 'error_message'])      # index=range() can be left out
 
 # important paths
-models_path = "../sbml2amici/amici_models"
+models_path = "../sbml2amici/amici_models_newest_version_0.10.19"
 models_base_path = "../sbml2amici"
 base_path = "./sedml_models"
 
@@ -50,6 +50,7 @@ for models in list_directory:
         model_output_dir = models_path + '/' + models + '/' + model_name
 
         # get new_observables()
+        print('Current Model: ' + models + '_' + model_name)
 
         try:
             ## entry = {'id': None, 'states': None, 'reactions': None, 'parameters': None, 'error_message': None}
@@ -106,8 +107,8 @@ for models in list_directory:
             # continue
 
 # print tsv_table + save it
-print(tsv_table)
-tsv_table.to_csv(path_or_buf=models_base_path + '/table.tsv', sep='\t', index=True)
+#print(tsv_table)
+tsv_table.to_csv(path_or_buf=models_base_path + '/table.tsv', sep='\t', index=False)
 
 # copy file 'all_logs' in new directory 'sbml2amici'
 old_path = './all_logs'
