@@ -21,14 +21,14 @@ import json
 import itertools
 
 # set settings for simulation
-atol = 1e-8     #1e-3  #1e-6
-rtol = 1e-6     #1e-3  #1e-6
+atol = 1e-6     #1e-3  #1e-6  #1e-12                      # 1e-8
+rtol = 1e-6     #1e-3  #1e-6  #1e-12                      # 1e-6
 linSol = 9
-solAlg = 1
+solAlg = 2                                                                                                              # 1
 
 # create folder for all .csv files of the trajectories
-if not os.path.exists('./json_files_Adams'):
-    os.makedirs('./json_files_Adams')
+if not os.path.exists('./json_files_BDF'):
+    os.makedirs('./json_files_BDF')
 
 # get name of jws reference
 url = "https://jjj.bio.vu.nl/rest/models/?format=json"
@@ -37,8 +37,8 @@ json_string = view_source.text
 json_dictionary = json.loads(json_string)
 
 # get all models
-list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models'))
-del list_directory_amici[0:193]                                                                                          # delete until model with error to avoid repeating all
+list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models_newest_version_0.10.19'))
+del list_directory_amici[0:194]                                                                                          # delete until model with error to avoid repeating all
 
 for iMod in range(0, len(list_directory_amici)):
 
@@ -54,7 +54,7 @@ for iMod in range(0, len(list_directory_amici)):
         iFile, extension = iFile.split('.', 1)
 
         # important paths
-        json_save_path = './json_files_Adams/' + iModel + '/' + iFile
+        json_save_path = './json_files_BDF/' + iModel + '/' + iFile                                                   # './json_files_BDF/'
         sedml_path = './sedml_models/' + iModel + '/' + iModel +'.sedml'
         sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
         BioModels_path = './BioModelsDatabase_models'
@@ -93,13 +93,13 @@ for iMod in range(0, len(list_directory_amici)):
                 model = all_settings(iModel,iFile)
 
                 # create folder
-                if not os.path.exists('./json_files_Adams/' + iModel + '/' + iFile):
-                    os.makedirs('./json_files_Adams/' + iModel + '/' + iFile)
+                if not os.path.exists('./json_files_BDF/' + iModel + '/' + iFile):
+                    os.makedirs('./json_files_BDF/' + iModel + '/' + iFile)
             except:
                 print('Model ' + iModel + ' extension is missing!')                                                                                 # error 2
                 continue
 
-            '''
+
             ######### jws simulation
             # Get time data with num_time_points == 100
             t_data = model.getTimepoints()
@@ -136,7 +136,6 @@ for iMod in range(0, len(list_directory_amici)):
             column_names = list(tsv_file.columns)
             column_names.remove('time')
             del tsv_file['time']
-            '''
 
             ########## model simulation
             # Create solver instance
