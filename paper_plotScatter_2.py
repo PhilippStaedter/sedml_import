@@ -1,7 +1,5 @@
 # script to plot linear regressions for all scatter plots - study 3
 
-# Q: do e.g. points as (74,0) count for the linear regression?
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -82,7 +80,7 @@ def Scatter(solAlg, nonLinSol):
     file_length = len(next_tsv['id'])
 
     # get correct data for all five linear solvers in one of the seven figures
-    # plot a customized scatter plot
+    # plot a customized plot
     fontsize = 4
     labelsize = 4
     titlesize = 22

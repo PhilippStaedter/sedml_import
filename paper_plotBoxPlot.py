@@ -1,4 +1,4 @@
-# script to create box plot with percentiles and median
+# script to create box plot with percentiles and median - with success rates
 
 import pandas as pd
 import os

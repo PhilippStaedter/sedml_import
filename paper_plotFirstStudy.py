@@ -44,12 +44,13 @@ for iLine in range(0, len(tsv_file['id'])):
 # histogram of states
 fontsize = 9
 labelsize = 9
-bins = 8
+#bins=np.logspace(0,4,200)
+bins = 80
 
 rotation = 90
-left = 0.07
+left = 0.09             #0.07
 bottom = 0.75
-width = 0.4
+width = 0.38
 height = 0.22
 row_factor = 0.45
 column_factor = 0.11
@@ -64,7 +65,7 @@ ax3 = plt.axes([left, bottom - 2 * column_factor - 2 * height, width, height])
 #plt.subplot(3,1,1)
 # add title
 #plt.title('Basic properties of all models', fontsize=20)
-plot1 = ax1.hist(x=data_states_ok, range=[-1,4], bins=10*bins, log=True) # range=[0,250],
+plot1 = ax1.hist(x=data_states_ok, range=[-1,4], bins=bins, log=True) # range=[0,250],
 #ax1.set_xscale('log')
 ax1.set_xlim((-0.1, 4)) #2000 #250 #100                                                                       # Froehlich2018: 1396
 ax1.set_ylim((0.5, 150))
@@ -73,9 +74,12 @@ ax1.set_xlabel('Number of state variables', fontsize=fontsize)
 ax1.set_ylabel('Amount of models', fontsize=fontsize)
 ax1.tick_params(labelsize=labelsize)
 
+# plot text 'A'
+ax1.text(-0.22, 1, 'A', fontsize=labelsize + 3, transform=ax1.transAxes)
+
 # histogram of reactions
 #plt.subplot(3,1,2)
-plot2 = ax2.hist(x=data_reactions_ok, range=[-1,4], bins=15*bins, log=True) # range=[0,600],
+plot2 = ax2.hist(x=data_reactions_ok, range=[-1,4], bins=bins, log=True) # range=[0,600],
 #ax2.set_xscale('log')
 ax2.set_xlim((-0.1, 4)) #3000 #600 #100                                                                       # Froehlich2018: 2686
 ax2.set_ylim((0.5, 150))
@@ -86,7 +90,7 @@ ax2.tick_params(labelsize=labelsize)
 
 # histogram of parameters
 #plt.subplot(3,1,3)
-plot3 = ax3.hist(x=data_parameters_ok, range=[-1,4], bins=25*bins, log=True) # range=[0,350],
+plot3 = ax3.hist(x=data_parameters_ok, range=[-1,4], bins=bins, log=True) # range=[0,350],
 #ax3.set_xscale('log')
 ax3.set_xlim((-0.1, 4)) #5000 #350 #1000                                                                       # Froehlich2018: 4704
 ax3.set_ylim((0.5, 150))
@@ -160,19 +164,24 @@ for iTolerance in range(0, len(all_abs_tol)):
         counter_Tol_4.append(counters_BDF)
 
 
-ax4 = plt.axes([0.57, 0.12, 0.41, 0.85])
-ax4.plot(tol_exps, counter_Tol_0[0], '-x', c='#d7191c', label=f'abs. tol.: {all_abs_tol[0]}, rel. tol.: {all_rel_tol[0]}')
-ax4.plot(tol_exps, counter_Tol_1[0], '-x', c='#fdae61', label=f'abs. tol.: {all_abs_tol[1]}, rel. tol.: {all_rel_tol[1]}')
-ax4.plot(tol_exps, counter_Tol_2[0], '-x', c='#ffffbf', label=f'abs. tol.: {all_abs_tol[2]}, rel. tol.: {all_rel_tol[2]}')
-ax4.plot(tol_exps, counter_Tol_3[0], '-x', c='#abd9e9', label=f'abs. tol.: {all_abs_tol[3]}, rel. tol.: {all_rel_tol[3]}')
-ax4.plot(tol_exps, counter_Tol_4[0], '-x', c='#2c7bb6', label=f'abs. tol.: {all_abs_tol[4]}, rel. tol.: {all_rel_tol[4]}')
+ax4 = plt.axes([0.57, 0.09, 0.41, 0.88]) #0.12
+ax4.plot(tol_exps, counter_Tol_0[0], '-x', c='#d7191c', label=f'Abs. tol.: {all_abs_tol[0]}, Rel. tol.: {all_rel_tol[0]}')
+ax4.plot(tol_exps, counter_Tol_1[0], '-x', c='#fdae61', label=f'Abs. tol.: {all_abs_tol[1]}, Rel. tol.: {all_rel_tol[1]}')
+ax4.plot(tol_exps, counter_Tol_2[0], '-x', c='#abd9e9', label=f'Abs. tol.: {all_abs_tol[2]}, Rel. tol.: {all_rel_tol[2]}')
+ax4.plot(tol_exps, counter_Tol_3[0], '-x', c='#2c7bb6', label=f'Abs. tol.: {all_abs_tol[3]}, Rel. tol.: {all_rel_tol[3]}')
+ax4.plot(tol_exps, counter_Tol_4[0], '-x', c='#2E2D66', label=f'Abs. tol.: {all_abs_tol[4]}, Rel. tol.: {all_rel_tol[4]}')
+
+# plot text 'B'
+ax1.text(-0.16, 1, 'B', fontsize=labelsize + 3, transform=ax4.transAxes)
 
 # local properties
+ax4.set_ylim([-20,400])
 ax4.set_xticks(np.array([-20, -15, -10, -5, 0, 5, 10]), (r'$10^{-20}$', r'$10^{-15}$', r'$10^{-10}$', r'$10^{-5}$', r'$10^{0}$', r'$10^{5}$', r'$10^{10}$'))
-fontsize = 12
+fontsize = 9 #12
 
 # global properties
-ax4.legend(loc=2)
+ax4.legend(loc=2, fontsize=fontsize)
+ax4.tick_params(labelsize=fontsize)
 
 # make top and right boxlines invisible
 ax4.spines['top'].set_visible(False)

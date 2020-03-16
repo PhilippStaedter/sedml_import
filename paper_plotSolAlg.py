@@ -147,55 +147,21 @@ def Multistep():
     ax2.set_xlim([-0.5, 34.5])
     ax1.set_ylim([0.7, 1])
     ax2.set_ylim([0.7, 1])
-
-    #ax1.set_xticklabels(['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
-    #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
-    #ax2.set_xticklabels(['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
-    #                     'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K'])
-    #ax1.minorticks_on()
-
-    '''
-    ax2.minorticks_on()
-    lower_labels = [r'$10^{-6}$' + ',' + r'$10^{-8}$', '' '', '', '',
-                       r'$10^{-8}$' + ',' + r'$10^{-6}$', '', '', '', '',
-                       r'$10^{-8}$' + ',' + r'$10^{-16}$', '', '', '', '',
-                       r'$10^{-10}$' + ',' + r'$10^{-12}$', '', '', '', '',
-                       r'$10^{-12}$' + ',' + r'$10^{-10}$', '', '', '', '',
-                       r'$10^{-14}$' + ',' + r'$10^{-14}$', '', '', '', '',
-                       r'$10^{-16}$' + ',' + r'$10^{-8}$']
-    upper_labels = ['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
-                      'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K']
-    upper_1 = plt.setp(ax1, xticklabels=lower_labels)
-    upper_2 = plt.setp(ax2, xticklabels=lower_labels)
-    ax1.set_xticklabels([])
-    # ax1.set_xticks()
-    #ax1.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
-    ax2.xaxis.set_minor_formatter(ticker.FixedFormatter(upper_labels))
-    #plt.setp(ax1.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
-    plt.setp(ax2.xaxis.get_minorticklabels(), fontsize=labelsize, fontweight='bold')
-    ax1.tick_params(axis='x', which='major', pad=40)
-    ax2.tick_params(axis='x', which='major', pad=40)
-    #ax1.set_axisbelow(True)
-    ax2.set_axisbelow(True)
-    #plt.setp(upper_1, fontsize=fontsize, fontweight='bold')
-    plt.setp(upper_2, fontsize=fontsize, fontweight='bold')
-    #plt.tick_params(labelsize=labelsize)
-    '''
     ax1.set_xticklabels([])
     ax1.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=fontsize)
     ax2.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=fontsize)
 
 
     # create major and minor ticklabels
-    upper_labels = ['D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K',
-                    'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K', 'D', 'G', 'B', 'T', 'K']
+    upper_labels = ['D', 'D', 'D', 'D', 'D', 'D', 'D', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'B', 'B', 'B', 'B', 'B', 'B',
+                    'B', 'T', 'T', 'T', 'T', 'T', 'T', 'T', 'K', 'K', 'K', 'K', 'K', 'K', 'K']
     Abs_Rel_Tol = [r'$10^{-6}$' '\n' r'$10^{-8}$', ' \n ', ' \n ', ' \n ', ' \n ',
                    r'$10^{-8}$' '\n' r'$10^{-6}$', ' \n ', ' \n ', ' \n ', ' \n ',
                    r'$10^{-8}$' '\n' r'$10^{-16}$', ' \n ', ' \n ', ' \n ', ' \n ',
                    r'$10^{-10}$' '\n' r'$10^{-12}$', ' \n ', ' \n ', ' \n ', ' \n ',
                    r'$10^{-12}$' '\n'  r'$10^{-10}$', ' \n ', ' \n ', ' \n ', ' \n ',
                    r'$10^{-14}$' '\n' r'$10^{-14}$', ' \n ', ' \n ', ' \n ', ' \n ',
-                   r'$10^{-16}$' '\n' r'$10^{-8}$' ' \n ', ' \n ', ' \n ', ' \n ',]
+                   r'$10^{-16}$' '\n' r'$10^{-8}$', ' \n ', ' \n ', ' \n ', ' \n ']
 
     ax1.set_xticks(list(range(35)))
     ax2.set_xticks(list(range(35)))
@@ -214,22 +180,7 @@ def Multistep():
     #ax3.plot(range(2), c='orange', label='AM')
     #ax3.plot(range(2), c='blue', label='BDF')
     ax2.legend(loc='upper left', bbox_to_anchor=(0, -0.3), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=titlesize)
-    ax2.text(0.4, -0.5, 'D: Dense,  G: SPGMR,  B: SPBCG,  T: SPTFQMR,  K: KLU', fontsize=titlesize, transform=ax2.transAxes)
-
-    '''
-    # turn ax3 plot invisible
-    ax3.plot(range(2), c='white')
-    linestyle = (0, (2, 5, 2, 5))
-    linewidth = 0.1
-    ax3.spines['top'].set_linestyle(linestyle)
-    ax3.spines['top'].set_linewidth(linewidth)
-    ax3.spines['right'].set_linestyle(linestyle)
-    ax3.spines['right'].set_linewidth(linewidth)
-    ax3.spines['bottom'].set_linestyle(linestyle)
-    ax3.spines['bottom'].set_linewidth(linewidth)
-    ax3.spines['left'].set_linestyle(linestyle)
-    ax3.spines['left'].set_linewidth(linewidth)
-    '''
+    ax2.text(0.4, -0.5, 'D: Dense,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=titlesize, transform=ax2.transAxes)
 
     # make top and right boxlines invisible
     ax1.spines['top'].set_visible(False)

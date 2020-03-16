@@ -5,7 +5,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from averageTime import *
-from matplotlib import ticker
+import math
 
 
 def Multistep():
@@ -113,10 +113,11 @@ def Multistep():
     rotation_factor = 70
     alpha = 1
     bar_width = 0.35
+    linewidth = 1
 
     # plot one density plot
     ax = plt.axes()
-    index = np.arange(35)
+    index = np.arange(39)
 
     # initialize y-data
     adams_data_1 = []
@@ -124,39 +125,43 @@ def Multistep():
     adams_data_2 = []
     bdf_data_2 = []
 
-    '''
-    # just one for the legend
-    adams_data_1.append(all_intern_columns_1[0][column_names[0]])
-    bdf_data_1.append(all_intern_columns_2[0][column_names[0]])
-    nonLinSol11 = ax.plot(index[0], round(len(adams_data_1) / file_length, 2), '-x', c='#e66101', label='Functional AM')
-    nonLinSol21 = ax.plot(index[0], round(len(bdf_data_1) / file_length, 2), '-x', c='#fdb863', label='Functional BDF')
-    adams_data_2 = all_intern_columns_1[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
-    bdf_data_2 = all_intern_columns_2[int(len(correct_files_1)/2)][column_names[int(len(correct_files_1)/2)]]
-    nonLinSol12 = ax.plot(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(adams_data_2) / file_length, 2), '-x', c='#b2abd2', label='Newton-type AM')
-    nonLinSol22 = ax.plot(index[int(len(correct_files_1)/2) - int(len(correct_files_1) / 2)], round(len(bdf_data_2) / file_length, 2), '-x', c='#5e3c99', label='Newton_type BDF')
-    '''
 
     # Functional
-    for iDensityPoint in range(0, int(len(correct_files_1)/2)):
-        adams_data_1.append(round(len(all_intern_columns_1[iDensityPoint][column_names[iDensityPoint]]) / file_length, 2))
-        bdf_data_1.append(round(len(all_intern_columns_2[iDensityPoint][column_names[iDensityPoint]]) / file_length, 2))
-    nonLinSol11 = ax.plot(index, adams_data_1, '-x', c='#e66101', label='Functional AM')
-    nonLinSol21 = ax.plot(index, bdf_data_1, '-x', c='#fdb863', label='Functional BDF')
+    blank_space_counter = 0
+    for iDensityPoint in range(0, int(len(correct_files_1)/2) + 4):
+        if iDensityPoint in [7, 15, 23, 31]:
+            adams_data_1.append(math.inf)
+            bdf_data_1.append(math.inf)
+            blank_space_counter += 1
+        else:
+            adams_data_1.append(round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
+            bdf_data_1.append(round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
+    nonLinSol11 = ax.plot(index, adams_data_1, '-x', c='#fdb863', label='Functional AM')
+    nonLinSol21 = ax.plot(index, bdf_data_1, '-x', c='#e66101', label='Functional BDF')
 
     # Newton-type
-    for iDensityPoint in range(int(len(correct_files_1)/2), len(correct_files_1)):
-        adams_data_2.append(round(len(all_intern_columns_1[iDensityPoint][column_names[iDensityPoint]]) / file_length, 2))
-        bdf_data_2.append(round(len(all_intern_columns_2[iDensityPoint][column_names[iDensityPoint]]) / file_length, 2))
+    blank_space_counter = 0
+    for iDensityPoint in range(int(len(correct_files_1)/2), len(correct_files_1) + 4):
+        if iDensityPoint in [int(len(correct_files_1)/2) + 7, int(len(correct_files_1)/2) + 15, int(len(correct_files_1)/2) + 23, int(len(correct_files_1)/2) + 31]:
+            adams_data_2.append(math.inf)
+            bdf_data_2.append(math.inf)
+            blank_space_counter += 1
+        else:
+            adams_data_2.append(round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
+            bdf_data_2.append(round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
     nonLinSol12 = ax.plot(index, adams_data_2, '-x', c='#b2abd2', label='Newton-type AM')
     nonLinSol22 = ax.plot(index, bdf_data_2, '-x', c='#5e3c99', label='Newton-type BDF')
 
     #ax.set_title('Non-Linear solver: Functional', fontsize=titlesize)
     ax.set_ylabel('Success rate [%]', fontsize=fontsize)
     #ax.set_title('Non-Linear solver: Newton-type', fontsize=titlesize)
-    ax.set_xlim([-0.5, 34.5])
+    ax.set_xlim([-0.5, 38.5])
     ax.set_ylim([0.7, 1])
     ax.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=labelsize)
 
+    # plot black separation line
+    for iLine in [7,15,23,31]:
+        ax.plot([iLine,iLine], [0.7,1], '--k', linewidth=linewidth)
 
     # create major and minor ticklabels
     '''
@@ -174,22 +179,22 @@ def Multistep():
                    r'$10^{-12}$' '\n'  r'$10^{-10}$', r'$10^{-14}$' '\n' r'$10^{-14}$', r'$10^{-16}$' '\n' r'$10^{-8}$']
     '''
 
-    ax.text(0, -0.1, '  D                                         G                                          B'
-                     '                                          T                                          K', fontsize=labelsize, transform=ax.transAxes)
-    upper_labels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$',
-                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$',
-                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$',
-                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$',
+    ax.text(0, -0.1, '--------------Dense--------------- ---------------GMRES--------------- --------------BiCGStab'
+                     '------------- ---------------TFQMR--------------- ----------------KLU----------------', fontsize=labelsize, transform=ax.transAxes)
+    upper_labels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
+                    r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
                     r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$']
-    lower_labels = [r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$',
-                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$',
-                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$',
-                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$',
+    lower_labels = [r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$', '',
+                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$', '',
+                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$', '',
+                    r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$', '',
                     r'$10^{-8}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$', r'$10^{-10}$', r'$10^{-14}$', r'$10^{-8}$']
 
 
-    ax.set_xticks(list(range(35)))
-    minor_list_1 = [x + 0.001 for x in list(range(35))]
+    ax.set_xticks(list(range(39)))
+    minor_list_1 = [x + 0.001 for x in list(range(39))]
     ax.set_xticks(minor_list_1, minor=True)
     ax.set_xticklabels(upper_labels, fontsize=labelsize, rotation=rotation)
     ax.set_xticklabels(lower_labels, minor=True, fontsize=labelsize, rotation=rotation)
@@ -199,12 +204,21 @@ def Multistep():
     ax.text(-0.12, -0.22, 'Abs. tol.: ', fontsize=fontsize, transform=ax.transAxes)
     ax.text(-0.12, -0.34, 'Rel. tol.: ', fontsize=fontsize, transform=ax.transAxes)
 
+    # delete xticks at specific positions
+    specific_xticks_major = ax.xaxis.get_major_ticks()
+    for iTick in [7, 15, 23, 31]:
+        specific_xticks_major[iTick].set_visible(False)
+    specific_xticks_minor = ax.xaxis.get_minor_ticks()
+    for iTick in [7, 15, 23, 31]:
+        specific_xticks_minor[iTick].set_visible(False)
+
     # create new empty invisible axis for legend
     #ax3 = figure.add_axes([0.15, 0.4, 0.02, 0.02])
     #ax3.plot(range(2), c='orange', label='AM')
     #ax3.plot(range(2), c='blue', label='BDF')
-    ax.legend(loc=4, fontsize=labelsize)
-    ax.text(0.15, -0.48, 'D: Dense,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=fontsize, transform=ax.transAxes)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.4), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
+    #ax.legend(loc=4, fontsize=labelsize)
+    #ax.text(0.15, -0.48, 'D: Dense,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=fontsize, transform=ax.transAxes)
 
     # make top and right boxlines invisible
     ax.spines['top'].set_visible(False)

@@ -30,8 +30,8 @@ main_tsv = averaging(main_tsv)
 
 # set two axes objects
 figure = plt.figure()
-ax1 = figure.add_axes([0.1, 0.55, 0.8, 0.4])                 # ax = plt.axes()
-ax2 = figure.add_axes([0.1, 0.15, 0.8, 0.35])
+ax1 = figure.add_axes([0.1, 0.55, 0.87, 0.4])                 # ax = plt.axes()
+ax2 = figure.add_axes([0.1, 0.15, 0.87, 0.35])
 
 # get list for all data
 xTickLabel = []
@@ -204,7 +204,7 @@ ax2.set_yscale('log')
 ax2.set_xlim([-1,41])
 ax2.set_ylim([0.1,100])
 ax2.tick_params(labelsize=labelsize)
-ax2.set_ylabel('Failure rates [%]', fontsize=labelsize + 5)
+ax2.set_ylabel('Failure rate [%]', fontsize=labelsize + 5)
 
 # add grit
 ax2.yaxis.grid(True, linestyle='-', which='both', color='lightgrey', alpha=0.25)
@@ -233,8 +233,8 @@ ax2.set_xticklabels(Abs_xTickLabels, fontsize=labelsize, rotation=rotation)
 ax2.set_xticklabels(Rel_xTckLabels, minor=True, fontsize=labelsize, rotation=rotation)
 ax2.tick_params(axis='x', which='major', pad=6)
 ax2.tick_params(axis='x', which='minor', pad=26)
-ax2.text(-0.1, -0.20, 'Abs.tol.: ', fontsize=fontsize, transform=ax2.transAxes)
-ax2.text(-0.1, -0.40, 'Rel.tol.: ', fontsize=fontsize, transform=ax2.transAxes)
+ax2.text(-0.1, -0.20, 'Abs. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
+ax2.text(-0.1, -0.40, 'Rel. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
 #ax2.text(-0.05, -0.1, 'Lin. sol.: ', fontsize=fontsize, transform=ax2.transAxes)
 #ax2.text(-0.05, -0.18, 'Abs. tol.: ', fontsize=fontsize, transform=ax2.transAxes)
 #ax2.text(-0.05, -0.27, 'Rel. tol.: ', fontsize=fontsize, transform=ax2.transAxes)

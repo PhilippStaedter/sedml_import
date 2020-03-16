@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import gaussian_kde
 from averageTime import *
-import matplotlib.cm as cm
+from matplotlib.colors import LinearSegmentedColormap
 
 # important paths
 base_path = '../paper_SolverSettings/WholeStudy'
@@ -90,34 +90,59 @@ print('equal_zero_y: ' + str(sorted(equal_zero_y)[0]))
 linestyle = (0, (2, 5, 2, 5))
 linewidth = 1
 
-fontsize = 22 - 4
-labelsize = 18 - 4
+fontsize = 17
+labelsize = 10
 titlesize = 30
 
-alpha = 0.4
-marker_size = 60
+alpha = 1
+marker_size = 2
+
+
+# create custom colormap
+colors_1 = [(1, 0.9, 0.6, 0.3), (0.96, 0.41, 0, 1)]                 # from (red, green, blue, alpha) to (red, green, blue, alpha)
+cm_1 = LinearSegmentedColormap.from_list('test', colors_1, N=30)    # number of different color steps
+colors_2 = [(0.8, 0.95, 1, 0.3), (0, 0.21, 0.46, 1)]
+cm_2 = LinearSegmentedColormap.from_list('test', colors_2, N=30)
 
 # Calculate the point density
 # orange
-xy = np.vstack([adams_bdf_x, adams_bdf_y])
-zz = gaussian_kde(xy)(xy)
+grid_orange = np.vstack([np.log(adams_bdf_x), np.log(adams_bdf_y)])
+kde_orange = gaussian_kde(grid_orange)(grid_orange)
 # blue
-vw = np.vstack([bdf_adams_x, bdf_adams_y])
-zzz = gaussian_kde(vw)(vw)
+grid_blue = np.vstack([np.log(bdf_adams_x), np.log(bdf_adams_y)])
+kde_blue = gaussian_kde(grid_blue)(grid_blue)
 # orange edge
-xxyy = np.vstack([adams_zero_x, adams_zero_y])
-z_z_ = gaussian_kde(xxyy)(xxyy)
+grid_orange_edge = np.vstack([np.log(adams_zero_x), np.log(adams_zero_y)])
+kde_orange_edge = gaussian_kde(grid_orange_edge)(grid_orange_edge)
 # blue edge
-vvww = np.vstack([bdf_zero_x, bdf_zero_y])
-z_z_z_ = gaussian_kde(vvww)(vvww)
+grid_blue_edge = np.vstack([np.log(bdf_zero_x), np.log(bdf_zero_y)])
+kde_blue_edge = gaussian_kde(grid_blue_edge)(grid_blue_edge)
 
-ax = plt.axes([0.1, 0.1, 0.8, 0.8])
+# Sort the points by density, so that the densest points are plotted last
+# orange
+ids_orange = kde_orange.argsort()
+adams_bdf_x, adams_bdf_y, kde_orange = np.array(adams_bdf_x)[ids_orange], np.array(adams_bdf_y)[ids_orange], np.array(kde_orange)[ids_orange]
+#or: adams_bdf_x, adams_bdf_y, kde_orange = [adams_bdf_x[i] for i in ids_orange], [adams_bdf_y[i] for i in ids_orange], [kde_orange for i in ids_orange]
+# blue
+ids_blue = kde_blue.argsort()
+bdf_adams_x, bdf_adams_y, kde_blue = np.array(bdf_adams_x)[ids_blue], np.array(bdf_adams_y)[ids_blue], np.array(kde_blue)[ids_blue]
+# orange
+ids_orange_edge = kde_orange_edge.argsort()
+adams_zero_x, adams_zero_y, kde_orange_edge = np.array(adams_zero_x)[ids_orange_edge], np.array(adams_zero_y)[ids_orange_edge], np.array(kde_orange_edge)[ids_orange_edge]
+# blue
+ids_blue_edge = kde_blue_edge.argsort()
+bdf_zero_x, bdf_zero_y, kde_blue_edge = np.array(bdf_zero_x)[ids_blue_edge], np.array(bdf_zero_y)[ids_blue_edge], np.array(kde_blue_edge)[ids_blue_edge]
+
+
+# plot scatter plot
+ax = plt.axes([0.1, 0.12, 0.8, 0.8])
+plt.gcf().subplots_adjust(bottom=0.2)
 z = range(0,45000)
-plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, c=zz, cmap=cm.autumn_r, label='AM faster: ' + str(round(len(adams_bdf_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
-plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, c=zzz, cmap=cm.winter_r, label='BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
-plt3 = ax.scatter(equal_x, equal_y, c='grey', zorder=10, clip_on=False, alpha=alpha) # label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
-plt4 = ax.scatter(adams_zero_x, adams_zero_y, c=z_z_, cmap=cm.winter_r, marker='D', s=marker_size, facecolors='none', edgecolors='blue', zorder=10, clip_on=False) # label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
-plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, c=z_z_z_, cmap=cm.autumn_r, s=marker_size, facecolors='none', edgecolors='orange', marker='D', zorder=10, clip_on=False) # label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
+plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, s=marker_size, c=kde_orange, cmap=cm_1, label='AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, s=marker_size, c=kde_blue, cmap=cm_2, label='BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+plt3 = ax.scatter(equal_x, equal_y, s=marker_size, c='grey', zorder=10, clip_on=False, alpha=alpha) # label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
+plt4 = ax.scatter(adams_zero_x, adams_zero_y, c=kde_orange_edge, cmap=cm_2, marker='D', s=marker_size, facecolors='none', edgecolors='blue', zorder=10, clip_on=False) # label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
+plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, c=kde_blue_edge, cmap=cm_1, s=marker_size, facecolors='none', edgecolors='orange', marker='D', zorder=10, clip_on=False) # label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 plt6 = ax.scatter(equal_zero_x, equal_zero_y, s=marker_size, facecolors='none', edgecolors='grey', marker='D', zorder=10, clip_on=False) # label='Both failed to integrate the model: ' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 ax.plot(z, c='black', zorder=20)
 ax.set_xlim([0.2, 45000])
@@ -127,11 +152,16 @@ ax.set_yscale('log')
 ax.set_xlabel('AM simulation time [ms]', fontsize=fontsize)
 ax.set_ylabel('BDF simulation time [ms]', fontsize=fontsize)
 #ax.set_title('Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=40)
-lg = ax.legend(loc=2, fontsize=fontsize)
-fr = lg.get_frame()
-fr.set_lw(0.2)
-#plt.colorbar(plt1, orientation='vertical', pad = 0.2)
-#plt.colorbar(plt2, orientation='vertical', pad = 0.4)
+#lg = ax.legend(loc=2, fontsize=labelsize)
+#fr = lg.get_frame()
+#fr.set_lw(0.2)
+
+# plot legend manually
+ax.plot(0.4, 25000, 'o', fillstyle='full', c='orange', markersize=marker_size)
+ax.plot(0.4, 12500, 'o', fillstyle='full', c='blue', markersize=marker_size)
+plt.text(0.6, 20000, 'AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=labelsize)
+plt.text(0.6, 10000, 'BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=labelsize)
+
 plt.tick_params(labelsize=labelsize)
 plt.gca().set_aspect('equal', adjustable='box')
 ax.spines['top'].set_linestyle(linestyle)
@@ -142,17 +172,21 @@ ax.spines['top'].set_color('red')
 ax.spines['right'].set_color('red')
 
 # write text over axis
-ax.text(55000, 500,'AM failed: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
-ax.text(30, 55000, 'BDF failed: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
-ax.text(20000, 80000, 'Both failed:' + str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
+ax.text(55000, 3,'AM failed: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
+ax.text(3, 55000, 'BDF failed: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
+ax.text(70000, 4000, 'Both failed:', fontsize=fontsize, rotation=-45)
+ax.text(50000, 6000, str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
 #ax.text(0.1, 70000, 'Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=30)
 
-# better layout
-plt.tight_layout()
 
 # change plotting size
-fig = plt.gcf()
-fig.set_size_inches(18.5, 10.5)
+plt.gcf().subplots_adjust(bottom=0.2)
+#fig = plt.gcf()
+#fig.set_size_inches(18.5, 10.5)
+#plt.gcf().subplots_adjust(bottom=0.5)
+
+# better layout
+#plt.tight_layout()
 
 # save figure
 #plt.savefig('../bachelor_thesis/New_Figures/Figures_study_5/Adams_vs_BDF_2_166SBML.pdf')

@@ -37,17 +37,17 @@ for iLine in range(0, len(tsv_file['id'])):
 
 
 # histogram of states
-fontsize = 16
-labelsize = 16
+fontsize = 9
+labelsize = 9
 bins = 8
 
 rotation = 90
-left = 0.1
+left = 0.07
 bottom = 0.75
-width = 0.8
-height = 0.15
+width = 0.9
+height = 0.22
 row_factor = 0.45
-column_factor = 0.15
+column_factor = 0.11
 rotation_factor = 70
 alpha = 1
 
@@ -61,8 +61,9 @@ ax3 = plt.axes([left, bottom - 2 * column_factor - 2 * height, width, height])
 #plt.title('Basic properties of all models', fontsize=20)
 plot1 = ax1.hist(x=data_states_ok, range=[-1,4], bins=10*bins, log=True) # range=[0,250],
 #ax1.set_xscale('log')
-ax1.set_xlim((-1, 4)) #2000 #250 #100                                                                       # Froehlich2018: 1396
+ax1.set_xlim((-0.1, 4)) #2000 #250 #100                                                                       # Froehlich2018: 1396
 ax1.set_ylim((0.5, 150))
+ax1.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax1.set_xlabel('Number of state variables', fontsize=fontsize)
 ax1.set_ylabel('Amount of models', fontsize=fontsize)
 ax1.tick_params(labelsize=labelsize)
@@ -71,8 +72,9 @@ ax1.tick_params(labelsize=labelsize)
 #plt.subplot(3,1,2)
 plot2 = ax2.hist(x=data_reactions_ok, range=[-1,4], bins=15*bins, log=True) # range=[0,600],
 #ax2.set_xscale('log')
-ax2.set_xlim((-1, 4)) #3000 #600 #100                                                                       # Froehlich2018: 2686
+ax2.set_xlim((-0.1, 4)) #3000 #600 #100                                                                       # Froehlich2018: 2686
 ax2.set_ylim((0.5, 150))
+ax2.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax2.set_xlabel('Number of reactions', fontsize=fontsize)
 ax2.set_ylabel('Amount of models', fontsize=fontsize)
 ax2.tick_params(labelsize=labelsize)
@@ -81,8 +83,9 @@ ax2.tick_params(labelsize=labelsize)
 #plt.subplot(3,1,3)
 plot3 = ax3.hist(x=data_parameters_ok, range=[-1,4], bins=25*bins, log=True) # range=[0,350],
 #ax3.set_xscale('log')
-ax3.set_xlim((-1, 4)) #5000 #350 #1000                                                                       # Froehlich2018: 4704
+ax3.set_xlim((-0.1, 4)) #5000 #350 #1000                                                                       # Froehlich2018: 4704
 ax3.set_ylim((0.5, 150))
+ax3.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax3.set_xlabel('Number of parameters',  fontsize=fontsize)
 ax3.set_ylabel('Amount of models', fontsize=fontsize)
 ax3.tick_params(labelsize=labelsize)
