@@ -7,7 +7,7 @@ from averageTime import *
 from LinearRegression import *
 
 
-def Scatter(solAlg, nonLinSol):
+def Scatter(solAlg, nonLinSol, variation):
 
     # list of all 35 data frames for better indexing in the future
     all_intern_columns = [pd.DataFrame(columns=[]), pd.DataFrame(columns=[]),
@@ -93,23 +93,102 @@ def Scatter(solAlg, nonLinSol):
     y_axis_interception_KLU = y_axis_interceptions[28:35]
     slope_KLU = slopes[28:35]
 
-    # sort values to get boundaries and x-data
-    column_names_Dense = [x for _,x in sorted(zip(slope_Dense, column_names_Dense))]
-    y_axis_interception_Dense = [x for _,x in sorted(zip(slope_Dense, y_axis_interception_Dense))]
-    slope_Dense = list(sorted(slope_Dense))
-    column_names_GMRES = [x for _, x in sorted(zip(slope_Dense, column_names_GMRES))]
-    y_axis_interception_GMRES = [x for _,x in sorted(zip(slope_GMRES, y_axis_interception_GMRES))]
-    slope_GMRES = list(sorted(slope_GMRES))
-    column_names_BiCGStab = [x for _, x in sorted(zip(slope_Dense, column_names_BiCGStab))]
-    y_axis_interception_BiCGStab = [x for _,x in sorted(zip(slope_BiCGStab, y_axis_interception_BiCGStab))]
-    slope_BiCGStab = list(sorted(slope_BiCGStab))
-    column_names_TFQMR = [x for _, x in sorted(zip(slope_Dense, column_names_TFQMR))]
-    y_axis_interception_TFQMR = [x for _,x in sorted(zip(slope_TFQMR, y_axis_interception_TFQMR))]
-    slope_TFQMR = list(sorted(slope_TFQMR))
-    column_names_KLU = [x for _, x in sorted(zip(slope_Dense, column_names_KLU))]
-    y_axis_interception_KLU = [x for _,x in sorted(zip(slope_KLU, y_axis_interception_KLU))]
-    slope_KLU = list(sorted(slope_KLU))
+    ax = plt.axes()
+    if variation == 1:
+        # sort values by slope to get boundaries and x-data
+        column_names_Dense = [x for _,x in sorted(zip(slope_Dense, column_names_Dense))]
+        y_axis_interception_Dense = [x for _,x in sorted(zip(slope_Dense, y_axis_interception_Dense))]
+        slope_Dense = list(sorted(slope_Dense))
 
+        column_names_GMRES = [x for _, x in sorted(zip(slope_GMRES, column_names_GMRES))]
+        y_axis_interception_GMRES = [x for _,x in sorted(zip(slope_GMRES, y_axis_interception_GMRES))]
+        slope_GMRES = list(sorted(slope_GMRES))
+
+        column_names_BiCGStab = [x for _, x in sorted(zip(slope_BiCGStab, column_names_BiCGStab))]
+        y_axis_interception_BiCGStab = [x for _,x in sorted(zip(slope_BiCGStab, y_axis_interception_BiCGStab))]
+        slope_BiCGStab = list(sorted(slope_BiCGStab))
+
+        column_names_TFQMR = [x for _, x in sorted(zip(slope_TFQMR, column_names_TFQMR))]
+        y_axis_interception_TFQMR = [x for _,x in sorted(zip(slope_TFQMR, y_axis_interception_TFQMR))]
+        slope_TFQMR = list(sorted(slope_TFQMR))
+
+        column_names_KLU = [x for _, x in sorted(zip(slope_KLU, column_names_KLU))]
+        y_axis_interception_KLU = [x for _,x in sorted(zip(slope_KLU, y_axis_interception_KLU))]
+        slope_KLU = list(sorted(slope_KLU))
+
+        ax.set_title('Sorted by slope')
+
+    elif variation == 2:
+        # sort values by y-axis-interception to get boundaries and x-data
+        column_names_Dense = [x for _,x in sorted(zip(y_axis_interception_Dense, column_names_Dense))]
+        slope_Dense = [x for _,x in sorted(zip(y_axis_interception_Dense, slope_Dense))]
+        y_axis_interception_Dense = list(sorted(y_axis_interception_Dense))
+
+        column_names_GMRES = [x for _, x in sorted(zip(y_axis_interception_GMRES, column_names_GMRES))]
+        slope_GMRES = [x for _,x in sorted(zip(y_axis_interception_GMRES, slope_GMRES))]
+        y_axis_interception_GMRES = list(sorted(y_axis_interception_GMRES))
+
+        column_names_BiCGStab = [x for _, x in sorted(zip(y_axis_interception_BiCGStab, column_names_BiCGStab))]
+        slope_BiCGStab = [x for _,x in sorted(zip(y_axis_interception_BiCGStab, slope_BiCGStab))]
+        y_axis_interception_BiCGStab = list(sorted(y_axis_interception_BiCGStab))
+
+        column_names_TFQMR = [x for _, x in sorted(zip(y_axis_interception_TFQMR, column_names_TFQMR))]
+        slope_TFQMR = [x for _,x in sorted(zip(y_axis_interception_TFQMR, slope_TFQMR))]
+        y_axis_interception_TFQMR = list(sorted(y_axis_interception_TFQMR))
+
+        column_names_KLU = [x for _, x in sorted(zip(y_axis_interception_KLU, column_names_KLU))]
+        slope_KLU = [x for _,x in sorted(zip(y_axis_interception_KLU, slope_KLU))]
+        y_axis_interception_KLU = list(sorted(y_axis_interception_KLU))
+
+        ax.set_title('Sorted by y-axis-interception')
+
+    elif variation == 3:
+        # sort values by both independent values to get boundaries and x-data
+        column_names_Dense = [x for _,x in sorted(zip(slope_Dense, column_names_Dense))]
+        y_axis_interception_Dense = list(sorted(y_axis_interception_Dense))
+        slope_Dense = list(sorted(slope_Dense))
+
+        column_names_GMRES = [x for _, x in sorted(zip(slope_GMRES, column_names_GMRES))]
+        y_axis_interception_GMRES = list(sorted(y_axis_interception_GMRES))
+        slope_GMRES = list(sorted(slope_GMRES))
+
+        column_names_BiCGStab = [x for _, x in sorted(zip(slope_BiCGStab, column_names_BiCGStab))]
+        y_axis_interception_BiCGStab = list(sorted(y_axis_interception_BiCGStab))
+        slope_BiCGStab = list(sorted(slope_BiCGStab))
+
+        column_names_TFQMR = [x for _, x in sorted(zip(slope_TFQMR, column_names_TFQMR))]
+        y_axis_interception_TFQMR = list(sorted(y_axis_interception_TFQMR))
+        slope_TFQMR = list(sorted(slope_TFQMR))
+
+        column_names_KLU = [x for _, x in sorted(zip(slope_KLU, column_names_KLU))]
+        y_axis_interception_KLU = list(sorted(y_axis_interception_KLU))
+        slope_KLU = list(sorted(slope_KLU))
+
+        ax.set_title('Sorted by slope and y-axis-interception independently --- data of slope')
+
+    elif variation == 4:
+        # sort values by both independent values to get boundaries and x-data
+        column_names_Dense = [x for _,x in sorted(zip(y_axis_interception_Dense, column_names_Dense))]
+        y_axis_interception_Dense = list(sorted(y_axis_interception_Dense))
+        slope_Dense = list(sorted(slope_Dense))
+
+        column_names_GMRES = [x for _, x in sorted(zip(y_axis_interception_GMRES, column_names_GMRES))]
+        y_axis_interception_GMRES = list(sorted(y_axis_interception_GMRES))
+        slope_GMRES = list(sorted(slope_GMRES))
+
+        column_names_BiCGStab = [x for _, x in sorted(zip(y_axis_interception_BiCGStab, column_names_BiCGStab))]
+        y_axis_interception_BiCGStab = list(sorted(y_axis_interception_BiCGStab))
+        slope_BiCGStab = list(sorted(slope_BiCGStab))
+
+        column_names_TFQMR = [x for _, x in sorted(zip(y_axis_interception_TFQMR, column_names_TFQMR))]
+        y_axis_interception_TFQMR = list(sorted(y_axis_interception_TFQMR))
+        slope_TFQMR = list(sorted(slope_TFQMR))
+
+        column_names_KLU = [x for _, x in sorted(zip(y_axis_interception_KLU, column_names_KLU))]
+        y_axis_interception_KLU = list(sorted(y_axis_interception_KLU))
+        slope_KLU = list(sorted(slope_KLU))
+
+        ax.set_title('Sorted by slope and y-axis-interception independently --- data of y-axis-interception')
 
     # length of the last file
     file_length = len(next_tsv['id'])
@@ -133,7 +212,6 @@ def Scatter(solAlg, nonLinSol):
     linestyle = (0, (2, 5, 2, 5))
     linewidth = 0.1
 
-    ax = plt.axes()
 
     # num_x
     first_x_lowerbound = list(all_intern_columns[column_names.index(column_names_Dense[0])]['state_variables'])
@@ -173,9 +251,9 @@ def Scatter(solAlg, nonLinSol):
 
     # change .tsv-id form e.g. 1_06_10.tsv to 06_10
     linSol4legend_1 = 'Dense'
-    linSol4legend_2 = 'SPGMR'
-    linSol4legend_3 = 'SPBCG'
-    linSol4legend_4 = 'SPTFQMR'
+    linSol4legend_2 = 'GMRES'
+    linSol4legend_3 = 'BiCGStab'
+    linSol4legend_4 = 'TFQMR'
     linSol5legend_5 = 'KLU'
 
     # scatter plot
@@ -195,6 +273,14 @@ def Scatter(solAlg, nonLinSol):
     ax.plot(exp_fifth_x_upperbound, fifth_data_upperbound, c='#a6d854')
     plt.tick_params(labelsize=labelsize)
     # '#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854'
+
+    # fill area under curves
+    ax.fill(np.append(exp_first_x_lowerbound, exp_first_x_upperbound[::-1]), np.append(first_data_lowerbound, first_data_upperbound[::-1]), c='#66c2a5', alpha=0.5)
+    ax.fill(np.append(exp_second_x_lowerbound, exp_second_x_upperbound[::-1]), np.append(second_data_lowerbound, second_data_upperbound[::-1]), c='#fc8d62', alpha=0.5)
+    ax.fill(np.append(exp_third_x_lowerbound, exp_third_x_upperbound[::-1]), np.append(third_data_lowerbound, third_data_upperbound[::-1]), c='#8da0cb', alpha=0.5)
+    ax.fill(np.append(exp_fourth_x_lowerbound, exp_fourth_x_upperbound[::-1]), np.append(fourth_data_lowerbound, fourth_data_upperbound[::-1]), c='#e78ac3', alpha=0.5)
+    ax.fill(np.append(exp_fifth_x_lowerbound, exp_fifth_x_upperbound[::-1]), np.append(fifth_data_lowerbound, fifth_data_upperbound[::-1]), c='#a6d854', alpha=0.5)
+
 
     # make top and right boxlines invisible
     ax.spines['top'].set_visible(False)
@@ -218,4 +304,4 @@ def Scatter(solAlg, nonLinSol):
 
 
 # call function
-Scatter('2', '2')
+Scatter('2', '2', 3)
