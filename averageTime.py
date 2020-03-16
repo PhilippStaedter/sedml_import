@@ -34,6 +34,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
                     new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                     new_df.loc[iFile - repetition].t_intern_ms = ''
@@ -42,6 +44,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
             else:
                 new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                 new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
@@ -50,6 +54,8 @@ def averaging(next_tsv):
                 new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                 new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                 new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'reactions' in columns:
+                    new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
         elif iFile != len(next_tsv['id']) - 1:
             # check in both directions
@@ -64,6 +70,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
                     new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                     new_df.loc[iFile - repetition].t_intern_ms = ''
@@ -72,6 +80,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
             else:
                 new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
@@ -81,6 +91,8 @@ def averaging(next_tsv):
                 new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                 new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                 new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'reactions' in columns:
+                    new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
         else:
             if next_tsv['id'][iFile] == next_tsv['id'][iFile - 1] and next_tsv['state_variables'][iFile] == next_tsv['state_variables'][iFile + 1]:  # last element
                 # find all exceptions by hand and type them in manually --- no clear rule existing
@@ -92,6 +104,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
                     new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                     new_df.loc[iFile - repetition].t_intern_ms = ''
@@ -100,6 +114,8 @@ def averaging(next_tsv):
                     new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                     new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                     new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'reactions' in columns:
+                        new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
             else:
                 new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
                 new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
@@ -108,6 +124,8 @@ def averaging(next_tsv):
                 new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
                 new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
                 new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'reactions' in columns:
+                    new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
     # repeat for round(max(repetition_of_else)/2) --- find out by hand for efficiency, otherwise high number will do as well
     repetition = 1
@@ -191,3 +209,9 @@ def averaging(next_tsv):
             new_df['id'][iMod] = '{kolodkin2010_figure2b}' + '_' + str(iMod)
 
     return(new_df)
+
+
+# example
+#file = pd.read_csv('../paper_SolverSettings/WholeStudy/1_1_1_06_08.tsv', sep='\t')
+#file = pd.read_csv('../bachelor_thesis/LinearSolver/1_08_06.tsv', sep='\t')
+#averaging(file)
