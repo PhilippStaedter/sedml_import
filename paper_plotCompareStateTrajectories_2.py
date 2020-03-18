@@ -3,8 +3,8 @@ import os
 import matplotlib.pyplot as plt
 
 
-all_abs_tol = ['06', '16', '03', '06', '12']
-all_rel_tol = ['03', '08', '03', '06', '12']
+all_abs_tol = ['03', '06', '06', '16', '12']
+all_rel_tol = ['03', '06', '03', '08', '12']
 
 counter_Tol_0 = []
 counter_Tol_1 = []
@@ -64,21 +64,26 @@ for iTolerance in range(0, len(all_abs_tol)):
         counter_Tol_4.append(counters_Adams)
         counter_Tol_4.append(counters_BDF)
 
-plt.plot(tol_exps, counter_Tol_0[0], '-x', c='orange', label=f'AM_{all_abs_tol[0]}_{all_rel_tol[0]}')
-plt.plot(tol_exps, counter_Tol_0[1], '-x', c='blue', label=f'BDF_{all_abs_tol[0]}_{all_rel_tol[0]}')
-plt.plot(tol_exps, counter_Tol_1[0], '-x', c='red', label=f'AM_{all_abs_tol[1]}_{all_rel_tol[1]}')
-plt.plot(tol_exps, counter_Tol_1[1], '-x', c='green', label=f'BDF_{all_abs_tol[1]}_{all_rel_tol[1]}')
-plt.plot(tol_exps, counter_Tol_2[0], '-x', c='purple', label=f'AM_{all_abs_tol[2]}_{all_rel_tol[2]}')
-plt.plot(tol_exps, counter_Tol_2[1], '-x', c='black', label=f'BDF_{all_abs_tol[2]}_{all_rel_tol[2]}')
-plt.plot(tol_exps, counter_Tol_3[0], '-x', c='yellow', label=f'AM_{all_abs_tol[3]}_{all_rel_tol[3]}')
-plt.plot(tol_exps, counter_Tol_3[1], '-x', c='brown', label=f'BDF_{all_abs_tol[3]}_{all_rel_tol[3]}')
-plt.plot(tol_exps, counter_Tol_4[0], '-x', c='cyan', label=f'AM_{all_abs_tol[4]}_{all_rel_tol[4]}')
-plt.plot(tol_exps, counter_Tol_4[1], '-x', c='magenta', label=f'BDF_{all_abs_tol[4]}_{all_rel_tol[4]}')
+plt.plot(tol_exps, counter_Tol_0[0], '-x', c='#d73027', label=f'AM_{all_abs_tol[0]}_{all_rel_tol[0]}')
+plt.plot(tol_exps, counter_Tol_0[1], '-x', c='#f46d43', label=f'BDF_{all_abs_tol[0]}_{all_rel_tol[0]}')
+plt.plot(tol_exps, counter_Tol_1[0], '-x', c='#fdae61', label=f'AM_{all_abs_tol[1]}_{all_rel_tol[1]}')
+plt.plot(tol_exps, counter_Tol_1[1], '-x', c='#fee090', label=f'BDF_{all_abs_tol[1]}_{all_rel_tol[1]}')
+plt.plot(tol_exps, counter_Tol_2[0], '-x', c='#ffffbf', label=f'AM_{all_abs_tol[2]}_{all_rel_tol[2]}')
+plt.plot(tol_exps, counter_Tol_2[1], '-x', c='#e0f3f8', label=f'BDF_{all_abs_tol[2]}_{all_rel_tol[2]}')
+plt.plot(tol_exps, counter_Tol_3[0], '-x', c='#abd9e9', label=f'AM_{all_abs_tol[3]}_{all_rel_tol[3]}')
+plt.plot(tol_exps, counter_Tol_3[1], '-x', c='#74add1', label=f'BDF_{all_abs_tol[3]}_{all_rel_tol[3]}')
+plt.plot(tol_exps, counter_Tol_4[0], '-x', c='#4575b4', label=f'AM_{all_abs_tol[4]}_{all_rel_tol[4]}')
+plt.plot(tol_exps, counter_Tol_4[1], '-x', c='#2E2D66', label=f'BDF_{all_abs_tol[4]}_{all_rel_tol[4]}')
 
+fontsize = 11
 plt.legend(loc=2)
-plt.gca().set_title(f'Comparison of all State Trajectories to JWS for AM vs BDF using all tolerances')
-plt.gca().set_xlabel("Error Tolerance for comparing State Trajectories")
-plt.gca().set_ylabel("Matching models")
+plt.gca().set_title(f'Comparison of all State Trajectories to JWS for AM vs BDF using all tolerances', fontsize=fontsize)
+plt.gca().set_xlabel("Error Tolerance for comparing State Trajectories", fontsize=fontsize)
+plt.gca().set_ylabel("Matching models", fontsize=fontsize)
 plt.gcf().tight_layout()
+
+# save plot
 #plt.savefig(f"figures_paper/Study_1/compareStateTrajectories_summary_{abs_tol}_{rel_tol}.pdf")
+
+# show plot
 plt.show()

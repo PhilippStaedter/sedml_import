@@ -36,7 +36,8 @@ for iTolerance in range(0, len(tolerance_files)):
             quotient = next_intern/main_intern
 
         # leave out value iff zero
-        if quotient == 0:
+        #if quotient == 0:
+        if next_intern == 0:
             zero_values_counter = zero_values_counter + 1
             'No 0 values allowed!'
         else:
@@ -61,10 +62,10 @@ for iTolerance in range(0, len(tolerance_files)):
 
     left = 0.065
     bottom = 0.8
-    width = 0.135
-    height = 0.127
-    row_factor = 0.155
-    column_factor = 0.142
+    width = 0.125               #0.135
+    height = 0.11               #0.127
+    row_factor = 0.165          #0.155
+    column_factor = 0.152       #0.142
     rotation_factor = 90
     ylim = [0.5, 200]
     xlim = [0.1, 100]

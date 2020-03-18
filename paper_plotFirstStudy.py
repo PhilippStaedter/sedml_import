@@ -71,7 +71,7 @@ ax1.set_xlim((-0.1, 4)) #2000 #250 #100                                         
 ax1.set_ylim((0.5, 150))
 ax1.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax1.set_xlabel('Number of state variables', fontsize=fontsize)
-ax1.set_ylabel('Amount of models', fontsize=fontsize)
+ax1.set_ylabel('Number of models', fontsize=fontsize)
 ax1.tick_params(labelsize=labelsize)
 
 # plot text 'A'
@@ -85,7 +85,7 @@ ax2.set_xlim((-0.1, 4)) #3000 #600 #100                                         
 ax2.set_ylim((0.5, 150))
 ax2.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax2.set_xlabel('Number of reactions', fontsize=fontsize)
-ax2.set_ylabel('Amount of models', fontsize=fontsize)
+ax2.set_ylabel('Number of models', fontsize=fontsize)
 ax2.tick_params(labelsize=labelsize)
 
 # histogram of parameters
@@ -96,7 +96,7 @@ ax3.set_xlim((-0.1, 4)) #5000 #350 #1000                                        
 ax3.set_ylim((0.5, 150))
 ax3.set_xticklabels(['', r'$10^{0}$', '', r'$10^{1}$', '', r'$10^{2}$', '', r'$10^{3}$', '', r'$10^{4}$'])
 ax3.set_xlabel('Number of parameters',  fontsize=fontsize)
-ax3.set_ylabel('Amount of models', fontsize=fontsize)
+ax3.set_ylabel('Number of models', fontsize=fontsize)
 ax3.tick_params(labelsize=labelsize)
 
 # make all top and right boxlines inviisible
