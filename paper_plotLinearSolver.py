@@ -129,6 +129,8 @@ def LinearSolver(solAlg, nonLinSol):
     ax1.spines['top'].set_visible(False)
     ax1.spines['right'].set_visible(False)
 
+    # plot text 'A'
+    ax1.text(-0.13, 1, 'A', fontsize=labelsize + 5, transform=ax1.transAxes)
 
 
     ######## subplot 2: box plot over computation times
@@ -238,6 +240,9 @@ def LinearSolver(solAlg, nonLinSol):
 
     # add grit
     ax2.yaxis.grid(True, linestyle='-', which='both', color='lightgrey', alpha=0.25)
+
+    # plot text 'B'
+    ax2.text(-0.13, 1, 'B', fontsize=labelsize + 5, transform=ax2.transAxes)
 
 
 

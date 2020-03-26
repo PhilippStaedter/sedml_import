@@ -161,21 +161,21 @@ def NonLinSol():
     functional_data_1 = []
     newton_data_1 = []
     for iHistogram in range(0, int(len(correct_files_1) / 2)):
-        functional_data_1.append(round(len(all_intern_columns_1[iHistogram][column_names[iHistogram]])/file_length, 2))
-        newton_data_1.append(round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
+        functional_data_1.append(1 - round(len(all_intern_columns_1[iHistogram][column_names[iHistogram]])/file_length, 2))
+        newton_data_1.append(1 - round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
 
     # BDF
     functional_data_2 = []
     newton_data_2 = []
     for iHistogram in range(int(len(correct_files_1) / 2), len(correct_files_1)):
-        functional_data_2.append(round(len(all_intern_columns_1[iHistogram][column_names[iHistogram]])/file_length, 2))
-        newton_data_2.append(round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
+        functional_data_2.append(1 - round(len(all_intern_columns_1[iHistogram][column_names[iHistogram]])/file_length, 2))
+        newton_data_2.append(1 - round(len(all_intern_columns_2[iHistogram][column_names[iHistogram]])/file_length, 2))
 
     # plot two (times two) histograms
-    adams1 = ax1.hist(functional_data_1, bins=50, range=(0.7, 1), color='orange', edgecolor='black', density=False)
-    adams2 = ax1.hist(newton_data_1, bins=50, range=(0.7, 1), color='blue', zorder=20, edgecolor='black', density=False)
-    bdf1 = ax2.hist(functional_data_2, bins=50, range=(0.7, 1), color='orange', label='Functional', edgecolor='black', density=False)
-    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0.7, 1), color='blue', label='Newton-type', zorder=20, edgecolor='black', density=False)                                               # density=True,
+    adams1 = ax1.hist(functional_data_1, bins=50, range=(0, 0.3), color='orange', edgecolor='black', density=False)
+    adams2 = ax1.hist(newton_data_1, bins=50, range=(0, 0.3), color='blue', zorder=20, edgecolor='black', density=False)
+    bdf1 = ax2.hist(functional_data_2, bins=50, range=(0, 0.3), color='orange', label='Functional', edgecolor='black', density=False)
+    bdf2 = ax2.hist(newton_data_2, bins=50, range=(0, 0.3), color='blue', label='Newton-type', zorder=20, edgecolor='black', density=False)                                               # density=True,
 
     # plot density function
 
@@ -183,14 +183,14 @@ def NonLinSol():
     # further settings
     ax1.set_ylim([0, 20])
     ax2.set_ylim([0, 20])
-    ax1.set_xlim([0.7, 1])
-    ax2.set_xlim([0.7, 1])
+    ax1.set_xlim([0, 0.3])
+    ax2.set_xlim([0, 0.3])
     ax1.set_yticklabels([0, '', 5, '', 10, '', 15, '', 20])
     ax2.set_yticklabels([0, '', 5, '', 10, '', 15, '', 20])
-    ax2.set_xticklabels(['70', '75', '80', '85', '90', '95', '100'])
+    ax2.set_xticklabels(['0', '5', '10', '15', '20', '25', '30'])
     plt.tick_params(labelsize=labelsize)
     ax1.tick_params(labelbottom=False)
-    ax2.set_xlabel('Success rate [%]', fontsize=fontsize)
+    ax2.set_xlabel('Failure rate [%]', fontsize=fontsize)
     ax1.set_ylabel('Number of models', fontsize=fontsize)
     ax2.set_ylabel('Number of models', fontsize=fontsize)
     ax1.set_title('Solver algorithm: AM', fontsize=fontsize)
@@ -204,7 +204,7 @@ def NonLinSol():
     ax2.spines['right'].set_visible(False)
 
     # set global labels
-    #plt.text(0.2, 1.15, 'Functional vs Newton-type - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
+    #plt.text(0.2, 1.15, 'Functional vs Newton-type - Failure Rate', fontsize=titlesize, fontweight='bold', transform=ax1.transAxes)
 
     # better layout
     plt.tight_layout()

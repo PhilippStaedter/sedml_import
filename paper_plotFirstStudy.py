@@ -115,17 +115,19 @@ fig = plt.gcf()
 fig.set_size_inches(18.5, 10.5)
 
 ############## plot scatter plot ################
-all_abs_tol = ['03', '06', '06', '16', '12']
-all_rel_tol = ['03', '03', '06', '08', '12']
+all_log_abs_tol = ['03', '06', '06', '16', '12']
+all_log_rel_tol = ['03', '03', '06', '08', '12']
+all_abs_tol = [r'$10^{-3}$', r'$10^{-6}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$']
+all_rel_tol = [r'$10^{-3}$', r'$10^{-3}$', r'$10^{-6}$', r'$10^{-8}$', r'$10^{-12}$']
 
 counter_Tol_0 = []
 counter_Tol_1 = []
 counter_Tol_2 = []
 counter_Tol_3 = []
 counter_Tol_4 = []
-for iTolerance in range(0, len(all_abs_tol)):
-    abs_tol = all_abs_tol[iTolerance]
-    rel_tol = all_rel_tol[iTolerance]
+for iTolerance in range(0, len(all_log_abs_tol)):
+    abs_tol = all_log_abs_tol[iTolerance]
+    rel_tol = all_log_rel_tol[iTolerance]
     bdf_models = []
     counters_BDF = []
     for Multistep in ['BDF']:
@@ -180,7 +182,7 @@ ax4.set_xticks(np.array([-20, -15, -10, -5, 0, 5, 10]), (r'$10^{-20}$', r'$10^{-
 fontsize = 9 #12
 
 # global properties
-ax4.legend(loc=2, fontsize=fontsize)
+ax4.legend(loc=2, fontsize=fontsize - 1)
 ax4.tick_params(labelsize=fontsize)
 
 # make top and right boxlines invisible
@@ -188,7 +190,7 @@ ax4.spines['top'].set_visible(False)
 ax4.spines['right'].set_visible(False)
 
 # more properties
-plt.gca().set_xlabel("Error Tolerance for comparing State Trajectories", fontsize=fontsize)
+plt.gca().set_xlabel("Absolute Error Tolerance for comparing State Trajectories", fontsize=fontsize)
 plt.gca().set_ylabel("Matching models", fontsize=fontsize)
 plt.gcf().tight_layout()
 

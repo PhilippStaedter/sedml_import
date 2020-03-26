@@ -1,19 +1,22 @@
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-all_abs_tol = ['03', '06', '06', '16', '12']
-all_rel_tol = ['03', '06', '03', '08', '12']
+all_log_abs_tol = ['03', '06', '06', '16', '12']
+all_log_rel_tol = ['03', '03', '06', '08', '12']
+all_abs_tol = [r'$10^{-3}$', r'$10^{-6}$', r'$10^{-6}$', r'$10^{-16}$', r'$10^{-12}$']
+all_rel_tol = [r'$10^{-3}$', r'$10^{-3}$', r'$10^{-6}$', r'$10^{-8}$', r'$10^{-12}$']
 
 counter_Tol_0 = []
 counter_Tol_1 = []
 counter_Tol_2 = []
 counter_Tol_3 = []
 counter_Tol_4 = []
-for iTolerance in range(0, len(all_abs_tol)):
-    abs_tol = all_abs_tol[iTolerance]
-    rel_tol = all_rel_tol[iTolerance]
+for iTolerance in range(0, len(all_log_abs_tol)):
+    abs_tol = all_log_abs_tol[iTolerance]
+    rel_tol = all_log_rel_tol[iTolerance]
     adams_models = []
     bdf_models = []
     counters_Adams = []
@@ -64,22 +67,33 @@ for iTolerance in range(0, len(all_abs_tol)):
         counter_Tol_4.append(counters_Adams)
         counter_Tol_4.append(counters_BDF)
 
-plt.plot(tol_exps, counter_Tol_0[0], '-x', c='#d73027', label=f'AM_{all_abs_tol[0]}_{all_rel_tol[0]}')
-plt.plot(tol_exps, counter_Tol_0[1], '-x', c='#f46d43', label=f'BDF_{all_abs_tol[0]}_{all_rel_tol[0]}')
-plt.plot(tol_exps, counter_Tol_1[0], '-x', c='#fdae61', label=f'AM_{all_abs_tol[1]}_{all_rel_tol[1]}')
-plt.plot(tol_exps, counter_Tol_1[1], '-x', c='#fee090', label=f'BDF_{all_abs_tol[1]}_{all_rel_tol[1]}')
-plt.plot(tol_exps, counter_Tol_2[0], '-x', c='#ffffbf', label=f'AM_{all_abs_tol[2]}_{all_rel_tol[2]}')
-plt.plot(tol_exps, counter_Tol_2[1], '-x', c='#e0f3f8', label=f'BDF_{all_abs_tol[2]}_{all_rel_tol[2]}')
-plt.plot(tol_exps, counter_Tol_3[0], '-x', c='#abd9e9', label=f'AM_{all_abs_tol[3]}_{all_rel_tol[3]}')
-plt.plot(tol_exps, counter_Tol_3[1], '-x', c='#74add1', label=f'BDF_{all_abs_tol[3]}_{all_rel_tol[3]}')
-plt.plot(tol_exps, counter_Tol_4[0], '-x', c='#4575b4', label=f'AM_{all_abs_tol[4]}_{all_rel_tol[4]}')
-plt.plot(tol_exps, counter_Tol_4[1], '-x', c='#2E2D66', label=f'BDF_{all_abs_tol[4]}_{all_rel_tol[4]}')
 
-fontsize = 11
+ax = plt.axes()
+ax.plot(tol_exps, counter_Tol_0[0], '--', c='#fdae61', label=f'AM & {all_abs_tol[0]} & {all_rel_tol[0]}')
+ax.plot(tol_exps, counter_Tol_0[1], '-x', c='#abd9e9', label=f'BDF & {all_abs_tol[0]} & {all_rel_tol[0]}')
+ax.plot(tol_exps, counter_Tol_1[0], '--', c='#f46d43', label=f'AM & {all_abs_tol[1]} & {all_rel_tol[1]}')
+ax.plot(tol_exps, counter_Tol_1[1], '-x', c='#74add1', label=f'BDF & {all_abs_tol[1]} & {all_rel_tol[1]}')
+ax.plot(tol_exps, counter_Tol_2[0], '--', c='#d73027', label=f'AM & {all_abs_tol[2]} & {all_rel_tol[2]}')
+ax.plot(tol_exps, counter_Tol_2[1], '-x', c='#4575b4', label=f'BDF & {all_abs_tol[2]} & {all_rel_tol[2]}')
+ax.plot(tol_exps, counter_Tol_3[0], '--', c='#a50026', label=f'AM & {all_abs_tol[3]} & {all_rel_tol[3]}')
+ax.plot(tol_exps, counter_Tol_3[1], '-x', c='#313695', label=f'BDF & {all_abs_tol[3]} & {all_rel_tol[3]}')
+ax.plot(tol_exps, counter_Tol_4[0], '--', c='#800000', label=f'AM & {all_abs_tol[4]} & {all_rel_tol[4]}')
+ax.plot(tol_exps, counter_Tol_4[1], '-x', c='#2E2D66', label=f'BDF & {all_abs_tol[4]} & {all_rel_tol[4]}')
+
+# local properties
+fontsize = 13
+ax.set_ylim([-20,400])
+ax.set_xticklabels(np.array(['', r'$10^{-20}$', r'$10^{-15}$', r'$10^{-10}$', r'$10^{-5}$', r'$10^{0}$', r'$10^{5}$', r'$10^{10}$']))
+
+# make top and right boxlines invisible
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+
 plt.legend(loc=2)
-plt.gca().set_title(f'Comparison of all State Trajectories to JWS for AM vs BDF using all tolerances', fontsize=fontsize)
-plt.gca().set_xlabel("Error Tolerance for comparing State Trajectories", fontsize=fontsize)
-plt.gca().set_ylabel("Matching models", fontsize=fontsize)
+#plt.gca().set_title('Comparison of all State Trajectories to JWS for AM vs BDF', fontsize=fontsize)
+plt.gca().set_xlabel('Absolute Error Tolerance for comparing State Trajectories', fontsize=fontsize)
+plt.gca().set_ylabel('Matching models', fontsize=fontsize)
 plt.gcf().tight_layout()
 
 # save plot

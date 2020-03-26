@@ -134,8 +134,8 @@ def Multistep():
             bdf_data_1.append(math.inf)
             blank_space_counter += 1
         else:
-            adams_data_1.append(round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
-            bdf_data_1.append(round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
+            adams_data_1.append(1 - round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 4))
+            bdf_data_1.append(1 - round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 4))
     nonLinSol11 = ax.plot(index, adams_data_1, '-x', c='#fdb863', label='Functional AM')
     nonLinSol21 = ax.plot(index, bdf_data_1, '-x', c='#e66101', label='Functional BDF')
 
@@ -147,21 +147,25 @@ def Multistep():
             bdf_data_2.append(math.inf)
             blank_space_counter += 1
         else:
-            adams_data_2.append(round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
-            bdf_data_2.append(round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 2))
+            adams_data_2.append(1 - round(len(all_intern_columns_1[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 4))
+            bdf_data_2.append(1 - round(len(all_intern_columns_2[iDensityPoint - blank_space_counter][column_names[iDensityPoint - blank_space_counter]]) / file_length, 4))
     nonLinSol12 = ax.plot(index, adams_data_2, '-x', c='#b2abd2', label='Newton-type AM')
     nonLinSol22 = ax.plot(index, bdf_data_2, '-x', c='#5e3c99', label='Newton-type BDF')
 
     #ax.set_title('Non-Linear solver: Functional', fontsize=titlesize)
-    ax.set_ylabel('Success rate [%]', fontsize=fontsize)
+    ax.set_ylabel('Failure rate [%]', fontsize=fontsize)
     #ax.set_title('Non-Linear solver: Newton-type', fontsize=titlesize)
     ax.set_xlim([-0.5, 38.5])
-    ax.set_ylim([0.7, 1])
-    ax.set_yticklabels(['70', '75', '80', '85', '90', '95', '100'], fontsize=labelsize)
+    #ax.set_ylim([0, 0.3])
+    ax.set_ylim([0.001, 1])
+    ax.set_yscale('log')
+    #ax.set_yticklabels(['0', '5', '10', '15', '20', '25', '30'], fontsize=labelsize)
+    ax.set_yticklabels(['', '0.1', '1', '10', '100'], fontsize=labelsize)
 
     # plot black separation line
     for iLine in [7,15,23,31]:
-        ax.plot([iLine,iLine], [0.7,1], '--k', linewidth=linewidth)
+        ax.plot([iLine,iLine], [0.001, 1], '--k', linewidth=linewidth)
+        #ax.plot([iLine,iLine], [0, 0.3], '--k', linewidth=linewidth)
 
     # create major and minor ticklabels
     '''
@@ -225,8 +229,8 @@ def Multistep():
     ax.spines['right'].set_visible(False)
 
     # set global labels
-    #ax1.set_title('Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', pad=30)
-    #plt.text(0.3, 2.75, 'Adams-Moulton vs BDF - Success Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
+    #ax1.set_title('Adams-Moulton vs BDF - Failure Rate', fontsize=titlesize, fontweight='bold', pad=30)
+    #plt.text(0.3, 2.75, 'Adams-Moulton vs BDF - Failure Rate', fontsize=titlesize, fontweight='bold', transform=ax2.transAxes)
 
     # better layout
     plt.tight_layout()
@@ -241,10 +245,10 @@ def Multistep():
     # show figure
     plt.show()
     # adjustment values
-    #top = 0.959,
+    #top = 0.96,
     #bottom = 0.328,
-    #left = 0.116,
-    #right = 0.95,
+    #left = 0.11,
+    #right = 0.975,
     #hspace = 0.2,
     #wspace = 0.2
 

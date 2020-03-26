@@ -81,16 +81,16 @@ def Scatter(solAlg, nonLinSol):
 
     # get correct data for all five linear solvers in one of the seven figures
     # plot a customized plot
-    fontsize = 4
-    labelsize = 4
+    fontsize = 7
+    labelsize = 7
     titlesize = 22
 
     rotation = 90
     left = 0.07
     bottom = 0.75
-    width = 0.4
+    width = 0.44
     height = 0.18
-    row_factor = 0.5
+    row_factor = 0.47
     column_factor = 0.22
     rotation_factor = 90
     alpha = 0.7
@@ -106,7 +106,7 @@ def Scatter(solAlg, nonLinSol):
             ax1.text(0.3, 1.05, 'Abs. tol. = ' + r'$10^{-6}$ + Rel. tol. = ' + r'$10^{-8}$', fontsize=fontsize, transform=ax1.transAxes)
             #ax1.get_xaxis().set_visible(False)
             ax1.tick_params(labelbottom=False)
-            ax1.text(-0.1, 0.18, 'Simulation time [ms]', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.12, 0.07, 'Simulation time [ms]', fontsize=fontsize - 1, transform=ax1.transAxes, rotation=rotation_factor)
 
         elif iCounter == 1:
             ax1 = plt.axes([left + iCounter * row_factor, bottom, width, height])
@@ -122,7 +122,7 @@ def Scatter(solAlg, nonLinSol):
             #ax1.get_xaxis().set_visible(False)
             ax1.tick_params(labelbottom=False)
             #ax1.tick_params(labelleft=False)
-            ax1.text(-0.1, 0.18, 'Simulation time [ms]', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.12, 0.04, 'Simulation time [ms]', fontsize=fontsize - 1, transform=ax1.transAxes, rotation=rotation_factor)
 
         elif iCounter == 3:
             ax1 = plt.axes([left + (iCounter - 2) * row_factor, bottom - (iCounter-2) * column_factor, width, height])
@@ -139,22 +139,22 @@ def Scatter(solAlg, nonLinSol):
             #ax1.get_xaxis().set_visible(False)
             #ax1.text(0.15, -0.3, 'Number of state variables', fontsize=fontsize, fontweight='bold', transform=ax1.transAxes)
             ax1.tick_params(labelbottom=False)
-            ax1.text(-0.1, 0.18, 'Simulation time [ms]', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.12, 0.01, 'Simulation time [ms]', fontsize=fontsize - 1, transform=ax1.transAxes, rotation=rotation_factor)
 
         elif iCounter == 5:
             ax1 = plt.axes([left + (iCounter - 4) * row_factor, bottom - (iCounter-3) * column_factor, width, height])
             ax1.text(0.3, 1.05, 'Abs. tol. = ' + r'$10^{-14}$ + Rel. tol. = ' + r'$10^{-14}$', fontsize=fontsize, transform=ax1.transAxes)
             #ax1.get_yaxis().set_visible(False)
             ax1.tick_params(labelleft=False)
-            ax1.text(0.3, -0.3, 'Number of state variables', fontsize=fontsize, transform=ax1.transAxes)
+            ax1.text(0.3, -0.32, 'Number of state variables', fontsize=fontsize - 1, transform=ax1.transAxes)
 
         elif iCounter == 6:
             ax1 = plt.axes([left, bottom - (iCounter - 3) * column_factor, width, height])
             ax1.text(0.3, 1.05, 'Abs. tol. = ' + r'$10^{-16}$ + Rel. tol. = ' + r'$10^{-16}$', fontsize=fontsize, transform=ax1.transAxes)
             #ax1.get_xaxis().set_visible(False)
             #ax1.tick_params(labelbottom=False)ax1.set_ylim([0.1, 50000])
-            ax1.text(0.3, -0.35, 'Number of state variables', fontsize=fontsize, transform=ax1.transAxes)
-            ax1.text(-0.1, 0.18, 'Simulation time [ms]', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(0.3, -0.38, 'Number of state variables', fontsize=fontsize - 1, transform=ax1.transAxes)
+            ax1.text(-0.12, -0.02, 'Simulation time [ms]', fontsize=fontsize - 1, transform=ax1.transAxes, rotation=rotation_factor)
 
 
         # apply formula:   iCounter --> iCounter + k*7
@@ -204,7 +204,7 @@ def Scatter(solAlg, nonLinSol):
         ax1.spines['right'].set_visible(False)
 
         # plot a legend
-        ax1.legend(loc=2, fontsize=fontsize, frameon=False)
+        ax1.legend(loc=2, fontsize=fontsize - 3, frameon=False)
 
 
     # set global labels

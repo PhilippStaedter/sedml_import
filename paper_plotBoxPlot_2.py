@@ -75,7 +75,8 @@ for iTolerance in range(0, len(tolerance_files)):
 
             # norm all internal + external time by 06_06
             if main_intern == 0:
-                quotient = 0
+                #quotient = 0
+                quotient = next_intern
             else:
                 quotient = next_intern/main_intern
 
