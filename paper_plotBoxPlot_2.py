@@ -30,8 +30,8 @@ main_tsv = averaging(main_tsv)
 
 # set two axes objects
 figure = plt.figure()
-ax1 = figure.add_axes([0.1, 0.55, 0.87, 0.4])                 # ax = plt.axes()
-ax2 = figure.add_axes([0.1, 0.15, 0.87, 0.35])
+ax1 = figure.add_axes([0.11, 0.55, 0.86, 0.4])                 # ax = plt.axes()
+ax2 = figure.add_axes([0.11, 0.15, 0.86, 0.35])
 
 # get list for all data
 xTickLabel = []
@@ -157,6 +157,9 @@ for iTick in [0,7,14,21,28,35]:
 # add grit
 ax1.yaxis.grid(True, linestyle='-', which='both', color='lightgrey', alpha=0.25)
 
+# plot text 'A'
+ax1.text(-0.12, 1, 'A', fontsize=fontsize + 3, transform=ax1.transAxes)
+
 
 ######### 2.PART: add bar plot with failure rate
 fontsize = 12
@@ -245,6 +248,9 @@ for iTick in [6,13,20,27,34,41]:
 specific_xticks_minor = ax2.xaxis.get_minor_ticks()
 for iTick in [6,13,20,27,34,41]:
     specific_xticks_minor[iTick].set_visible(False)
+
+# plot text 'B'
+ax2.text(-0.12, 1, 'B', fontsize=fontsize + 3, transform=ax2.transAxes)
 
 
 ## better layout

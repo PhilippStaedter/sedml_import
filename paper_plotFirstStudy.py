@@ -174,7 +174,7 @@ ax4.plot(tol_exps, counter_Tol_3[0], '-x', c='#2c7bb6', label=f'Abs. tol.: {all_
 ax4.plot(tol_exps, counter_Tol_4[0], '-x', c='#2E2D66', label=f'Abs. tol.: {all_abs_tol[4]}, Rel. tol.: {all_rel_tol[4]}')
 
 # plot text 'B'
-ax1.text(-0.16, 1, 'B', fontsize=labelsize + 3, transform=ax4.transAxes)
+ax4.text(-0.16, 1, 'B', fontsize=labelsize + 3, transform=ax4.transAxes)
 
 # local properties
 ax4.set_ylim([-20,400])

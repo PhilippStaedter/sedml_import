@@ -18,8 +18,12 @@ list_directory_general = sorted(os.listdir(base_path))
 list_directory_adams = []
 list_directory_bdf = []
 for iFile in range(0, int(len(list_directory_general)/2)):
-    list_directory_adams.append(list_directory_general[iFile])
-    list_directory_bdf.append(list_directory_general[iFile + int(len(list_directory_general)/2)])
+    adams_split = list_directory_general[iFile].split('_')
+    bdf_split = list_directory_general[iFile + int(len(list_directory_general)/2)].split('_')
+    if adams_split[1] == '2':
+        list_directory_adams.append(list_directory_general[iFile])
+    if bdf_split[1] == '2':
+        list_directory_bdf.append(list_directory_general[iFile + int(len(list_directory_general)/2)])
 #list_directory_adams = sorted(os.listdir(Adams_base_path))
 #list_directory_bdf = sorted(os.listdir(BDF_base_path))
 
@@ -85,6 +89,8 @@ print('bdf_zero_x: ' + str(sorted(bdf_zero_x)[0]))
 print('bdf_zero_y: ' + str(sorted(bdf_zero_y)[0]))
 print('equal_zero_x: ' + str(sorted(equal_zero_x)[0]))
 print('equal_zero_y: ' + str(sorted(equal_zero_y)[0]))
+print('len(equal_zero_x): ' + str(len(equal_zero_x)))
+print('len(equal_zero_y): ' + str(len(equal_zero_y)))
 
 # plot a scatter plot + diagonal line
 linestyle = (0, (2, 5, 2, 5))
@@ -138,8 +144,8 @@ bdf_zero_x, bdf_zero_y, kde_blue_edge = np.array(bdf_zero_x)[ids_blue_edge], np.
 ax = plt.axes([0.1, 0.12, 0.8, 0.8])
 plt.gcf().subplots_adjust(bottom=0.2)
 z = range(0,45000)
-plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, s=marker_size, c=kde_orange, cmap=cm_1, label='AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
-plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, s=marker_size, c=kde_blue, cmap=cm_2, label='BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+plt1 = ax.scatter(adams_bdf_x, adams_bdf_y, s=marker_size, c=kde_orange, cmap=cm_1, label='AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
+plt2 = ax.scatter(bdf_adams_x, bdf_adams_y, s=marker_size, c=kde_blue, cmap=cm_2, label='BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', zorder=10, clip_on=False, alpha=alpha)
 plt3 = ax.scatter(equal_x, equal_y, s=marker_size, c='grey', zorder=10, clip_on=False, alpha=alpha) # label='Both are equally good: ' + str(round(len(equal_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 plt4 = ax.scatter(adams_zero_x, adams_zero_y, c=kde_orange_edge, cmap=cm_2, marker='D', s=marker_size, facecolors='none', edgecolors='blue', zorder=10, clip_on=False) # label='Adams-Moulton failed to integrate the model: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
 plt5 = ax.scatter(bdf_zero_x, bdf_zero_y, c=kde_blue_edge, cmap=cm_1, s=marker_size, facecolors='none', edgecolors='orange', marker='D', zorder=10, clip_on=False) # label='BDF failed to integrate the model: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %',
@@ -159,8 +165,8 @@ ax.set_ylabel('BDF simulation time [ms]', fontsize=fontsize)
 # plot legend manually
 ax.plot(0.4, 25000, 'o', fillstyle='full', c='orange', markersize=marker_size)
 ax.plot(0.4, 12500, 'o', fillstyle='full', c='blue', markersize=marker_size)
-plt.text(0.6, 20000, 'AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=labelsize)
-plt.text(0.6, 10000, 'BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=labelsize)
+plt.text(0.6, 20000, 'AM faster: ' + str(round(len(adams_bdf_x) / len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', fontsize=labelsize)
+plt.text(0.6, 10000, 'BDF faster: ' + str(round(len(bdf_adams_x)/len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', fontsize=labelsize)
 
 plt.tick_params(labelsize=labelsize)
 plt.gca().set_aspect('equal', adjustable='box')
@@ -172,10 +178,10 @@ ax.spines['top'].set_color('red')
 ax.spines['right'].set_color('red')
 
 # write text over axis
-ax.text(55000, 1,'AM failed only: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
-ax.text(1, 55000, 'BDF failed only: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
+ax.text(55000, 1,'AM failed only: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', fontsize=fontsize, rotation=-90)
+ax.text(1, 55000, 'BDF failed only: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', fontsize=fontsize)
 ax.text(70000, 4000, 'Both failed:', fontsize=fontsize, rotation=-45)
-ax.text(50000, 6000, str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
+ax.text(50000, 6000, str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*100/len(list_directory_adams), 2)) + ' %', fontsize=fontsize, rotation=-45)
 #ax.text(0.1, 70000, 'Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=30)
 
 

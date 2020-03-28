@@ -24,6 +24,7 @@ for iTolerance in range(0, len(tolerance_files)):
     next_tsv = averaging(next_tsv)
 
     zero_values_counter = 0
+    main_intern_is_0_counter = 0
     normed_list = []
     for iFile in range(0, len(main_tsv['id'])):
         main_intern = main_tsv['t_intern_ms'][iFile]
@@ -35,13 +36,16 @@ for iTolerance in range(0, len(tolerance_files)):
         else:
             quotient = next_intern/main_intern
 
-        # leave out value iff zero
+        # leave out value if zero but only count for the success rate if next_intern = 0
         #if quotient == 0:
         if next_intern == 0:
-            zero_values_counter = zero_values_counter + 1
+            zero_values_counter += 1
             'No 0 values allowed!'
+        elif main_intern == 0:
+            main_intern_is_0_counter += 1
+            continue
         else:
-            normed_list.append(quotient)
+            normed_list.append(np.log10(quotient))
 
     # for xlim control
     if sorted(normed_list, reverse=True)[0] > 10:
@@ -56,19 +60,21 @@ for iTolerance in range(0, len(tolerance_files)):
         rel_tol = rel_tol[1]
 
     # plot as histogram
-    fontsize = 15
-    labelsize = 13
+    fontsize = 17
+    labelsize = 11
     titlesize = 30
 
     left = 0.065
     bottom = 0.8
-    width = 0.125               #0.135
-    height = 0.11               #0.127
-    row_factor = 0.165          #0.155
-    column_factor = 0.152       #0.142
+    width = 0.135
+    height = 0.127
+    row_factor = 0.155
+    column_factor = 0.142
     rotation_factor = 90
-    ylim = [0.5, 200]
-    xlim = [0.1, 100]
+    ylim = [0.7, 200]
+    #xlim = [0.1, 100]
+    xlim = [-1, 2]
+    bins = 40
 
     # create axes
     if iTolerance in range(0,6):
@@ -77,7 +83,7 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_ylim(ylim)
         ax1.tick_params(labelbottom=False)
         if iTolerance == 0:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
             ax1.text(0.5, 1.1, r'$10^{-' + str(rel_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes)
         if iTolerance in range(1,6):
             ax1.tick_params(labelleft=False)
@@ -88,7 +94,7 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_ylim(ylim)
         ax1.tick_params(labelbottom=False)
         if iTolerance == 6:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(7,12):
             ax1.tick_params(labelleft=False)
     elif iTolerance in range(12,18):
@@ -97,7 +103,7 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_ylim(ylim)
         ax1.tick_params(labelbottom=False)
         if iTolerance == 12:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(13,18):
             ax1.tick_params(labelleft=False)
     elif iTolerance in range(18, 24):
@@ -106,7 +112,7 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_ylim(ylim)
         ax1.tick_params(labelbottom=False)
         if iTolerance == 18:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(19,24):
             ax1.tick_params(labelleft=False)
     elif iTolerance in range(24,30):
@@ -115,7 +121,7 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_ylim(ylim)
         ax1.tick_params(labelbottom=False)
         if iTolerance == 24:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(25,30):
             ax1.tick_params(labelleft=False)
     elif iTolerance in range(30,36):
@@ -123,21 +129,21 @@ for iTolerance in range(0, len(tolerance_files)):
         ax1.set_xlim(xlim)
         ax1.set_ylim(ylim)
         if iTolerance == 30:
-            ax1.text(-0.25, 0.6, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
+            ax1.text(-0.25, 0.5, r'$10^{-' + str(abs_tol) + '}$', fontsize=fontsize, transform=ax1.transAxes, rotation=rotation_factor)
         if iTolerance in range(31,36):
             ax1.tick_params(labelleft=False)
 
-    ax1.set_xscale('log')
-    ax1.tick_params(labelsize=labelsize - 4)
-    if iTolerance == 23:
-        plot_histogram = ax1.hist(x=normed_list, range=None, bins=600, log=True)
-    elif iTolerance == 0:
-        plot_histogram = ax1.hist(x=normed_list, range=None, bins=100, log=True)
-        normed_list_perturb = [2*x for x in normed_list]
-        plot_histogram = ax1.hist(x=normed_list_perturb, range=None, bins=100, log=True)
+    #ax1.set_xscale('log')
+    ax1.set_yscale('log')
+    ax1.set_xticklabels([r'$10^{-1}$', r'$10^{0}$', r'$10^{1}$', r'$10^{2}$'])
+    ax1.tick_params(labelsize=labelsize)
+    if iTolerance == 0:
+        plot_histogram = ax1.hist(x=normed_list, range=None, bins=bins, log=False)
+        #normed_list_perturb = [2*x for x in normed_list]
+        #plot_histogram = ax1.hist(x=normed_list_perturb, range=None, bins=200, log=False)
     else:
-        plot_histogram = ax1.hist(x=normed_list, range=None, bins=200, log=True)
-    plt.text(x=2, y=50, s='success: ' + str(round(len(normed_list) / (len(normed_list) + zero_values_counter) * 100, 2)) + ' %', fontsize=labelsize - 4)
+        plot_histogram = ax1.hist(x=normed_list, range=None, bins=bins, log=False)
+    plt.text(x=1, y=90, s=str(round((len(normed_list) + main_intern_is_0_counter) / (len(normed_list) + zero_values_counter + main_intern_is_0_counter) * 100, 2)) + ' %', fontsize=fontsize)
 
     # make top and right boxlines invisible
     ax1.spines['top'].set_visible(False)
@@ -148,8 +154,8 @@ for iTolerance in range(0, len(tolerance_files)):
 # set global labels
 plt.text(-5.7, 6.8, 'Rel.tol.:', fontsize=fontsize, transform=ax1.transAxes)
 plt.text(-6.18, 6.7, 'Abs.tol.:', fontsize=fontsize, transform=ax1.transAxes)
-plt.text(-3, -0.6, 'Relative simulation time', fontsize=fontsize, transform=ax1.transAxes)
-plt.text(-6.18, 4, 'Amount of models', fontsize=fontsize, transform=ax1.transAxes, rotation=90)
+plt.text(-3.2, -0.55, 'Relative simulation time', fontsize=fontsize + 10, transform=ax1.transAxes)
+plt.text(-6.18, 2.1, 'Amount of models', fontsize=fontsize + 10, transform=ax1.transAxes, rotation=90)
 #plt.text(-5.75, 7.2, 'Simulation time distribution of models for different tolerance combinations - BDF', fontsize=titlesize - 5, fontweight='bold', transform=ax1.transAxes)  # -60 , 350
 
 # better layout
