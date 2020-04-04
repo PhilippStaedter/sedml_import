@@ -174,8 +174,8 @@ ax.spines['top'].set_color('red')
 ax.spines['right'].set_color('red')
 
 # write text over axis
-ax.text(55000, 1,'AM failed only: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
-ax.text(1, 55000, 'BDF failed only: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
+ax.text(55000, 1,'only AM failed: ' + str(round(len(adams_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-90)
+ax.text(1, 55000, 'only BDF failed: ' + str(round(len(bdf_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize)
 ax.text(70000, 4000, 'Both failed:', fontsize=fontsize, rotation=-45)
 ax.text(50000, 6000, str(round(len(equal_zero_x)/len(adams_tsv_file['t_intern_ms'])*10/7, 2)) + ' %', fontsize=fontsize, rotation=-45)
 #ax.text(0.1, 70000, 'Adams-Moulton vs. BDF settings', fontsize=titlesize, fontweight='bold', pad=30)

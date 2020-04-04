@@ -69,16 +69,16 @@ for iTolerance in range(0, len(all_log_abs_tol)):
 
 
 ax = plt.axes()
-ax.plot(tol_exps, counter_Tol_0[0], '--', c='#fdae61', label=f'AM & {all_abs_tol[0]} & {all_rel_tol[0]}')
-ax.plot(tol_exps, counter_Tol_0[1], '-x', c='#abd9e9', label=f'BDF & {all_abs_tol[0]} & {all_rel_tol[0]}')
-ax.plot(tol_exps, counter_Tol_1[0], '--', c='#f46d43', label=f'AM & {all_abs_tol[1]} & {all_rel_tol[1]}')
-ax.plot(tol_exps, counter_Tol_1[1], '-x', c='#74add1', label=f'BDF & {all_abs_tol[1]} & {all_rel_tol[1]}')
-ax.plot(tol_exps, counter_Tol_2[0], '--', c='#d73027', label=f'AM & {all_abs_tol[2]} & {all_rel_tol[2]}')
-ax.plot(tol_exps, counter_Tol_2[1], '-x', c='#4575b4', label=f'BDF & {all_abs_tol[2]} & {all_rel_tol[2]}')
-ax.plot(tol_exps, counter_Tol_3[0], '--', c='#a50026', label=f'AM & {all_abs_tol[3]} & {all_rel_tol[3]}')
-ax.plot(tol_exps, counter_Tol_3[1], '-x', c='#313695', label=f'BDF & {all_abs_tol[3]} & {all_rel_tol[3]}')
-ax.plot(tol_exps, counter_Tol_4[0], '--', c='#800000', label=f'AM & {all_abs_tol[4]} & {all_rel_tol[4]}')
-ax.plot(tol_exps, counter_Tol_4[1], '-x', c='#2E2D66', label=f'BDF & {all_abs_tol[4]} & {all_rel_tol[4]}')
+ax.plot(tol_exps, counter_Tol_0[0], '-*', c='#fdae61', label=f'AM & {all_abs_tol[0]} & {all_rel_tol[0]}')
+ax.plot(tol_exps, counter_Tol_0[1], '-*', c='#abd9e9', label=f'BDF & {all_abs_tol[0]} & {all_rel_tol[0]}')
+ax.plot(tol_exps, counter_Tol_1[0], '-*', c='#f46d43', label=f'AM & {all_abs_tol[1]} & {all_rel_tol[1]}')
+ax.plot(tol_exps, counter_Tol_1[1], '-*', c='#74add1', label=f'BDF & {all_abs_tol[1]} & {all_rel_tol[1]}')
+ax.plot(tol_exps, counter_Tol_2[0], '-*', c='#d73027', label=f'AM & {all_abs_tol[2]} & {all_rel_tol[2]}')
+ax.plot(tol_exps, counter_Tol_2[1], '-*', c='#4575b4', label=f'BDF & {all_abs_tol[2]} & {all_rel_tol[2]}')
+ax.plot(tol_exps, counter_Tol_3[0], '-*', c='#a50026', label=f'AM & {all_abs_tol[3]} & {all_rel_tol[3]}')
+ax.plot(tol_exps, counter_Tol_3[1], '-*', c='#313695', label=f'BDF & {all_abs_tol[3]} & {all_rel_tol[3]}')
+ax.plot(tol_exps, counter_Tol_4[0], '-*', c='#800000', label=f'AM & {all_abs_tol[4]} & {all_rel_tol[4]}')
+ax.plot(tol_exps, counter_Tol_4[1], '-*', c='#2E2D66', label=f'BDF & {all_abs_tol[4]} & {all_rel_tol[4]}')
 
 # local properties
 fontsize = 13
@@ -92,7 +92,7 @@ ax.spines['right'].set_visible(False)
 
 plt.legend(loc=2)
 #plt.gca().set_title('Comparison of all State Trajectories to JWS for AM vs BDF', fontsize=fontsize)
-plt.gca().set_xlabel('Absolute Error Tolerance for comparing State Trajectories', fontsize=fontsize)
+plt.gca().set_xlabel('Acceptance Threshold for matching State Trajectories', fontsize=fontsize)
 plt.gca().set_ylabel('Matching models', fontsize=fontsize)
 plt.gcf().tight_layout()
 

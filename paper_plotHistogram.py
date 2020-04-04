@@ -155,7 +155,7 @@ for iTolerance in range(0, len(tolerance_files)):
 plt.text(-5.7, 6.8, 'Rel.tol.:', fontsize=fontsize, transform=ax1.transAxes)
 plt.text(-6.18, 6.7, 'Abs.tol.:', fontsize=fontsize, transform=ax1.transAxes)
 plt.text(-3.2, -0.55, 'Relative simulation time', fontsize=fontsize + 10, transform=ax1.transAxes)
-plt.text(-6.18, 2.1, 'Amount of models', fontsize=fontsize + 10, transform=ax1.transAxes, rotation=90)
+plt.text(-6.18, 2.1, 'Number of models', fontsize=fontsize + 10, transform=ax1.transAxes, rotation=90)
 #plt.text(-5.75, 7.2, 'Simulation time distribution of models for different tolerance combinations - BDF', fontsize=titlesize - 5, fontweight='bold', transform=ax1.transAxes)  # -60 , 350
 
 # better layout

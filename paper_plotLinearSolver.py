@@ -98,7 +98,7 @@ def LinearSolver(solAlg, nonLinSol):
 
     # sort points by density
 
-    linSol_for_Legend = ['Dense', 'GMRES', 'BiCGstab', 'TFQMR', 'KLU']
+    linSol_for_Legend = ['DENSE', 'GMRES', 'BICGSTAB', 'TFQMR', 'KLU']
     colors = ['#d73027', '#fc8d59', '#fee090', '#91bfdb', '#4575b4']
     for iLinearSolverDataPoints in range(0, int(len(correct_files)/7)):
         # concatenate Data Frames in categories of linear solver data points
@@ -121,9 +121,10 @@ def LinearSolver(solAlg, nonLinSol):
         exp_simulation_time = [10 ** n for n in list(data_simulation_time)]
         ax1.scatter(exp_num_x, exp_simulation_time, s=marker_size, alpha=alpha, c=colors[iLinearSolverDataPoints])
         ax1.plot(exp_num_x, data_regression, c=colors[iLinearSolverDataPoints], label=linSol_for_Legend[iLinearSolverDataPoints] + ': slope = ' + str(np.round(slope[0], 4)))
+        #print('y_axis_interception: ' + str(y_axis_interception))
 
     # plot legend
-    ax1.legend(loc=2, fontsize=labelsize - 2, frameon=False)
+    ax1.legend(loc=1, fontsize=labelsize - 2, frameon=False)
 
     # make top and right boxlines invisible
     ax1.spines['top'].set_visible(False)
@@ -185,13 +186,13 @@ def LinearSolver(solAlg, nonLinSol):
     for patch, color in zip(bp['boxes'], colors):
         patch.set_facecolor(color)
     for whisker in bp['whiskers']:
-        whisker.set(color='#7570b3', linewidth=2)
+        whisker.set(color='#7570b3', linewidth=1)
     for cap in bp['caps']:
-        cap.set(color='#7570b3', linewidth=2)
+        cap.set(color='#7570b3', linewidth=1)
     for median in bp['medians']:
         median.set(color='black', linewidth=2)
     for flier in bp['fliers']:
-        flier.set(marker='+', color='#e7298a', alpha=0.5)
+        flier.set(marker='+', color='#e7298a', alpha=0.5, markersize=3)
 
     # ax2.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')
     #ax2.set_ylabel('Simulation time', fontsize=fontsize)
@@ -210,7 +211,7 @@ def LinearSolver(solAlg, nonLinSol):
                        '', '', '', r'$10^{-12}$', '', '',
                        '', '', '', r'$10^{-14}$', '', '',
                        '', '', '', r'$10^{-16}$', '', '']
-    Rel_xTckLabels = ['', '', '', r'$10^{-8}$', '', '',
+    Rel_xTickLabels = ['', '', '', r'$10^{-8}$', '', '',
                        '', '', '', r'$10^{-6}$', '', '',
                        '', '', '', r'$10^{-16}$', '', '',
                        '', '', '', r'$10^{-12}$', '', '',
@@ -222,7 +223,7 @@ def LinearSolver(solAlg, nonLinSol):
     minor_list_1 = [x + 0.001 for x in list(range(42))]
     ax2.set_xticks(minor_list_1, minor=True)
     ax2.set_xticklabels(Abs_xTickLabels, fontsize=labelsize)
-    ax2.set_xticklabels(Rel_xTckLabels, minor=True, fontsize=labelsize)
+    ax2.set_xticklabels(Rel_xTickLabels, minor=True, fontsize=labelsize)
     ax2.tick_params(axis='x', which='major', pad=5)
     ax2.tick_params(axis='x', which='minor', pad=20)
     ax2.text(-0.1, -0.05, 'Abs. tol.: ', fontsize=labelsize, transform=ax2.transAxes)
@@ -239,7 +240,7 @@ def LinearSolver(solAlg, nonLinSol):
         specific_xticks_minor[iTick].set_visible(True)
 
     # add grit
-    ax2.yaxis.grid(True, linestyle='-', which='both', color='lightgrey', alpha=0.25)
+    #ax2.yaxis.grid(True, linestyle='-', which='both', color='lightgrey', alpha=0.25)
 
     # plot text 'B'
     ax2.text(-0.13, 1, 'B', fontsize=labelsize + 5, transform=ax2.transAxes)

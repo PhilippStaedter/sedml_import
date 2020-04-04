@@ -199,10 +199,10 @@ def Scatter(solAlg, nonLinSol):
         exp_fifth_x = [10**m for m in list(all_intern_columns[iCounter + 28]['state_variables'])]
 
         # change .tsv-id form e.g. 1_06_10.tsv to 06_10
-        linSol4legend_1 = 'Dense'
-        linSol4legend_2 = 'SPGMR'
-        linSol4legend_3 = 'SPBCG'
-        linSol4legend_4 = 'SPTFQMR'
+        linSol4legend_1 = 'DENSE'
+        linSol4legend_2 = 'GMRES'
+        linSol4legend_3 = 'BICGSTAB'
+        linSol4legend_4 = 'TFQMR'
         linSol5legend_5 = 'KLU'
 
         # scatter plot

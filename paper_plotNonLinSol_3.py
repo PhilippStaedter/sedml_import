@@ -156,16 +156,16 @@ def Multistep():
     ax.set_ylabel('Failure rate [%]', fontsize=fontsize)
     #ax.set_title('Non-Linear solver: Newton-type', fontsize=titlesize)
     ax.set_xlim([-0.5, 38.5])
-    #ax.set_ylim([0, 0.3])
-    ax.set_ylim([0.001, 1])
-    ax.set_yscale('log')
-    #ax.set_yticklabels(['0', '5', '10', '15', '20', '25', '30'], fontsize=labelsize)
-    ax.set_yticklabels(['', '0.1', '1', '10', '100'], fontsize=labelsize)
+    ax.set_ylim([0, 0.3])
+    #ax.set_ylim([0.001, 1])
+    #ax.set_yscale('log')
+    ax.set_yticklabels(['0', '5', '10', '15', '20', '25', '30'], fontsize=labelsize)
+    #ax.set_yticklabels(['', '0.1', '1', '10', '100'], fontsize=labelsize)
 
     # plot black separation line
     for iLine in [7,15,23,31]:
-        ax.plot([iLine,iLine], [0.001, 1], '--k', linewidth=linewidth)
-        #ax.plot([iLine,iLine], [0, 0.3], '--k', linewidth=linewidth)
+        #ax.plot([iLine,iLine], [0.001, 1], '--k', linewidth=linewidth)
+        ax.plot([iLine,iLine], [0, 0.3], '--k', linewidth=linewidth)
 
     # create major and minor ticklabels
     '''
@@ -183,8 +183,8 @@ def Multistep():
                    r'$10^{-12}$' '\n'  r'$10^{-10}$', r'$10^{-14}$' '\n' r'$10^{-14}$', r'$10^{-16}$' '\n' r'$10^{-8}$']
     '''
 
-    ax.text(0, -0.1, '--------------Dense--------------- ---------------GMRES--------------- --------------BiCGStab'
-                     '------------- ---------------TFQMR--------------- ----------------KLU----------------', fontsize=labelsize, transform=ax.transAxes)
+    ax.text(0, -0.1, '--------------DENSE--------------- ---------------GMRES--------------- -------------BICGSTAB'
+                     '------------- ---------------TFQMR--------------- ----------------KLU-----------------', fontsize=labelsize, transform=ax.transAxes)
     upper_labels = [r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
                     r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
                     r'$10^{-6}$', r'$10^{-8}$', r'$10^{-8}$', r'$10^{-10}$', r'$10^{-12}$', r'$10^{-14}$', r'$10^{-16}$', '',
@@ -222,7 +222,7 @@ def Multistep():
     #ax3.plot(range(2), c='blue', label='BDF')
     ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.4), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
     #ax.legend(loc=4, fontsize=labelsize)
-    #ax.text(0.15, -0.48, 'D: Dense,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=fontsize, transform=ax.transAxes)
+    #ax.text(0.15, -0.48, 'D: DENSE,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=fontsize, transform=ax.transAxes)
 
     # make top and right boxlines invisible
     ax.spines['top'].set_visible(False)
