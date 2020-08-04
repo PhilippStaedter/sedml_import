@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PYTHON_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/BioModelsDatabase_models" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_Adams_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_Adams_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_Adams_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_Adams_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_Adams_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_14_14" />
+      <excludeFolder url="file://$MODULE_DIR$/COPASI_all_results_BDF_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/StateTrajectories_BioModels_COPASI_Data" />
+      <excludeFolder url="file://$MODULE_DIR$/Test" />
+      <excludeFolder url="file://$MODULE_DIR$/all_sedml_files" />
+      <excludeFolder url="file://$MODULE_DIR$/amici_models" />
+      <excludeFolder url="file://$MODULE_DIR$/figures_paper" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_1_1" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_4_4" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_Adams_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_Adams_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_Adams_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_Adams_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_Adams_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_14_14" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_BDF_16_16" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_Adams_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_Adams_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_Adams_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_Adams_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_Adams_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_03_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_06_03" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_06_06" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_12_12" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_14_14" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_16_08" />
+      <excludeFolder url="file://$MODULE_DIR$/json_files_all_results_BDF_16_16" />
+      <excludeFolder url="file://$MODULE_DIR$/kouril2017_fig3" />
+      <excludeFolder url="file://$MODULE_DIR$/model_steadystate_scaled" />
+      <excludeFolder url="file://$MODULE_DIR$/sedml_models" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 3.8 (PENV)" jdkType="Python SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
