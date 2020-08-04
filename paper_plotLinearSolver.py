@@ -123,6 +123,10 @@ def LinearSolver(solAlg, nonLinSol):
         ax1.plot(exp_num_x, data_regression, c=colors[iLinearSolverDataPoints], label=linSol_for_Legend[iLinearSolverDataPoints] + ': slope = ' + str(np.round(slope[0], 4)))
         #print('y_axis_interception: ' + str(y_axis_interception))
 
+    # plot a black dashed bisection line
+    ax1.plot(list(range(1, int(sorted(exp_num_x, reverse=True)[0]))), list(range(1, int(sorted(exp_num_x, reverse=True)[0]))),
+             'k--', label='Bisection line: slope = 1')
+
     # plot legend
     ax1.legend(loc=1, fontsize=labelsize - 2, frameon=False)
 
@@ -144,19 +148,26 @@ def LinearSolver(solAlg, nonLinSol):
     seventh_set = []
     for iDataFrame in range(0, len(all_intern_columns)):
         if iDataFrame in [0, 7, 14, 21, 28]:
-            first_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #first_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            first_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [1, 8, 15, 22, 29]:
-            second_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #second_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            second_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [2, 9, 16, 23, 30]:
-            third_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #third_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            third_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [3, 10, 17, 24, 31]:
-            fourth_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #fourth_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            fourth_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [4, 11, 18, 25, 32]:
-            fifth_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #fifth_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            fifth_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [5, 12, 19, 26, 33]:
-            sixth_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #sixth_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            sixth_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
         elif iDataFrame in [6, 13, 20, 27, 34]:
-            seventh_set.append(list(all_intern_columns[iDataFrame]['simulation_time']))
+            #seventh_set.append([np.log10(x) for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
+            seventh_set.append([x for x in list(all_intern_columns[iDataFrame]['simulation_time'])])
 
     # get all elements in one list and add empty spaces to enhance clarity
     total_data = first_set + [[]] + second_set + [[]] + third_set + [[]] +  fourth_set + [[]] + fifth_set + [[]] + sixth_set + [[]] + seventh_set
@@ -169,6 +180,8 @@ def LinearSolver(solAlg, nonLinSol):
     ax2.spines['top'].set_visible(False)
     ax2.spines['right'].set_visible(False)
     ax2.set_ylim([0.2, 100000])
+    #ax2.set_ylim([np.log10(0.2), 5])
+    #ax2.set_yticklabels(['', r'$10^{0}$', r'$10^{1}$', r'$10^{2}$', r'$10^{3}$', r'$10^{4}$', r'$10^{5}$'])
 
     # change colour for each set
     color1 = '#d73027'

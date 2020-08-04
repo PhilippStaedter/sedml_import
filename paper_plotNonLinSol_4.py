@@ -36,7 +36,7 @@ def NonLinearSolver(solAlg, LinSol):
     column_names = []
 
     # important paths
-    base_path = '../paper_SolverSettings/WholeStudy'
+    base_path = '../paper_SolverSettings/WholeStudy_mitNakakuki'
 
     # choose only the correct files
     all_files = sorted(os.listdir(base_path))

@@ -20,7 +20,7 @@ elif Multistep_Method == 'BDF':
 
 # important paths
 #tolerance_path = '../bachelor_thesis/Tolerance'
-tolerance_path = '../paper_SolverSettings/Tolerances_1e4/' + Multistep_Method                                                           #
+tolerance_path = '../paper_SolverSettings/TolerancesStudy/' + Multistep_Method                                                           #
 
 # main .tsv file to norm all other files
 main_tsv = pd.read_csv(tolerance_path + '/' + prefix + '06_06.tsv', sep='\t')                                                       #
@@ -136,13 +136,13 @@ colors = [color1, color1, color1, color1, color1, color1,
 for patch, color in zip(bp['boxes'], colors):
     patch.set_facecolor(color)
 for whisker in bp['whiskers']:
-    whisker.set(color='#7570b3', linewidth=2)
+    whisker.set(color='#7570b3', linewidth=1)
 for cap in bp['caps']:
-    cap.set(color='#7570b3', linewidth=2)
+    cap.set(color='#7570b3', linewidth=1)
 for median in bp['medians']:
     median.set(color='black', linewidth=2)
 for flier in bp['fliers']:
-    flier.set(marker='+', color='#e7298a', alpha=0.5)
+    flier.set(marker='+', color='#e7298a', alpha=0.5, markersize=3)
 
 
 #ax1.set_title('Comparison of percentiles and median', fontsize=titlesize, fontweight='bold')

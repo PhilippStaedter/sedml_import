@@ -123,6 +123,24 @@ def LinearSolver(solAlg, nonLinSol):
         ax1.plot(exp_num_x, data_regression, c=colors[iLinearSolverDataPoints], label=linSol_for_Legend[iLinearSolverDataPoints] + ': slope = ' + str(np.round(slope[0], 4)))
         #print('y_axis_interception: ' + str(y_axis_interception))
 
+    # plot a black dashed bisection line
+    iLinearSolverDataPoints = 2
+    vertically_stacked_tsv = pd.concat(
+        [all_intern_columns[7 * iLinearSolverDataPoints], all_intern_columns[7 * iLinearSolverDataPoints + 1],
+         all_intern_columns[7 * iLinearSolverDataPoints + 2], all_intern_columns[7 * iLinearSolverDataPoints + 3],
+         all_intern_columns[7 * iLinearSolverDataPoints + 4], all_intern_columns[7 * iLinearSolverDataPoints + 5],
+         all_intern_columns[7 * iLinearSolverDataPoints + 6]], axis=0)
+    vertically_stacked_tsv = vertically_stacked_tsv.reset_index(drop=True)
+    y_axis_interception, slope = linearRegression(vertically_stacked_tsv, 'state_variables', 'simulation_time')
+    num_x = [np.log10(p) for p in vertically_stacked_tsv['state_variables']]
+    data_simulation_time = [np.log10(q) for q in vertically_stacked_tsv['simulation_time']]
+    data_regression = [l[0] for l in
+                       [10 ** k for k in [y_axis_interception + j for j in [slope * i for i in num_x]]]]
+    exp_num_x = [10 ** m for m in list(num_x)]
+    ax1.plot(list(range(1, int(sorted(exp_num_x, reverse=True)[0]))),
+             list(range(1, int(sorted(exp_num_x, reverse=True)[0]))),
+             'k--', label='Bisection line: slope = 1')
+
     # plot legend
     ax1.legend(loc=1, fontsize=labelsize - 2, frameon=False)
 

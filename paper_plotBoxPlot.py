@@ -20,7 +20,7 @@ elif Multistep_Method == 'BDF':
 
 # important paths
 #tolerance_path = '../bachelor_thesis/Tolerance'
-tolerance_path = '../paper_SolverSettings/Tolerances_1e4/' + Multistep_Method                                                           #
+tolerance_path = '../paper_SolverSettings/TolerancesStudy/' + Multistep_Method                                                           #
 
 # main .tsv file to norm all other files
 main_tsv = pd.read_csv(tolerance_path + '/' + prefix + '06_06.tsv', sep='\t')                                                       #

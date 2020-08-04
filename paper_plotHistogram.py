@@ -7,7 +7,7 @@ import numpy as np
 from averageTime import *
 
 # important paths
-tolerance_path = '../paper_SolverSettings/Tolerances_1e4/BDF'
+tolerance_path = '../paper_SolverSettings/TolerancesStudy/BDF'
 
 # main .tsv file to norm all other files
 main_tsv = pd.read_csv(tolerance_path + '/2_06_06.tsv', sep='\t')
@@ -143,7 +143,7 @@ for iTolerance in range(0, len(tolerance_files)):
         #plot_histogram = ax1.hist(x=normed_list_perturb, range=None, bins=200, log=False)
     else:
         plot_histogram = ax1.hist(x=normed_list, range=None, bins=bins, log=False)
-    plt.text(x=1, y=90, s=str(round((len(normed_list) + main_intern_is_0_counter) / (len(normed_list) + zero_values_counter + main_intern_is_0_counter) * 100, 2)) + ' %', fontsize=fontsize)
+    plt.text(x=1, y=90, s=str(round(100 - (len(normed_list) + main_intern_is_0_counter) / (len(normed_list) + zero_values_counter + main_intern_is_0_counter) * 100, 2)) + ' %', fontsize=fontsize)
 
     # make top and right boxlines invisible
     ax1.spines['top'].set_visible(False)
