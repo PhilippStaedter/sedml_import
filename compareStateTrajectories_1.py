@@ -19,26 +19,35 @@ import time
 
 
 
-def compStaTraj(delete_counter):
+def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
     # create new folder for all json files
     if not os.path.exists('./json_folder'):
         os.makedirs('./json_folder')
 
     # set settings for simulation
-    for solAlg in [1, 2]:
-        for nonLinSol in [1, 2]:
-            for linSol in [1, 6, 7, 8, 9]:
-                '''
-                if solAlg == 1:
-                    MultistepMethod = 'Adams'
-                    Tolerance_combination = [[1e-3,1e-3], [1e-6,1e-3], [1e-6,1e-6], [1e-12,1e-12], [1e-16,1e-8]]
-                elif solAlg == 2:
-                    MultistepMethod = 'BDF'
-                    Tolerance_combination = [[1e-3,1e-3], [1e-6,1e-3], [1e-6,1e-6], [1e-12,1e-12], [1e-16,1e-8], [1e-14,1e-14], [1e-16,1e-16]]
-                '''
-                Tolerance_combination = [[1e-6, 1e-8], [1e-8, 1e-6], [1e-8, 1e-16], [1e-16, 1e-8],
-                                         [1e-10, 1e-12], [1e-12, 1e-10], [1e-14, 1e-14]]
+    algorithm = [1, 2]
+    if Algorithm != '':
+        Index_correct_algorithm = algorithm.index(Algorithm)
+        algorithm = algorithm[Index_correct_algorithm:]
+    for solAlg in algorithm:
 
+        iterative = [1, 2]
+        if Iterative != '':
+            Index_correct_nonlinsol = iterative.index(Iterative)
+            iterative = iterative[Index_correct_nonlinsol:]
+        for nonLinSol in iterative:
+
+            linearsol = [1, 6, 7]#, 8, 9]
+            if Linear != '':
+                Index_correct_linearsol = linearsol.index(Linear)
+                linearsol = linearsol[Index_correct_linearsol:]
+            for linSol in linearsol:
+
+                Tolerance_combination = [[1e-6, 1e-8], [1e-8, 1e-6]]#, [1e-8, 1e-16], [1e-16, 1e-8],
+                                         #[1e-10, 1e-12], [1e-12, 1e-10], [1e-14, 1e-14]]
+                if Tolerances != '':
+                    Index_correct_tolerances = Tolerance_combination.index(Tolerances)
+                    Tolerance_combination = Tolerance_combination[Index_correct_tolerances :]
                 for iTolerance in Tolerance_combination:
                     start = time.time()
 
@@ -57,25 +66,28 @@ def compStaTraj(delete_counter):
                     json_dictionary = json.loads(json_string)
 
                     # get all models
-                    list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models_newest_version_0.10.19'))
+                    list_directory_amici = sorted(os.listdir('../sbml2amici/test'))
                     if delete_counter != 0:
                         del list_directory_amici[0:delete_counter]
 
                     for iMod in range(0, len(list_directory_amici)):
 
                         iModel = list_directory_amici[iMod]
-                        list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
+                        #list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
+                        list_files = sorted(os.listdir('../sbml2amici/0.10.19_without_correct/' + iModel))
 
                         for iFile in list_files:
                             # iFile without .sbml extension
-                            iFile, extension = iFile.split('.', 1)
+                            #iFile, extension = iFile.split('.', 1)
 
+                            '''
                             # if this file is part of '../sbml2amici/correct_amici_models_paper', omit it
                             list_directory_correct_amici = sorted(os.listdir('../sbml2amici/correct_amici_models_paper'))
                             if iModel in list_directory_correct_amici:
                                 list_files_correct_amici = sorted(os.listdir('../sbml2amici/correct_amici_models_paper/' + iModel))
                                 if iFile in list_files_correct_amici:
                                     break
+                            '''
 
                             # important paths
                             json_save_path = './json_folder/' + f'json_files_{solAlg}_{nonLinSol}_{linSol}_{atol_exp}_{rtol_exp}' \
@@ -207,10 +219,31 @@ def compStaTraj(delete_counter):
                                     df_state_trajectory = pd.DataFrame(columns=column_names, data=state_trajectory)
                                 except:
                                     print('Try again for model ' + list_directory_amici[iMod] + '_' + iFile)
-                                    compStaTraj(iMod)
+                                    compStaTraj(iMod, solAlg, nonLinSol, linSol, iTolerance)
                                 df_state_trajectory.to_csv(json_save_path + '/' + iFile + '_model_simulation.csv', sep='\t')
                     end = time.time()
                     print(end - start)
 
+                # reset values - linear solver
+                Algorithm = ''
+                Iterative = ''
+                Linear = ''
+                Tolerances = ''
+
+            # reset values - nonlinear solver
+            Algorithm = ''
+            Iterative = ''
+            Linear = ''
+            Tolerances = ''
+
+        # reset values - solver algorithm
+        Algorithm = ''
+        Iterative = ''
+        Linear = ''
+        Tolerances = ''
+
+    print('All combinations have been satisfied!')
+    sys.exit()
+
 # call function, starting with no models to delete
-compStaTraj(0)
+compStaTraj(0, '', '', '', '')
