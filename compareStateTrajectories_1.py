@@ -19,10 +19,13 @@ import time
 
 
 
-def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
+def compStaTraj_JWS(delete_counter, Algorithm, Iterative, Linear, Tolerances):
     # create new folder for all json files
-    if not os.path.exists('./json_folder'):
-        os.makedirs('./json_folder')
+    folder_path = './FigS1_preselection'
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
+    #if not os.path.exists('./json_folder'):
+    #    os.makedirs('./json_folder')
 
     # set settings for simulation
     algorithm = [1, 2]
@@ -31,19 +34,20 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
         algorithm = algorithm[Index_correct_algorithm:]
     for solAlg in algorithm:
 
-        iterative = [1, 2]
+        iterative = [2] #[1, 2]
         if Iterative != '':
             Index_correct_nonlinsol = iterative.index(Iterative)
             iterative = iterative[Index_correct_nonlinsol:]
         for nonLinSol in iterative:
 
-            linearsol = [1, 6, 7]#, 8, 9]
+            linearsol = [9] #[1, 6, 7]#, 8, 9]
             if Linear != '':
                 Index_correct_linearsol = linearsol.index(Linear)
                 linearsol = linearsol[Index_correct_linearsol:]
             for linSol in linearsol:
 
-                Tolerance_combination = [[1e-6, 1e-8], [1e-8, 1e-6]]#, [1e-8, 1e-16], [1e-16, 1e-8],
+                Tolerance_combination = [[1e-3, 1e-3], [1e-6, 1e-3], [1e-6, 1e-6], [1e-12, 1e-10], [1e-14, 1e-14], [1e-16, 1e-8]]
+                                        #[[1e-6, 1e-8], [1e-8, 1e-6]]#, [1e-8, 1e-16], [1e-16, 1e-8],
                                          #[1e-10, 1e-12], [1e-12, 1e-10], [1e-14, 1e-14]]
                 if Tolerances != '':
                     Index_correct_tolerances = Tolerance_combination.index(Tolerances)
@@ -52,8 +56,23 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
                     start = time.time()
 
                     # split atol and rtol for naming purposes
-                    _,atol_exp = str(iTolerance[0]).split('-')
-                    _,rtol_exp = str(iTolerance[1]).split('-')
+                    atol_exp = str('{:.1e}'.format(iTolerance[0])).split('-')
+                    rtol_exp = str('{:.1e}'.format(iTolerance[1])).split('-')
+                    '''
+                    if iTolerance[0] == 0.001 or iTolerance[1] == 0.001:
+                        if iTolerance[0] == 0.001 and iTolerance[1] == 0.001:
+                            atol_exp = '03'
+                            rtol_exp = '03'
+                        elif iTolerance[0] == 0.001:
+                            atol_exp = '03'
+                            _, rtol_exp = str(iTolerance[1]).split('-')
+                        elif iTolerance[1] == 0.001:
+                            _, atol_exp = str(iTolerance[0]).split('-')
+                            rtol_exp = '03'
+                    else:
+                        _,atol_exp = str(iTolerance[0]).split('-')
+                        _,rtol_exp = str(iTolerance[1]).split('-')
+                    '''
                     if len(atol_exp) != 2:
                         atol_exp = '0' + atol_exp
                     if len(rtol_exp) != 2:
@@ -66,7 +85,7 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
                     json_dictionary = json.loads(json_string)
 
                     # get all models
-                    list_directory_amici = sorted(os.listdir('../sbml2amici/test'))
+                    list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models_newest_version_0.10.19'))      # /test
                     if delete_counter != 0:
                         del list_directory_amici[0:delete_counter]
 
@@ -74,7 +93,8 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
 
                         iModel = list_directory_amici[iMod]
                         #list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
-                        list_files = sorted(os.listdir('../sbml2amici/0.10.19_without_correct/' + iModel))
+                        #list_files = sorted(os.listdir('../sbml2amici/0.10.19_without_correct/' + iModel))
+                        list_files = sorted(os.listdir('../sbml2amici/amici_models_newest_version_0.10.19/' + iModel))
 
                         for iFile in list_files:
                             # iFile without .sbml extension
@@ -90,7 +110,7 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
                             '''
 
                             # important paths
-                            json_save_path = './json_folder/' + f'json_files_{solAlg}_{nonLinSol}_{linSol}_{atol_exp}_{rtol_exp}' \
+                            json_save_path = folder_path + '/' + f'json_files_{solAlg}_{nonLinSol}_{linSol}_{atol_exp}_{rtol_exp}' \
                                              + '/' + iModel + '/' + iFile
                             sedml_path = './sedml_models/' + iModel + '/' + iModel + '.sedml'
                             sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
@@ -246,4 +266,4 @@ def compStaTraj(delete_counter, Algorithm, Iterative, Linear, Tolerances):
     sys.exit()
 
 # call function, starting with no models to delete
-compStaTraj(0, '', '', '', '')
+compStaTraj_JWS(0, '', '', '', '')

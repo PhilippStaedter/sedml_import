@@ -1,4 +1,4 @@
-# script 1 to compare state trajectories from BioModels with trajectories of the simulation created by COPASI
+# script 2 to compare state trajectories from BioModels with trajectories of the simulation created by COPASI
 # => creates two important .tsv files
 
 # Attention:    boundary conditions are not being simulated by COPASI!
@@ -23,78 +23,76 @@ import itertools
 import time
 
 
-def compStaTraj_BioModels_2(atol,rtol):
+def compStaTraj_BioModels_2():
     # upper and lower boundaries for the absolute and relative errors
     AbsError_1 = range(-20, 10)
     RelError_2 = range(-20, 10)
 
     # create folder for all results
-    base_path = './COPASI_all_results_BDF_' + atol + '_' + rtol             # BDF
-    if not os.path.exists(base_path):
-        os.makedirs(base_path)
+    folder_path = './FigS1_preselection'
+    if not os.path.exists(folder_path):
+        print('Error: The folder FigS1_preselection should have been created by now!')
+        sys.exit()
 
-    # iterate over all error combinations
-    for iAbsError in range(0, len(AbsError_1)):
-        for iRelError in range(0, len(RelError_2)):
+    # filter for those that contain 'COPASI_'
+    del_counter = 0
+    list_simulation_data = sorted(os.listdir(folder_path))
+    for iItem in range(0, len(list_simulation_data)):
+        if not 'COPASI_' in list_simulation_data[iItem - del_counter]:
+            del list_simulation_data[iItem - del_counter]
+            del_counter += 1
 
-            if iAbsError != iRelError:
-                continue
+    for iSimDataGroup in list_simulation_data:
+        # get all hyperparameters
+        _, __, solAlg, nonLinSol, linSol, absTol, relTol = iSimDataGroup.split('_')
 
-            # set errors
-            abs_error = float('1e' + str(AbsError_1[iAbsError]))  # tighter conditions give back 'False' most of the time
-            rel_error = float('1e' + str(RelError_2[iRelError]))
+        # iterate over all error combinations
+        for iAbsError in range(0, len(AbsError_1)):
+            for iRelError in range(0, len(RelError_2)):
 
-            # int2str
-            abs_str = '{:.0e}'.format(float(abs_error))
-            rel_str = '{:.0e}'.format(float(rel_error))
+                if iAbsError != iRelError:
+                    continue
 
-            print(f"TOLERANCES: abs={abs_str} rel={rel_str}")
+                # set errors
+                abs_error = float('1e' + str(AbsError_1[iAbsError]))  # tighter conditions give back 'False' most of the time
+                rel_error = float('1e' + str(RelError_2[iRelError]))
 
-            # create folder for all .csv files of the results
-            if not os.path.exists(base_path + '/COPASI_' + abs_str + '_' + rel_str):
-                os.makedirs(base_path + '/COPASI_' + abs_str + '_' + rel_str)
+                # int2str
+                abs_str = '{:.0e}'.format(float(abs_error))
+                rel_str = '{:.0e}'.format(float(rel_error))
 
-            # set counter
-            counter = 0
+                print(f"TOLERANCES: abs={abs_str} rel={rel_str}")
 
-            # get all models
-            # list_directory_amici = sorted(os.listdir('../sbml2amici/amici_models_newest_version_0.10.19'))
-            list_directory_bio = sorted(os.listdir('./StateTrajectories_BioModels_COPASI_Data'))
-            if 'README.md' in list_directory_bio:
-                list_directory_bio.remove('README.md')
+                # set counter
+                counter = 0
 
-            # measure time needed for all models
-            start_time = time.time()
+                # measure time needed for all models
+                start_time = time.time()
 
-            # iterate over all models again
-            for iMod in range(0, len(list_directory_bio)):
-                iModel = list_directory_bio[iMod]
-                # iModel = 'Bungay2003'
-                list_files = sorted(os.listdir('./sedml_models/' + iModel + '/sbml_models'))
-
-                for iFile in list_files:
-                    print(f"    {iModel} :: {iFile}")
-
-                    # iFile without .sbml extension
-                    iFile, extension = iFile.split('.', 1)
+                # iterate over all models
+                list_directory_bio = sorted(os.listdir(folder_path + '/' + iSimDataGroup))
+                for iMod in range(0, len(list_directory_bio)):
+                    iModel = list_directory_bio[iMod]
+                    # iModel = 'Bungay2003'
 
                     # important paths
-                    old_bio_save_path = './StateTrajectories_BioModels_COPASI_Data/' + iModel
-                    new_bio_save_path = base_path + '/COPASI_' + abs_str + '_' + rel_str + '/' + iModel         # BDF
+                    old_bio_save_path = folder_path + '/' + iSimDataGroup + '/' + iModel
+                    new_bio_save_path = folder_path + '/' + f'all_results_COPASI_{solAlg}_{nonLinSol}_{linSol}_{absTol}_{relTol}' \
+                                         + '/' + 'json_files_' + abs_str + '_' + rel_str + '/' + iModel
 
                     if not os.path.exists(old_bio_save_path):
-                        print('Model ' + iModel + '_' + iFile + ' crashed some other way!')  # error 1
+                        print('Model ' + iModel + ' crashed some other way!')
                     else:
 
                         # create folder
-                        if not os.path.exists(base_path + '/COPASI_' + abs_str + '_' + rel_str + '/' + iModel):
-                            os.makedirs(base_path + '/COPASI_' + abs_str + '_' + rel_str + '/' + iModel)
+                        if not os.path.exists(new_bio_save_path):
+                            os.makedirs(new_bio_save_path)
 
                         # open COPASI_simulation .tsv file
-                        tsv_file = pd.read_csv(f"{old_bio_save_path}/COPASI_{iModel}_{atol}_{rtol}.tsv", sep='\t')
+                        tsv_file = pd.read_csv(f"{old_bio_save_path}/{iModel}_COPASI_simulation.tsv", sep='\t')
 
                         # open model_simulation .tsv file
-                        df_state_trajectory = pd.read_csv(f"{old_bio_save_path}/AMICI_{iModel}_{atol}_{rtol}.tsv", sep='\t')
+                        df_state_trajectory = pd.read_csv(f"{old_bio_save_path}/{iModel}_model_simulation.tsv", sep='\t')
 
                         # columns names of COPASI file
                         column_names = list(tsv_file.columns)
@@ -150,4 +148,4 @@ def compStaTraj_BioModels_2(atol,rtol):
 
 
 # call function
-compStaTraj_BioModels_2('14','14')
+compStaTraj_BioModels_2()
