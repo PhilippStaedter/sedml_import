@@ -56,13 +56,13 @@ def compStaTraj_JWS(delete_counter, Algorithm, Iterative, Linear, Tolerances):
         algorithm = algorithm[Index_correct_algorithm:]
     for solAlg in algorithm:
 
-        iterative = [1, 2]
+        iterative = [2] #[1]
         if Iterative != '':
             Index_correct_nonlinsol = iterative.index(Iterative)
             iterative = iterative[Index_correct_nonlinsol:]
         for nonLinSol in iterative:
 
-            linearsol = [1, 6, 7, 8, 9]
+            linearsol = [6, 7, 8, 9] #[1]
             if Linear != '':
                 Index_correct_linearsol = linearsol.index(Linear)
                 linearsol = linearsol[Index_correct_linearsol:]
