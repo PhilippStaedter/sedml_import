@@ -199,6 +199,7 @@ def changeCpsFile(iModel, iFile):
 
 def simLSODA(iModel, iFile):
     # create a data frame to save the results
+    df_save_path = f'../copasi_sim/{iModel}/{iFile}/{iModel}_{File}_results.tsv'
     columns = ['setting', 'id', 't_intern_ms', 't_extern_ms']
     df = pd.DataFrame(columns=columns, data=[])
 
@@ -230,7 +231,7 @@ def simLSODA(iModel, iFile):
             t = time() - start
             extern_simulation_time.append(t)
 
-            # open .tsv file to get intern CPU simulation time + delete file to save space
+            # open .tsv file to get intern CPU simulation time and delete file to save space
             path_results_file = f'../copasi_sim/{iModel}/{iFile}/copasi_results_{iRep}.tsv'
             cps_sim_file = pd.read_csv(path_results_file, sep='\t')
             intern_simulation_time.append(cps_sim_file['(Timer)CPU Time'][100])
@@ -242,6 +243,55 @@ def simLSODA(iModel, iFile):
         df['t_intern_ms'][iTol] = np.median(intern_simulation_time)
         df['t_extern_ms'][iTol] = np.median(extern_simulation_time)
 
+        # save data frame
+        df.to_csv(df_save_path, sep='\t', index=False)
+
+
+
+def wholeStudyCOPASI():
+    # important paths
+    base_path_copasi = '../copasi_sim'
+    new_df_save_path = '../paper_SolverSettings/WholeStudy_LSODA'
+
+    # create folder
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+
+    # create one new data frame for all settings
+    abs_tol = [1e-08, 1e-6, 1e-12, 1e-10, 1e-14, 1e-16, 1e-8]
+    rel_tol = [1e-6, 1e-8, 1e-10, 1e-12, 1e-14, 1e-8, 1e-16]
+    atol = [str(Tol).split('-')[1] for Tol in abs_tol]
+    rtol = [str(Tol).split('-')[1] for Tol in rel_tol]
+    for iTol in range(0, len(atol)):
+        AbsTol = atol[iTol]
+        RelTol = rtol[iTol]
+
+        # create a new data frame
+        columns = ['id', 't_intern_ms', 't_extern_ms']
+        df_new = pd.DataFrame(columns=columns, data=[])
+
+        # open all results files and index after the setting
+        counter = 0
+        correct_models = sorted(os.listdir(base_path_copasi))
+        for iModel in correct_models:
+            correct_sbmls = sorted(os.listdir(base_path_copasi + '/' + iModel))
+            for iFile in correct_sbmls:
+                df_old = pd.read_csv(f'../copasi_sim/{iModel}/{iFile}/{iModel}_{iFile}_results.tsv', sep='\t')
+
+                # add a row to the original data frame
+                df_new = df_new.append({}, ignore_index=True)
+
+                # look for the correct setting
+                for iSetting in range(0, len(df_old['setting']))
+                    if df_old['setting'][iSetting] == f'{AbsTol}_{RelTol}'
+                        df_new['id'][counter] = df_old['id'][iSetting]
+                        df_new['t_intern_ms'][counter] = df_old['t_intern_ms'][iSetting]
+                        df_new['t_extern_ms'][counter] = df_old['t_extern_ms'][iSetting]
+                # raise counetr
+                counter += 1
+
+        # save new data frame
+        df_new.to_csv(f'{new_df_save_path}/(1,2)_2_1_{AbsTol}_{RelTol}.tsv', sep='\t', index=False)
 
 
 
@@ -251,10 +301,12 @@ def simLSODA(iModel, iFile):
 correct_amici_models = '../sbml2amici/correct_amici_models_paper'
 correct_amici_models_16 = '../sbml2amici/correct_amici_models_paper_16'
 
-# 4
+# combine all results to one whole LSODA study
+wholeStudyCOPASI()
+
 
 #'''
-# 3
+# simulate all .cps files using COPASI's LSODA
 iModel = 'aguda1999_fig5c'
 iFile = 'model0_aguda1'
 #iModel = 'Leloup1999'
@@ -263,7 +315,7 @@ simLSODA(iModel, iFile)
 a = 4
 #'''
 
-# 2
+# get all changes for tht sbml or xml model
 iModel = 'aguda1999_fig5c'
 iFile = 'model0_aguda1'
 #iModel = 'Leloup1999'
@@ -272,7 +324,7 @@ changeCpsFile(iModel, iFile)
 a = 4
 
 
-# 1
+# create all .cps files necessary for a COPASI-LSODA study
 counter = 0
 correct_models = sorted(os.listdir(correct_amici_models))
 correct_models_16 = sorted(os.listdir(correct_amici_models_16))
