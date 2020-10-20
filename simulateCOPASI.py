@@ -58,8 +58,8 @@ def getTimeCourse(iModel, iFile):
             sim_end_time = all_simulations.getOutputEndTime()
             sim_num_time_points = all_simulations.getNumberOfPoints()
 
-            # replace 'sim_num_time_points' by default value 101 for trajectory comparison in the end
-            sim_num_time_points = 101
+            # replace 'sim_num_time_points' by default value 100 for trajectory comparison in the end
+            sim_num_time_points = 100
 
     return model_name, sim_start_time, sim_end_time, sim_num_time_points
 
@@ -98,7 +98,7 @@ def getSimTable(iModel, iFile):
                     spec_and_type.append([comp_and_type[iComp][1], sbml_file.getModel().getSpecies(iSpec).getName(), 'Concentration'])
                 else:
                     spec_and_type.append([comp_and_type[iComp][1], sbml_file.getModel().getSpecies(iSpec).getId(), 'Concentration'])
-
+    '''
     # get parameters that are not constant
     num_par = sbml_file.getModel().getNumParameters()
     par_and_type = []
@@ -109,15 +109,15 @@ def getSimTable(iModel, iFile):
                 par_and_type.append([sbml_file.getModel().getParameter(iPar).getName(), 'Value'])
             else:
                 par_and_type.append([sbml_file.getModel().getParameter(iPar).getId(), 'Value'])
-
-    return spec_and_type, par_and_type
+    '''
+    return spec_and_type#, par_and_type
 
 
 def createCpsFiles(iModel, iFile):
     # important paths
     path_copasiSE = '../Documents/Software/COPASI/bin/CopasiSE'
-    sbml_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.sbml'
-    biomodels_path = './sedml_models/' + iModel + '/sbml_models/' + iFile + '.xml'
+    sbml_path = '../copasi_sim/' + iModel + '/' + iFile + '/' + iModel + '.sbml'
+    biomodels_path = '../copasi_sim/' + iModel + '/' + iFile + '/' + iModel + '.xml'
     save_path = '../copasi_sim/' + iModel + '/' + iFile + '/' + iModel + '.cps'
 
     # check for type of model
@@ -153,7 +153,7 @@ def changeCpsFile(iModel, iFile):
         changed_cps_file = open(new_path_cps + '/Changed_' + iModel + '_' + AbsTol + '_' + RelTol + '.cps', 'w')
 
         # get data for the simulation table
-        spec_and_type, par_and_type = getSimTable(iModel, iFile)
+        spec_and_type = getSimTable(iModel, iFile)      #, par_and_type
 
         for line in cps_file:
             if 'type="timeCourse" scheduled="false" updateModel="false"' in line:
@@ -186,8 +186,10 @@ def changeCpsFile(iModel, iFile):
                 changed_cps_file.write(f'        <Object cn="CN=Root,Model={model_name},Reference=Time"/> \n')
                 for iLine in range(0, len(spec_and_type)):
                     changed_cps_file.write(f'        <Object cn="CN=Root,Model={model_name},Vector=Compartments[{spec_and_type[iLine][0]}],Vector=Metabolites[{spec_and_type[iLine][1]}],Reference={spec_and_type[iLine][2]}"/> \n')
+                '''
                 for iLine in range(0, len(par_and_type)):
                     changed_cps_file.write(f'        <Object cn="CN=Root,Model={model_name},Vector=Values[{par_and_type[iLine][0]}],Reference={par_and_type[iLine][1]}"/> \n')
+                '''
                 changed_cps_file.write(f'        <Object cn="CN=Root,Timer=CPU Time"/> \n')
                 changed_cps_file.write(f'        <Object cn="CN=Root,Timer=Wall Clock Time"/> \n')
                 changed_cps_file.write(f'      </Table> \n')
@@ -199,7 +201,7 @@ def changeCpsFile(iModel, iFile):
 
 def simLSODA(iModel, iFile):
     # create a data frame to save the results
-    df_save_path = f'../copasi_sim/{iModel}/{iFile}/{iModel}_{File}_results.tsv'
+    df_save_path = f'../copasi_sim/{iModel}/{iFile}/{iModel}_{iFile}_results.tsv'
     columns = ['setting', 'id', 't_intern_ms', 't_extern_ms']
     df = pd.DataFrame(columns=columns, data=[])
 
@@ -231,11 +233,18 @@ def simLSODA(iModel, iFile):
             t = time() - start
             extern_simulation_time.append(t)
 
-            # open .tsv file to get intern CPU simulation time and delete file to save space
-            path_results_file = f'../copasi_sim/{iModel}/{iFile}/copasi_results_{iRep}.tsv'
-            cps_sim_file = pd.read_csv(path_results_file, sep='\t')
-            intern_simulation_time.append(cps_sim_file['(Timer)CPU Time'][100])
-            os.remove(path_results_file)
+            # try to open .tsv file to get intern CPU simulation time and delete file to save space
+            try:
+                path_results_file = f'../copasi_sim/{iModel}/{iFile}/copasi_results_{iRep}.tsv'
+                cps_sim_file = pd.read_csv(path_results_file, sep='\t')
+                length_time = len(list(cps_sim_file['(Timer)CPU Time']))
+                intern_simulation_time.append(cps_sim_file['(Timer)CPU Time'][length_time - 1])
+                os.remove(path_results_file)
+            except:
+                intern_simulation_time.append(0)
+
+        # one last time to keep the state trajectories
+        os.system(f'{path_copasiSE} --report-file copasi_trajectories_{AbsTol}_{RelTol}.tsv {path_cps}')
 
         # write medians in the data frame
         df['setting'][iTol] = f'{AbsTol}_{RelTol}'
@@ -243,8 +252,10 @@ def simLSODA(iModel, iFile):
         df['t_intern_ms'][iTol] = np.median(intern_simulation_time)
         df['t_extern_ms'][iTol] = np.median(extern_simulation_time)
 
-        # save data frame
-        df.to_csv(df_save_path, sep='\t', index=False)
+        print(str(iTol) + ' done!')
+
+    # save data frame
+    df.to_csv(df_save_path, sep='\t', index=False)
 
 
 
@@ -254,8 +265,8 @@ def wholeStudyCOPASI():
     new_df_save_path = '../paper_SolverSettings/WholeStudy_LSODA'
 
     # create folder
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+    if not os.path.exists(new_df_save_path):
+        os.makedirs(new_df_save_path)
 
     # create one new data frame for all settings
     abs_tol = [1e-08, 1e-6, 1e-12, 1e-10, 1e-14, 1e-16, 1e-8]
@@ -282,12 +293,12 @@ def wholeStudyCOPASI():
                 df_new = df_new.append({}, ignore_index=True)
 
                 # look for the correct setting
-                for iSetting in range(0, len(df_old['setting']))
-                    if df_old['setting'][iSetting] == f'{AbsTol}_{RelTol}'
+                for iSetting in range(0, len(df_old['setting'])):
+                    if df_old['setting'][iSetting] == f'{AbsTol}_{RelTol}':
                         df_new['id'][counter] = df_old['id'][iSetting]
                         df_new['t_intern_ms'][counter] = df_old['t_intern_ms'][iSetting]
                         df_new['t_extern_ms'][counter] = df_old['t_extern_ms'][iSetting]
-                # raise counetr
+                # raise counter
                 counter += 1
 
         # save new data frame
@@ -301,11 +312,12 @@ def wholeStudyCOPASI():
 correct_amici_models = '../sbml2amici/correct_amici_models_paper'
 correct_amici_models_16 = '../sbml2amici/correct_amici_models_paper_16'
 
+'''
 # combine all results to one whole LSODA study
 wholeStudyCOPASI()
-
-
-#'''
+a = 4
+'''
+'''
 # simulate all .cps files using COPASI's LSODA
 iModel = 'aguda1999_fig5c'
 iFile = 'model0_aguda1'
@@ -313,8 +325,8 @@ iFile = 'model0_aguda1'
 #iFile = 'Leloup1999'
 simLSODA(iModel, iFile)
 a = 4
-#'''
-
+'''
+'''
 # get all changes for tht sbml or xml model
 iModel = 'aguda1999_fig5c'
 iFile = 'model0_aguda1'
@@ -322,24 +334,26 @@ iFile = 'model0_aguda1'
 #iFile = 'Leloup1999'
 changeCpsFile(iModel, iFile)
 a = 4
-
+'''
 
 # create all .cps files necessary for a COPASI-LSODA study
 counter = 0
 correct_models = sorted(os.listdir(correct_amici_models))
 correct_models_16 = sorted(os.listdir(correct_amici_models_16))
 correct_trajectories = correct_models + correct_models_16
+correct_trajectories = correct_trajectories[12:]
 for iModel in correct_trajectories:
     if iModel in correct_models:
         sbmls = sorted(os.listdir(correct_amici_models + '/' + iModel))
     elif iModel in correct_models_16:
         sbmls = sorted(os.listdir(correct_amici_models_16 + '/' + iModel))
     for iFile in sbmls:
-        iModel = 'Leloup1999'
-        iFile = 'Leloup1999'
-        #iModel = 'aguda1999_fig5c'
-        #iFile = 'model0_aguda1'
         createCpsFiles(iModel, iFile)
+        changeCpsFile(iModel, iFile)
+        simLSODA(iModel, iFile)
         counter += 1
     print('Model: ' + iModel + ' done!')
 print('Final Number : ' + str(counter))
+
+# combine all results to one whole LSODA study
+wholeStudyCOPASI()
