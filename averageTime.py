@@ -27,33 +27,54 @@ def averaging(next_tsv):
             if next_tsv['id'][iFile] == next_tsv['id'][iFile + 1] and next_tsv['state_variables'][iFile] == next_tsv['state_variables'][iFile + 1]:    # first element
                 # find all exceptions by hand and type them in manually --- no clear rule existing
                 if next_tsv['id'][iFile] == '{kolodkin2010_figure2b}':
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = ''
-                    new_df.loc[iFile - repetition].t_extern_ms = ''
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = ''
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = ''
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
             else:
-                new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'id' in columns:
+                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                if 't_intern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                if 't_extern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                if 'state_variables' in columns:
+                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                if 'parameters' in columns:
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                if 'status' in columns:
+                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                if 'error_message' in columns:
+                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                 if 'reactions' in columns:
                     new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
@@ -63,67 +84,109 @@ def averaging(next_tsv):
                next_tsv['id'][iFile] == next_tsv['id'][iFile - 1] and next_tsv['state_variables'][iFile] == next_tsv['state_variables'][iFile - 1]:
                 # find all exceptions by hand and type them in manually --- no clear rule existing
                 if next_tsv['id'][iFile] == '{kolodkin2010_figure2b}':
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = ''
-                    new_df.loc[iFile - repetition].t_extern_ms = ''
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = ''
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = ''
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
             else:
-                new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'id' in columns:
+                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                if 't_intern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                if 't_extern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                if 'state_variables' in columns:
+                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                if 'parameters' in columns:
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                if 'status' in columns:
+                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                if 'error_message' in columns:
+                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                 if 'reactions' in columns:
                     new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
         else:
-            if next_tsv['id'][iFile] == next_tsv['id'][iFile - 1] and next_tsv['state_variables'][iFile] == next_tsv['state_variables'][iFile + 1]:  # last element
+            if next_tsv['id'][iFile] == next_tsv['id'][iFile - 1] and next_tsv['state_variables'][iFile] == next_tsv['state_variables'][iFile - 1]:  # last element
                 # find all exceptions by hand and type them in manually --- no clear rule existing
                 if next_tsv['id'][iFile] == '{kolodkin2010_figure2b}':
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
                 else:
-                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                    new_df.loc[iFile - repetition].t_intern_ms = ''
-                    new_df.loc[iFile - repetition].t_extern_ms = ''
-                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                    if 'id' in columns:
+                        new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                    if 't_intern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_intern_ms = ''
+                    if 't_extern_ms' in columns:
+                        new_df.loc[iFile - repetition].t_extern_ms = ''
+                    if 'state_variables' in columns:
+                        new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                    if 'parameters' in columns:
+                        new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                    if 'status' in columns:
+                        new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                    if 'error_message' in columns:
+                        new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                     if 'reactions' in columns:
                         new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
             else:
-                new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
-                new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
-                new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
-                new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
-                new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
-                new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
-                new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
+                if 'id' in columns:
+                    new_df.loc[iFile - repetition].id = next_tsv['id'][iFile]
+                if 't_intern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_intern_ms = next_tsv['t_intern_ms'][iFile]
+                if 't_extern_ms' in columns:
+                    new_df.loc[iFile - repetition].t_extern_ms = next_tsv['t_extern_ms'][iFile]
+                if 'state_variables' in columns:
+                    new_df.loc[iFile - repetition].state_variables = next_tsv['state_variables'][iFile]
+                if 'parameters' in columns:
+                    new_df.loc[iFile - repetition].parameters = next_tsv['parameters'][iFile]
+                if 'status' in columns:
+                    new_df.loc[iFile - repetition].status = next_tsv['status'][iFile]
+                if 'error_message' in columns:
+                    new_df.loc[iFile - repetition].error_message = next_tsv['error_message'][iFile]
                 if 'reactions' in columns:
                     new_df.loc[iFile - repetition].reactions = next_tsv['reactions'][iFile]
 
@@ -158,50 +221,50 @@ def averaging(next_tsv):
             else:                                                                                                           # last element of the list --- can't be dublicate any more
                 'Do nothing for now'
 
+    if 't_intern_ms' in columns or 't_extern_ms' in columns:
+        # get right values --- only possible if t_intern_ms or t_extern_ms exist
+        temp_1 = []
+        temp_2 = []
+        output_1 = []
+        output_2 = []
+        for iFile in range(0, len(new_df['id'])):
+            # search for blank space
+            if new_df['t_intern_ms'][iFile] == '':
+                name = new_df['id'][iFile]
+                for iOldFile in range(0, len(next_tsv['id'])):
+                    if next_tsv['id'][iOldFile] == name:
+                        temp_1.append(next_tsv['t_intern_ms'][iOldFile])
+                        temp_2.append(next_tsv['t_extern_ms'][iOldFile])
+                    else:
+                        output_1.append(temp_1)
+                        output_2.append(temp_2)
+                        if output_1[len(output_1) - 1] == []:
+                            del output_1[len(output_1) - 1]
+                        temp_1 = []
+                        if output_2[len(output_2) - 1] == []:
+                            del output_2[len(output_2) - 1]
+                        temp_2 = []
 
-    # get right values
-    temp_1 = []
-    temp_2 = []
-    output_1 = []
-    output_2 = []
-    for iFile in range(0, len(new_df['id'])):
-        # search for blank space
-        if new_df['t_intern_ms'][iFile] == '':
-            name = new_df['id'][iFile]
-            for iOldFile in range(0, len(next_tsv['id'])):
-                if next_tsv['id'][iOldFile] == name:
-                    temp_1.append(next_tsv['t_intern_ms'][iOldFile])
-                    temp_2.append(next_tsv['t_extern_ms'][iOldFile])
-                else:
+                if temp_1:
                     output_1.append(temp_1)
+                if temp_2:
                     output_2.append(temp_2)
-                    if output_1[len(output_1) - 1] == []:
-                        del output_1[len(output_1) - 1]
-                    temp_1 = []
-                    if output_2[len(output_2) - 1] == []:
-                        del output_2[len(output_2) - 1]
-                    temp_2 = []
 
-            if temp_1:
-                output_1.append(temp_1)
-            if temp_2:
-                output_2.append(temp_2)
+        # divide through values
+        divided_numbers_1 = []
+        divided_numbers_2 = []
+        for iNum in range(0, len(output_1)):
+            divided_numbers_1.append(sum(output_1[iNum])/len(output_1[iNum]))
+        for iNum in range(0, len(output_2)):
+            divided_numbers_2.append(sum(output_2[iNum]) / len(output_2[iNum]))
 
-    # divide through values
-    divided_numbers_1 = []
-    divided_numbers_2 = []
-    for iNum in range(0, len(output_1)):
-        divided_numbers_1.append(sum(output_1[iNum])/len(output_1[iNum]))
-    for iNum in range(0, len(output_2)):
-        divided_numbers_2.append(sum(output_2[iNum]) / len(output_2[iNum]))
-
-    # assign to right place by deleting the first argument
-    for iFile in range(0, len(new_df['id'])):
-        if new_df['t_intern_ms'][iFile] == '':
-            new_df['t_intern_ms'][iFile] = divided_numbers_1[0]
-            new_df['t_extern_ms'][iFile] = divided_numbers_2[0]
-            divided_numbers_1.pop(0)
-            divided_numbers_2.pop(0)
+        # assign to right place by deleting the first argument
+        for iFile in range(0, len(new_df['id'])):
+            if new_df['t_intern_ms'][iFile] == '':
+                new_df['t_intern_ms'][iFile] = divided_numbers_1[0]
+                new_df['t_extern_ms'][iFile] = divided_numbers_2[0]
+                divided_numbers_1.pop(0)
+                divided_numbers_2.pop(0)
 
     # change id for uniquenes of kolodkin
     for iMod in range(0, len(new_df['id'])):
@@ -215,3 +278,4 @@ def averaging(next_tsv):
 #file = pd.read_csv('../paper_SolverSettings/WholeStudy/1_1_1_06_08.tsv', sep='\t')
 #file = pd.read_csv('../bachelor_thesis/LinearSolver/1_08_06.tsv', sep='\t')
 #averaging(file)
+#a = 4
