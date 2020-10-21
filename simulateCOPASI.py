@@ -264,6 +264,8 @@ def simLSODA(iModel, iFile):
 
 def wholeStudyCOPASI():
     # important paths
+    correct_amici_models = '../sbml2amici/correct_amici_models_paper'
+    correct_amici_models_16 = '../sbml2amici/correct_amici_models_paper_16'
     base_path_copasi = '../copasi_sim'
     new_df_save_path = '../paper_SolverSettings/WholeStudy_LSODA'
 
@@ -286,11 +288,13 @@ def wholeStudyCOPASI():
 
         # open all results files and index after the setting
         counter = 0
-        correct_models = sorted(os.listdir(base_path_copasi))
-        for iModel in correct_models:
+        correct_models = sorted(os.listdir(correct_amici_models))
+        correct_models_16 = sorted(os.listdir(correct_amici_models_16))
+        correct_trajectories = correct_models + correct_models_16
+        for iModel in correct_trajectories:
             correct_sbmls = sorted(os.listdir(base_path_copasi + '/' + iModel))
             for iFile in correct_sbmls:
-                df_old = pd.read_csv(f'../copasi_sim/{iModel}/{iFile}/{iModel}_{iFile}_results.tsv', sep='\t')
+                df_old = pd.read_csv(f'{base_path_copasi}/{iModel}/{iFile}/{iModel}_{iFile}_results.tsv', sep='\t')
 
                 # add a row to the original data frame
                 df_new = df_new.append({}, ignore_index=True)
@@ -315,13 +319,12 @@ def wholeStudyCOPASI():
 correct_amici_models = '../sbml2amici/correct_amici_models_paper'
 correct_amici_models_16 = '../sbml2amici/correct_amici_models_paper_16'
 
-
+'''
 # create all .cps files necessary for a COPASI-LSODA study
 counter = 0
 correct_models = sorted(os.listdir(correct_amici_models))
 correct_models_16 = sorted(os.listdir(correct_amici_models_16))
 correct_trajectories = correct_models + correct_models_16
-correct_trajectories = correct_trajectories[56:]
 for iModel in correct_trajectories:
     if iModel in correct_models:
         sbmls = sorted(os.listdir(correct_amici_models + '/' + iModel))
@@ -334,7 +337,7 @@ for iModel in correct_trajectories:
         counter += 1
     print('Model: ' + iModel + ' done!')
 print('Final Number : ' + str(counter))
-
+'''
 
 # combine all results to one whole LSODA study
 wholeStudyCOPASI()
