@@ -148,8 +148,11 @@ def changeCpsFile(iModel, iFile):
         AbsTol = atol[iTol]
         RelTol = rtol[iTol]
 
-        # open .cps as text file and save it as new .cps file
-        cps_file = open(path_cps, 'r')
+        # try to open .cps as text file and save it as new .cps file
+        try:
+            cps_file = open(path_cps, 'r')
+        except:
+            break
         changed_cps_file = open(new_path_cps + '/Changed_' + iModel + '_' + AbsTol + '_' + RelTol + '.cps', 'w')
 
         # get data for the simulation table
@@ -312,36 +315,13 @@ def wholeStudyCOPASI():
 correct_amici_models = '../sbml2amici/correct_amici_models_paper'
 correct_amici_models_16 = '../sbml2amici/correct_amici_models_paper_16'
 
-'''
-# combine all results to one whole LSODA study
-wholeStudyCOPASI()
-a = 4
-'''
-'''
-# simulate all .cps files using COPASI's LSODA
-iModel = 'aguda1999_fig5c'
-iFile = 'model0_aguda1'
-#iModel = 'Leloup1999'
-#iFile = 'Leloup1999'
-simLSODA(iModel, iFile)
-a = 4
-'''
-'''
-# get all changes for tht sbml or xml model
-iModel = 'aguda1999_fig5c'
-iFile = 'model0_aguda1'
-#iModel = 'Leloup1999'
-#iFile = 'Leloup1999'
-changeCpsFile(iModel, iFile)
-a = 4
-'''
 
 # create all .cps files necessary for a COPASI-LSODA study
 counter = 0
 correct_models = sorted(os.listdir(correct_amici_models))
 correct_models_16 = sorted(os.listdir(correct_amici_models_16))
 correct_trajectories = correct_models + correct_models_16
-correct_trajectories = correct_trajectories[12:]
+correct_trajectories = correct_trajectories[56:]
 for iModel in correct_trajectories:
     if iModel in correct_models:
         sbmls = sorted(os.listdir(correct_amici_models + '/' + iModel))
@@ -354,6 +334,7 @@ for iModel in correct_trajectories:
         counter += 1
     print('Model: ' + iModel + ' done!')
 print('Final Number : ' + str(counter))
+
 
 # combine all results to one whole LSODA study
 wholeStudyCOPASI()
