@@ -315,6 +315,7 @@ def wholeStudyCOPASI():
                         df_new['id'][counter] = df_old['id'][iSetting]
                         df_new['t_intern_ms'][counter] = df_old['t_intern_ms'][iSetting]
                         df_new['t_extern_ms'][counter] = df_old['t_extern_ms'][iSetting]
+                        df_new['state_variables'][counter] = df_old['state_variables'][iSetting]
                 # raise counter
                 counter += 1
 
