@@ -225,6 +225,8 @@ def simLSODA(iModel, iFile):
         # important paths
         path_copasiSE = '../Documents/Software/COPASI/bin/CopasiSE'
         path_cps = f'../copasi_sim/{iModel}/{iFile}/Changed_{iModel}_{AbsTol}_{RelTol}.cps'
+        path_sbml = f'./sedml_models/{iModel}/sbml_models/{iFile}.sbml'
+        path_xml = f'./sedml_models/{iModel}/sbml_models/{iFile}.xml'
 
         # simulation using COPASI's LSODA
         number_of_repetitions = 40
@@ -255,6 +257,14 @@ def simLSODA(iModel, iFile):
         df['t_intern_ms'][iTol] = np.median(intern_simulation_time)
         df['t_extern_ms'][iTol] = np.median(extern_simulation_time)
 
+        # save the model's state variables needed for the script 'averageTime.py'
+        if os.path.exists(path_sbml):
+            sbml_file = libsbml.readSBML(path_sbml)
+        elif os.path.exists(path_xml):
+            sbml_file = libsbml.readSBML(path_xml)
+        num_species = sbml_file.getModel().getNumSpecies()
+        df['state_variables'][iTol] = num_species
+
         print(str(iTol) + ' done!')
 
     # save data frame
@@ -283,7 +293,7 @@ def wholeStudyCOPASI():
         RelTol = rtol[iTol]
 
         # create a new data frame
-        columns = ['id', 't_intern_ms', 't_extern_ms']
+        columns = ['id', 't_intern_ms', 't_extern_ms', 'state_variables']
         df_new = pd.DataFrame(columns=columns, data=[])
 
         # open all results files and index after the setting
