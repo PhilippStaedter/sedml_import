@@ -12,6 +12,7 @@ def Multistep():
 
     # important paths
     base_path = '../paper_SolverSettings/WholeStudy'
+    base_path_LSODA = '../paper_SolverSettings/WholeStudy_LSODA'
 
     # list of all data frames for nonLinSol == 1 for better indexing in the future
     all_intern_columns_1 = [pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]),
@@ -53,46 +54,58 @@ def Multistep():
                           pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]),
                           pd.DataFrame(columns=[]), pd.DataFrame(columns=[])]
 
-    all_intern_columns = [all_intern_columns_1, all_intern_columns_2]
+    # list of all data frames for nonLinSol == (1,2) for better indexing in the future
+    all_intern_columns_LSODA = [pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]),
+                                 pd.DataFrame(columns=[]), pd.DataFrame(columns=[]), pd.DataFrame(columns=[]),
+                                 pd.DataFrame(columns=[])]
+
+    all_intern_columns = all_intern_columns_1 + all_intern_columns_2 + all_intern_columns_LSODA
     column_names = []
 
     # choose only the correct files
-    all_files = sorted(os.listdir(base_path))
+    all_files_AMICI = sorted(os.listdir(base_path))
+    all_files_LSODA = sorted(os.listdir(base_path_LSODA))
+    all_files = all_files_AMICI + all_files_LSODA
     correct_files_1 = []
     correct_files_2 = []
+    correct_files_LSODA = []
     for iFile in range(0, len(all_files)):
         if all_files[iFile].split('_')[0] == '1':
             correct_files_1.append(all_files[iFile])
         elif all_files[iFile].split('_')[0] == '2':
             correct_files_2.append(all_files[iFile])
-    correct_files = [correct_files_1, correct_files_2]
+        elif all_files[iFile].split('_')[0] == '(1,2)':
+            correct_files_LSODA.append(all_files[iFile])
+    correct_files = correct_files_1 + correct_files_2 + correct_files_LSODA
 
     # open all .tsv linear solver files + save right column in data frame
-    for iNonLinSol in range(0, len(correct_files)):
-        for iCorrectFile in range(0, len(correct_files_1)):  # each .tsv file
-            next_tsv = pd.read_csv(base_path + '/' + correct_files[iNonLinSol][iCorrectFile], sep='\t')
+    for iModel in range(0, len(correct_files)):
+        if correct_files[iModel] in correct_files_1 + correct_files_2:
+            next_tsv = pd.read_csv(base_path + '/' + correct_files[iModel], sep='\t')
+        elif correct_files[iModel] in correct_files_LSODA:
+            next_tsv = pd.read_csv(base_path_LSODA + '/' + correct_files[iModel], sep='\t')
 
-            # change .tsv-id form e.g. 1_06_10.tsv to 06_10
-            new_name = correct_files[iNonLinSol][iCorrectFile].split('.')[0].split('_')[3] + '_' + \
-                       correct_files[iNonLinSol][iCorrectFile].split('.')[0].split('_')[4]
+        # change .tsv-id form e.g. 1_06_10.tsv to 06_10
+        new_name = correct_files[iModel].split('.')[0].split('_')[3] + '_' + \
+                   correct_files[iModel].split('.')[0].split('_')[4]
 
-            # reset after each iteration
-            next_time_value = []
-            num_x = []
+        # reset after each iteration
+        next_time_value = []
+        num_x = []
 
-            # open next file
-            next_tsv = averaging(next_tsv)
+        # open next file
+        next_tsv = averaging(next_tsv)
 
-            # get the correct values
-            for iFile in range(0, len(next_tsv['id'])):  # each file
-                if next_tsv['t_intern_ms'][iFile] != 0:
-                    next_time_value.append(next_tsv['t_intern_ms'][iFile])
-                    num_x.append(next_tsv['state_variables'][iFile])
+        # get the correct values
+        for iFile in range(0, len(next_tsv['id'])):
+            if next_tsv['t_intern_ms'][iFile] != 0:
+                next_time_value.append(next_tsv['t_intern_ms'][iFile])
+                num_x.append(next_tsv['state_variables'][iFile])
 
-            # append new column to existing data frame with correct values
-            column_names.append(str(new_name))
-            all_intern_columns[iNonLinSol][iCorrectFile]['state_variables'] = pd.Series(num_x)
-            all_intern_columns[iNonLinSol][iCorrectFile][str(new_name)] = pd.Series(next_time_value)
+        # append new column to existing data frame with correct values
+        column_names.append(str(new_name))
+        all_intern_columns[iModel]['state_variables'] = pd.Series(num_x)
+        all_intern_columns[iModel][str(new_name)] = pd.Series(next_time_value)
 
     # length of the last file
     file_length = len(next_tsv['id'])
@@ -118,12 +131,14 @@ def Multistep():
     # plot one density plot
     ax = plt.axes()
     index = np.arange(39)
+    index_2 = np.arange(7)
 
     # initialize y-data
     adams_data_1 = []
     bdf_data_1 = []
     adams_data_2 = []
     bdf_data_2 = []
+    LSODA_data = []
 
 
     # Functional
@@ -152,20 +167,29 @@ def Multistep():
     nonLinSol12 = ax.plot(index, adams_data_2, '-x', c='#b2abd2', label='Newton-type AM')
     nonLinSol22 = ax.plot(index, bdf_data_2, '-x', c='#5e3c99', label='Newton-type BDF')
 
+    # LSODA
+    blank_space_counter = 0
+    for iDensityPoint in range(int(len(correct_files_1 + correct_files_2)), len(correct_files)):
+            LSODA_data.append(1 - round(len(all_intern_columns[iDensityPoint - blank_space_counter][
+                                                  column_names[iDensityPoint - blank_space_counter]]) / file_length, 4))
+    LSODA = ax.plot(index_2, LSODA_data, '-x', c='#4c3340', label='LSODA')
+
+
     #ax.set_title('Non-Linear solver: Functional', fontsize=titlesize)
     ax.set_ylabel('Failure rate [%]', fontsize=fontsize)
     #ax.set_title('Non-Linear solver: Newton-type', fontsize=titlesize)
     ax.set_xlim([-0.5, 38.5])
-    ax.set_ylim([0, 0.3])
+    ax.set_ylim([0, 0.5])
     #ax.set_ylim([0.001, 1])
     #ax.set_yscale('log')
-    ax.set_yticklabels(['0', '5', '10', '15', '20', '25', '30'], fontsize=labelsize)
+    ax.set_yticks([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5])
+    ax.set_yticklabels(['0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50'], fontsize=labelsize)
     #ax.set_yticklabels(['', '0.1', '1', '10', '100'], fontsize=labelsize)
 
     # plot black separation line
     for iLine in [7,15,23,31]:
         #ax.plot([iLine,iLine], [0.001, 1], '--k', linewidth=linewidth)
-        ax.plot([iLine,iLine], [0, 0.3], '--k', linewidth=linewidth)
+        ax.plot([iLine,iLine], [0, 0.5], '--k', linewidth=linewidth)
 
     # create major and minor ticklabels
     '''
@@ -220,7 +244,7 @@ def Multistep():
     #ax3 = figure.add_axes([0.15, 0.4, 0.02, 0.02])
     #ax3.plot(range(2), c='orange', label='AM')
     #ax3.plot(range(2), c='blue', label='BDF')
-    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.4), fancybox=True, shadow=True, ncol=5, frameon=False, fontsize=fontsize)
+    ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.4), fancybox=True, shadow=True, ncol=6, frameon=False, fontsize=fontsize - 2)
     #ax.legend(loc=4, fontsize=labelsize)
     #ax.text(0.15, -0.48, 'D: DENSE,  G: GMRES,  B: BCG,  T: TFQMR,  K: KLU', fontsize=fontsize, transform=ax.transAxes)
 
